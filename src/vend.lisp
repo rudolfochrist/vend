@@ -102,6 +102,7 @@ map back to the parent, such that later only one git clone is performed.")
 
 (defun sexps-from-file (path)
   "Read the sexps from a given file PATH without evaluating them."
+  (format t "[vend] Extracting systems from ~a~%" path)
   (let* ((str    (string-from-file path))
          (clean  (remove-reader-chars str))
          (stream (make-string-input-stream clean)))
@@ -113,16 +114,60 @@ map back to the parent, such that later only one git clone is performed.")
 #++
 (sexps-from-file (car (asd-files "./")))
 
-(defun remove-reader-chars (str)
-  (let ((start (search "#." str)))
-    (if start
-        (concatenate 'string
-                     (subseq str 0 start)
-                     (remove-reader-chars (subseq str (+ 2 start))))
-        str)))
+(defun reader-macro? (chars)
+  (and (eql #\# (nth 0 chars))
+       (eql #\. (nth 1 chars))
+       (eql #\( (nth 2 chars))))
 
 #++
-(remove-reader-chars "(defsystem :foo :long-description #.(+ 1 1))")
+(reader-macro? (coerce "#.(+ 1 1)" 'list))
+#++
+(reader-macro? (coerce "(+ 1 1)" 'list))
+#++
+(reader-macro? (coerce "" 'list))
+
+(defun asdf-call? (chars)
+  (and (eql #\( (nth 0 chars))
+       (eql #\a (nth 1 chars))
+       (eql #\s (nth 2 chars))
+       (eql #\d (nth 3 chars))
+       (eql #\f (nth 4 chars))
+       (eql #\: (nth 5 chars))))
+
+#++
+(asdf-call? (coerce "(asdf:foo)" 'list))
+#++
+(asdf-call? (coerce "(foo)" 'list))
+
+(defun remove-reader-chars (str)
+  "Replace any `#.' sexp with T."
+  (labels ((keep (acc chars)
+             (let ((head (car chars))
+                   (tail (cdr chars)))
+               (cond ((null head) acc)
+                     ;; The presence of read-time macros confuses `read', so we
+                     ;; proactively remove them.
+                     ((reader-macro? chars)
+                      (keep (cons #\t acc) (chuck 1 (cddr tail))))
+                     ;; Likewise, some clever package authors like to utilise
+                     ;; `asdf' directly in their system definitions. This
+                     ;; similarly causes problems with `read', so we remove
+                     ;; such calls.
+                     ((asdf-call? chars)
+                      (keep (cons #\t acc) (chuck 1 (cdr tail))))
+                     (t (keep (cons head acc) tail)))))
+           (chuck (parens chars)
+             (let ((head (car chars)))
+               (cond ((zerop parens) chars)
+                     ((null head) '())
+                     ((eql #\( head) (chuck (1+ parens) (cdr chars)))
+                     ((eql #\) head) (chuck (1- parens) (cdr chars)))
+                     (t (chuck parens (cdr chars)))))))
+    (coerce (reverse (keep '() (coerce str 'list)))
+            'string)))
+
+#++
+(remove-reader-chars "(defsystem :foo :long-description #.(+ 1 1) :foo (asdf:bar))")
 
 (defun string->keyword (s)
   (intern (string-upcase s) "KEYWORD"))
@@ -190,6 +235,7 @@ map back to the parent, such that later only one git clone is performed.")
   "Recursively perform a git clone on every detected dependency."
   (let ((cache (make-hash-table)))
     (labels ((recurse (dep-dir)
+               (format t "[vend] Scanning ~a~%" dep-dir)
                (t:transduce
                 (t:comp (t:map #'sexps-from-file)
                         #'t:concatenate
@@ -204,6 +250,9 @@ map back to the parent, such that later only one git clone is performed.")
                                     ;; dependencies.
                                     (or (zerop (hash-table-count cache))
                                         (gethash (system-name sys) cache))))
+                        (t:log (lambda (acc sys)
+                                 (declare (ignore acc))
+                                 (format t "[vend] Analysing system: ~a~%" (system-name sys))))
                         (t:map #'depends-from-system)
                         #'t:concatenate
                         #'t:unique
@@ -233,8 +282,7 @@ map back to the parent, such that later only one git clone is performed.")
   (let* ((cwd (ext:getcwd))
          (dir (p:ensure-directory (p:join cwd "vendored"))))
     (cond ((probe-file dir)
-           (format t "Target directory already exists.~%")
+           (format t "[vend] Target directory already exists.~%")
            (si:exit 1))
-          (t (format t "Scanning from ~a~%" cwd)
-             (work cwd dir)
-             (format t "Done.~%")))))
+          (t (work cwd dir)
+             (format t "[vend] Done.~%")))))
