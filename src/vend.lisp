@@ -25,7 +25,9 @@ map back to the parent, such that later only one git clone is performed.")
     :cl-postgres
     :hu.dwim.presentation
     :hu.dwim.web-server
-    :puri)
+    :puri
+    ;; Way more trouble than its worth.)
+    :asdf)
   "Known naughty systems that we can't do anything about.")
 
 (defparameter +sources+
@@ -44,8 +46,9 @@ map back to the parent, such that later only one git clone is performed.")
     :cl-unicode      "https://github.com/edicl/cl-unicode.git"
     :closer-mop      "https://github.com/pcostanza/closer-mop.git"
     :closure-common  "https://github.com/sharplispers/closure-common.git"
-    :contextl        "https://github.com/pcostanza/contextl.git"
+    :com.inuoe.jzon  "https://github.com/Zulu-Inuoe/jzon.git"
     :command-line-arguments "https://github.com/fare/command-line-arguments.git"
+    :contextl        "https://github.com/pcostanza/contextl.git"
     :cxml            "https://github.com/sharplispers/cxml.git"
     :documentation-utils "https://github.com/Shinmera/documentation-utils.git"
     :fare-quasiquote "https://gitlab.common-lisp.net/frideau/fare-quasiquote.git"
@@ -55,6 +58,7 @@ map back to the parent, such that later only one git clone is performed.")
     :filepaths       "https://codeberg.org/fosskers/filepaths.git"
     :fiveam          "https://github.com/lispci/fiveam.git"
     :flexi-streams   "https://github.com/edicl/flexi-streams.git"
+    :float-features  "https://github.com/Shinmera/float-features.git"
     :fset            "https://gitlab.common-lisp.net/fset/fset.git"
     :hu.dwim.common  "https://github.com/hu-dwim/hu.dwim.common.git"
     :hu.dwim.common-lisp "https://github.com/hu-dwim/hu.dwim.common-lisp.git"
@@ -94,13 +98,12 @@ map back to the parent, such that later only one git clone is performed.")
     :trivial-features "https://github.com/trivial-features/trivial-features.git"
     :trivial-indent  "https://github.com/Shinmera/trivial-indent.git"
     :try             "https://github.com/melisgl/try.git"
-    :type-i          "https://github.com/guicho271828/type-i.git"
-    :com.inuoe.jzon  "https://github.com/Zulu-Inuoe/jzon.git")
+    :type-i          "https://github.com/guicho271828/type-i.git")
   "All actively depended-on Common Lisp libraries.")
 
 (defun asd-files (dir)
   "Yield the pathnames of all `.asd' files found in the given DIR."
-  (directory (p:join dir "*.asd")))
+  (directory (p:join dir "**/*.asd")))
 
 #++
 (asd-files "./")
@@ -117,6 +120,7 @@ map back to the parent, such that later only one git clone is performed.")
 
 (defun sexps-from-file (path)
   "Read the sexps from a given file PATH without evaluating them."
+  #++
   (format t "[vend] Extracting systems from ~a~%" path)
   (let* ((str    (string-from-file path))
          (clean  (remove-reader-chars str))
@@ -193,14 +197,15 @@ map back to the parent, such that later only one git clone is performed.")
 #++
 (remove-reader-chars "(asdf:defsystem :foo :long-description #.(+ 1 1) :foo (asdf:bar))")
 
-(defun string->keyword (s)
-  (intern (string-upcase s) "KEYWORD"))
-
-(defun symbol->keyword (s)
-  (intern (symbol-name s) "KEYWORD"))
+(defun into-keyword (s)
+  "Turn anything stringy or symboly into a keyword."
+  (etypecase s
+    (keyword s)
+    (string (intern (string-upcase s) "KEYWORD"))
+    (symbol (intern (symbol-name s) "KEYWORD"))))
 
 #++
-(symbol->keyword 'foo)
+(into-keyword 'foo)
 
 (defun keyword->string (kw)
   (t:transduce (t:map (lambda (c) (if (equal #\. c) #\-  c)))
@@ -220,12 +225,11 @@ map back to the parent, such that later only one git clone is performed.")
   (t:transduce (t:map (lambda (dep)
                         (etypecase dep
                           (keyword dep)
-                          (string (string->keyword dep))
-                          (symbol (symbol->keyword dep))
-                          (list (destructuring-bind (kw name v) dep
-                                  (declare (ignore v))
-                                  (cond ((and (eq :version kw) (stringp name))
-                                         (string->keyword name))
+                          (string (into-keyword dep))
+                          (symbol (into-keyword dep))
+                          (list (destructuring-bind (kw a b) dep
+                                  (cond ((eq :version kw) (into-keyword a))
+                                        ((eq :feature kw) (into-keyword b))
                                         (t (error "Unknown composite dependency declaration: ~a" dep))))))))
                #'t:snoc
                (getf sexp :depends-on)))
@@ -237,8 +241,8 @@ map back to the parent, such that later only one git clone is performed.")
   (let ((name (nth 1 sexp)))
     (etypecase name
       (keyword name)
-      (string (string->keyword name))
-      (symbol (string->keyword (symbol-name name))))))
+      (string (into-keyword name))
+      (symbol (into-keyword (symbol-name name))))))
 
 #++
 (system-name (car (sexps-from-file (car (asd-files "./")))))
@@ -262,6 +266,7 @@ map back to the parent, such that later only one git clone is performed.")
   "Recursively perform a git clone on every detected dependency."
   (let ((cache (make-hash-table)))
     (labels ((recurse (dep-dir)
+               #++
                (format t "[vend] Scanning ~a~%" dep-dir)
                (t:transduce
                 (t:comp (t:map #'sexps-from-file)
@@ -279,6 +284,7 @@ map back to the parent, such that later only one git clone is performed.")
                         ;; at higher levels are actually scanned for
                         ;; dependencies.
                         (t:filter (lambda (sys) (gethash (system-name sys) cache)))
+                        #++
                         (t:log (lambda (acc sys)
                                  (declare (ignore acc))
                                  (format t "[vend] Analysing system: ~a~%" (system-name sys))))
