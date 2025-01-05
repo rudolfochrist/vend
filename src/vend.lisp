@@ -87,6 +87,7 @@ map back to the parent, such that later only one git clone is performed.")
     :babel           "https://github.com/cl-babel/babel.git"
     :bordeaux-threads "https://github.com/sionescu/bordeaux-threads.git"
     :cffi            "https://github.com/cffi/cffi.git"
+    :cl-change-case  "https://github.com/rudolfochrist/cl-change-case.git"
     :cl-fad          "https://github.com/edicl/cl-fad.git"
     :cl-json         "https://github.com/sharplispers/cl-json.git"
     :cl-l10n         "https://gitlab.common-lisp.net/cl-l10n/cl-l10n.git"
@@ -148,17 +149,33 @@ map back to the parent, such that later only one git clone is performed.")
 #++
 (asd-files "./")
 
+(defun string-from-file (path)
+  "Newlines removed."
+  (t:transduce #'t:concatenate #'t:string path))
+
 (defun sexps-from-file (path)
   "Read the sexps from a given file PATH without evaluating them."
-  (let ((*read-eval* nil)) ; This prevents `#.' forms from being evaluated.
-    (with-open-file (stream path :direction :input)
-      ;; TODO: 2025-01-04 Provide similar functionality via `transducers'.
-      (loop for sexp = (read stream nil :eof)
-            until (eq sexp :eof)
-            collect sexp))))
+  (let* ((str    (string-from-file path))
+         (clean  (remove-reader-chars str))
+         (stream (make-string-input-stream clean)))
+    ;; TODO: 2025-01-04 Provide similar functionality via `transducers'.
+    (loop for sexp = (read stream nil :eof)
+          until (eq sexp :eof)
+          collect sexp)))
 
 #++
 (sexps-from-file (car (asd-files "./")))
+
+(defun remove-reader-chars (str)
+  (let ((start (search "#." str)))
+    (if start
+        (concatenate 'string
+                     (subseq str 0 start)
+                     (remove-reader-chars (subseq str (+ 2 start))))
+        str)))
+
+#++
+(remove-reader-chars "(defsystem :foo :long-description #.(+ 1 1))")
 
 (defun string->keyword (s)
   (intern (string-upcase s) "KEYWORD"))
@@ -179,7 +196,8 @@ map back to the parent, such that later only one git clone is performed.")
 (keyword->string :com.inuoe.jzon)
 
 (defun system? (sexp)
-  (eq 'defsystem (car sexp)))
+  (and (eq 'cons (type-of sexp))
+       (eq 'defsystem (car sexp))))
 
 (defun depends-from-system (sexp)
   "Extract the `:depends-on' list from a sexp, if it has one."
@@ -200,7 +218,10 @@ map back to the parent, such that later only one git clone is performed.")
 (depends-from-system (car (sexps-from-file (car (asd-files "./")))))
 
 (defun system-name (sexp)
-  (string->keyword (nth 1 sexp)))
+  (let ((name (nth 1 sexp)))
+    (etypecase name
+      (keyword name)
+      (string (string->keyword name)))))
 
 #++
 (system-name (car (sexps-from-file (car (asd-files "./")))))
