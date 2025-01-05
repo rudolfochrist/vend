@@ -97,8 +97,14 @@ map back to the parent, such that later only one git clone is performed.")
 (asd-files "./")
 
 (defun string-from-file (path)
-  "Newlines removed."
-  (t:transduce #'t:concatenate #'t:string path))
+  "Preserves newlines, such that comments will be handled properly by `read'."
+  (t:transduce (t:comp (t:map (lambda (line) (string-trim " " line)))
+                       (t:intersperse '(#\Newline))
+                       #'t:concatenate)
+               #'t:string path))
+
+#++
+(string-from-file #p"vend.asd")
 
 (defun sexps-from-file (path)
   "Read the sexps from a given file PATH without evaluating them."
@@ -213,10 +219,13 @@ map back to the parent, such that later only one git clone is performed.")
   (let ((name (nth 1 sexp)))
     (etypecase name
       (keyword name)
-      (string (string->keyword name)))))
+      (string (string->keyword name))
+      (symbol (string->keyword (symbol-name name))))))
 
 #++
 (system-name (car (sexps-from-file (car (asd-files "./")))))
+#++
+(system-name '(defsystem foo))
 
 (defun mkdir (dir)
   (multiple-value-bind (stream code obj)
