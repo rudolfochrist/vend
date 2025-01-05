@@ -249,16 +249,18 @@ map back to the parent, such that later only one git clone is performed.")
                 (t:comp (t:map #'sexps-from-file)
                         #'t:concatenate
                         (t:filter #'system?)
-                        (t:filter (lambda (sys)
-                                    ;; If empty, then we're at the top level
-                                    ;; project and we should accept all systems.
-                                    ;; Otherwise, the `gethash' check here
-                                    ;; serves as a guard, ensuring that only
-                                    ;; systems that were asked for at higher
-                                    ;; levels are actually scanned for
-                                    ;; dependencies.
-                                    (or (zerop (hash-table-count cache))
-                                        (gethash (system-name sys) cache))))
+                        ;; If we're at the top level, we need to preemptively
+                        ;; add its systems to the cache. This prevents
+                        ;; reclonings of the project itself in certain
+                        ;; circumstances.
+                        (t:map (lambda (sys)
+                                 (when (equal dep-dir cwd)
+                                   (setf (gethash (system-name sys) cache) t))
+                                 sys))
+                        ;; Here we ensure that only systems that were asked for
+                        ;; at higher levels are actually scanned for
+                        ;; dependencies.
+                        (t:filter (lambda (sys) (gethash (system-name sys) cache)))
                         (t:log (lambda (acc sys)
                                  (declare (ignore acc))
                                  (format t "[vend] Analysing system: ~a~%" (system-name sys))))
@@ -283,6 +285,11 @@ map back to the parent, such that later only one git clone is performed.")
 
 #++
 (let* ((cwd (ext:getcwd))
+       (dir (p:ensure-directory (p:join cwd "vendored2"))))
+  (work cwd dir))
+
+#++
+(let* ((cwd #p"/home/colin/code/common-lisp/transducers/")
        (dir (p:ensure-directory (p:join cwd "vendored"))))
   (work cwd dir))
 
