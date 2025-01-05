@@ -101,12 +101,43 @@ map back to the parent, such that later only one git clone is performed.")
     :type-i          "https://github.com/guicho271828/type-i.git")
   "All actively depended-on Common Lisp libraries.")
 
+(defun components-less? (a b)
+  (labels ((recurse (ac bc)
+             (cond ((null ac) t)
+                   ((and (not (null ac)) (null bc)) nil)
+                   ((and (null (cdr ac)) (not (null (cdr bc)))) t)
+                   ((and (not (null (cdr ac))) (null (cdr bc))) nil)
+                   ((and (null (cdr ac)) (null (cdr bc)))
+                    (string-lessp (p:base (car ac))
+                                  (p:base (car bc))))
+                   ((string-lessp (car ac) (car bc)) t)
+                   ((string-lessp (car bc) (car ac)) nil)
+                   (t (recurse (cdr ac) (cdr bc))))))
+    (recurse (p:components a) (p:components b))))
+
+#++
+(components-less? "trivial-gray-streams.asd" "trivial-gray-streams-test.asd")
+#++
+(components-less? #p"/home/colin/foo" #p"/home/colin/foo/bar")
+#++
+(components-less? #p"/home/colin/foo/bar" #p"/home/colin/foo")
+
 (defun asd-files (dir)
   "Yield the pathnames of all `.asd' files found in the given DIR."
-  (directory (p:join dir "**/*.asd")))
+  (sort (directory (p:join dir "**/*.asd"))
+        #'components-less?))
 
 #++
 (asd-files "./")
+
+#++
+(asd-files "/home/colin/code/common-lisp/transducers/vendored/parachute/")
+
+#++
+(asd-files "/home/colin/code/common-lisp/transducers/vendored/trivial-gray-streams/")
+
+#++
+(p:components "/home/colin/code/common-lisp/transducers/vendored/parachute/")
 
 (defun string-from-file (path)
   "Preserves newlines, such that comments will be handled properly by `read'."
@@ -125,7 +156,6 @@ map back to the parent, such that later only one git clone is performed.")
   (let* ((str    (string-from-file path))
          (clean  (remove-reader-chars str))
          (stream (make-string-input-stream clean)))
-    ;; TODO: 2025-01-04 Provide similar functionality via `transducers'.
     (loop for sexp = (read stream nil :eof)
           until (eq sexp :eof)
           collect sexp)))
@@ -264,9 +294,9 @@ map back to the parent, such that later only one git clone is performed.")
 
 (defun work (cwd target)
   "Recursively perform a git clone on every detected dependency."
-  (let ((cache (make-hash-table)))
+  (let ((cache  (make-hash-table))
+        (wanted (make-hash-table)))
     (labels ((recurse (dep-dir)
-               #++
                (format t "[vend] Scanning ~a~%" dep-dir)
                (t:transduce
                 (t:comp (t:map #'sexps-from-file)
@@ -278,16 +308,19 @@ map back to the parent, such that later only one git clone is performed.")
                         ;; circumstances.
                         (t:map (lambda (sys)
                                  (when (equal dep-dir cwd)
-                                   (setf (gethash (system-name sys) cache) t))
+                                   (setf (gethash (system-name sys) cache) t)
+                                   (setf (gethash (system-name sys) wanted) t))
                                  sys))
-                        ;; Here we ensure that only systems that were asked for
-                        ;; at higher levels are actually scanned for
-                        ;; dependencies.
-                        (t:filter (lambda (sys) (gethash (system-name sys) cache)))
-                        #++
                         (t:log (lambda (acc sys)
                                  (declare (ignore acc))
                                  (format t "[vend] Analysing system: ~a~%" (system-name sys))))
+                        ;; Here we ensure that only systems that were asked for
+                        ;; at higher levels are actually scanned for
+                        ;; dependencies.
+                        (t:filter (lambda (sys) (gethash (system-name sys) wanted)))
+                        (t:log (lambda (acc sys)
+                                 (declare (ignore acc))
+                                 (format t "[vend] Continuing with system: ~a~%" (system-name sys))))
                         (t:map #'depends-from-system)
                         #'t:concatenate
                         #'t:unique
@@ -300,6 +333,7 @@ map back to the parent, such that later only one git clone is performed.")
                                        (cloned (p:ensure-string (p:join target (keyword->string dep)))))
                                    (assert source nil "~a is not a known system.~%Please have it registered into the vend source code." dep)
                                    (setf (gethash dep cache) t)
+                                   (setf (gethash dep wanted) t)
                                    (clone source cloned)
                                    (recurse cloned)))))
                 #'t:for-each
