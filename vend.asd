@@ -6,4 +6,3 @@
   :depends-on (:filepaths :transducers)
   :components ((:module "src" :components ((:file "vend"))))
   :description "Simply vendor your Common Lisp project dependencies.")
-
