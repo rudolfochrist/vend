@@ -11,6 +11,8 @@
   '(:cffi-grovel :cffi
     :cffi-toolchain :cffi
     :cl-ppcre-unicode :cl-ppcre
+    :dref :mgl-pax
+    :mgl-pax-bootstrap :mgl-pax
     :regression-test :ansi-test
     :rt :ansi-test
     :trivia.balland2006 :trivia
@@ -45,8 +47,10 @@ map back to the parent, such that later only one git clone is performed.")
     :contextl        "https://github.com/pcostanza/contextl.git"
     :command-line-arguments "https://github.com/fare/command-line-arguments.git"
     :cxml            "https://github.com/sharplispers/cxml.git"
+    :documentation-utils "https://github.com/Shinmera/documentation-utils.git"
     :fare-quasiquote "https://gitlab.common-lisp.net/frideau/fare-quasiquote.git"
     :fare-utils      "https://gitlab.common-lisp.net/frideau/fare-utils.git"
+    :form-fiddle     "https://github.com/Shinmera/form-fiddle.git"
     :fiasco          "https://github.com/joaotavora/fiasco.git"
     :filepaths       "https://codeberg.org/fosskers/filepaths.git"
     :fiveam          "https://github.com/lispci/fiveam.git"
@@ -71,19 +75,24 @@ map back to the parent, such that later only one git clone is performed.")
     :local-time      "https://github.com/dlowe-net/local-time.git"
     :metabang-bind   "https://github.com/hraban/metabang-bind.git"
     :mgl-pax         "https://github.com/melisgl/mgl-pax.git"
+    :misc-extensions "https://gitlab.common-lisp.net/misc-extensions/misc-extensions.git"
     :named-readtables "https://github.com/melisgl/named-readtables.git"
     :optima          "https://github.com/m2ym/optima.git"
     :parachute       "https://github.com/Shinmera/parachute.git"
     :parse-number    "https://github.com/sharplispers/parse-number.git"
+    :pythonic-string-reader "https://github.com/smithzvk/pythonic-string-reader.git"
+    :random-state    "https://github.com/Shinmera/random-state.git"
     :split-sequence  "https://github.com/sharplispers/split-sequence.git"
     :str             "https://github.com/vindarel/cl-str.git"
     :swank           "https://github.com/slime/slime.git"
     :transducers     "https://codeberg.org/fosskers/cl-transducers.git"
     :trivia          "https://github.com/guicho271828/trivia.git"
     :trivial-cltl2   "https://github.com/Zulu-Inuoe/trivial-cltl2.git"
+    :trivial-custom-debugger "https://github.com/phoe/trivial-custom-debugger.git"
     :trivial-garbage "https://github.com/trivial-garbage/trivial-garbage.git"
     :trivial-gray-streams "https://github.com/trivial-gray-streams/trivial-gray-streams.git"
     :trivial-features "https://github.com/trivial-features/trivial-features.git"
+    :trivial-indent  "https://github.com/Shinmera/trivial-indent.git"
     :try             "https://github.com/melisgl/try.git"
     :type-i          "https://github.com/guicho271828/type-i.git"
     :com.inuoe.jzon  "https://github.com/Zulu-Inuoe/jzon.git")
@@ -145,6 +154,14 @@ map back to the parent, such that later only one git clone is performed.")
 #++
 (asdf-call? (coerce "(foo)" 'list))
 
+(defun uiop-call? (chars)
+  (and (eql #\( (nth 0 chars))
+       (eql #\u (nth 1 chars))
+       (eql #\i (nth 2 chars))
+       (eql #\o (nth 3 chars))
+       (eql #\p (nth 4 chars))
+       (eql #\: (nth 5 chars))))
+
 (defun remove-reader-chars (str)
   "Replace any `#.' sexp with T."
   (labels ((keep (acc chars)
@@ -156,11 +173,12 @@ map back to the parent, such that later only one git clone is performed.")
                      ((reader-macro? chars)
                       (keep (cons #\t acc) (chuck 1 (cddr tail))))
                      ;; Likewise, some clever package authors like to utilise
-                     ;; `asdf' directly in their system definitions. This
-                     ;; similarly causes problems with `read', so we remove
+                     ;; `asdf' and `uiop' directly in their system definitions.
+                     ;; This similarly causes problems with `read', so we remove
                      ;; such calls.
-                     ((asdf-call? chars)
-                      (keep (cons #\t acc) (chuck 1 (cdr tail))))
+                     ((or (asdf-call? chars)
+                          (uiop-call? chars))
+                      (keep (cons #\( acc) (nthcdr 5 tail)))
                      (t (keep (cons head acc) tail)))))
            (chuck (parens chars)
              (let ((head (car chars)))
@@ -173,7 +191,7 @@ map back to the parent, such that later only one git clone is performed.")
             'string)))
 
 #++
-(remove-reader-chars "(defsystem :foo :long-description #.(+ 1 1) :foo (asdf:bar))")
+(remove-reader-chars "(asdf:defsystem :foo :long-description #.(+ 1 1) :foo (asdf:bar))")
 
 (defun string->keyword (s)
   (intern (string-upcase s) "KEYWORD"))
