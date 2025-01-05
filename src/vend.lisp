@@ -144,7 +144,7 @@ map back to the parent, such that later only one git clone is performed.")
 
 (defun system? (sexp)
   (and (eq 'cons (type-of sexp))
-       (eq 'defsystem (car sexp))))
+       (string= "DEFSYSTEM" (symbol-name (car sexp)))))
 
 (defun depends-from-system (sexp)
   "Extract the `:depends-on' list from a sexp, if it has one."
@@ -188,7 +188,7 @@ map back to the parent, such that later only one git clone is performed.")
 
 (defun work (cwd target)
   "Recursively perform a git clone on every detected dependency."
-  (let ((cache  (make-hash-table)))
+  (let ((cache (make-hash-table)))
     (labels ((recurse (dep-dir)
                (t:transduce
                 (t:comp (t:map #'sexps-from-file)
@@ -225,15 +225,16 @@ map back to the parent, such that later only one git clone is performed.")
 
 #++
 (let* ((cwd (ext:getcwd))
-       (dir (p:ensure-directory (p:join cwd "vendored2"))))
+       (dir (p:ensure-directory (p:join cwd "vendored"))))
   (work cwd dir))
 
 ;; TODO: 2025-01-05 Expose flag to avoid cloning `asdf'.
 (defun main ()
   (let* ((cwd (ext:getcwd))
-         (dir (p:ensure-directory (p:join cwd "vendored2"))))
+         (dir (p:ensure-directory (p:join cwd "vendored"))))
     (cond ((probe-file dir)
            (format t "Target directory already exists.~%")
            (si:exit 1))
-          (t (work cwd dir)
+          (t (format t "Scanning from ~a~%" cwd)
+             (work cwd dir)
              (format t "Done.~%")))))
