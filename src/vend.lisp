@@ -178,24 +178,32 @@ map back to the parent, such that later only one git clone is performed.")
 #++
 (keyword->string :com.inuoe.jzon)
 
-(defun depends-from-sexp (sexp)
+(defun system? (sexp)
+  (eq 'defsystem (car sexp)))
+
+(defun depends-from-system (sexp)
   "Extract the `:depends-on' list from a sexp, if it has one."
-  (when (eq 'defsystem (car sexp))
-    (t:transduce (t:map (lambda (dep)
-                          (etypecase dep
-                            (keyword dep)
-                            (string (string->keyword dep))
-                            (symbol (symbol->keyword dep))
-                            (list (destructuring-bind (kw name v) dep
-                                    (declare (ignore v))
-                                    (cond ((and (eq :version kw) (stringp name))
-                                           (string->keyword name))
-                                          (t (error "Unknown composite dependency declaration: ~a" dep))))))))
-                 #'t:snoc
-                 (getf sexp :depends-on))))
+  (t:transduce (t:map (lambda (dep)
+                        (etypecase dep
+                          (keyword dep)
+                          (string (string->keyword dep))
+                          (symbol (symbol->keyword dep))
+                          (list (destructuring-bind (kw name v) dep
+                                  (declare (ignore v))
+                                  (cond ((and (eq :version kw) (stringp name))
+                                         (string->keyword name))
+                                        (t (error "Unknown composite dependency declaration: ~a" dep))))))))
+               #'t:snoc
+               (getf sexp :depends-on)))
 
 #++
-(depends-from-sexp (car (sexps-from-file (car (asd-files "./")))))
+(depends-from-system (car (sexps-from-file (car (asd-files "./")))))
+
+(defun system-name (sexp)
+  (string->keyword (nth 1 sexp)))
+
+#++
+(system-name (car (sexps-from-file (car (asd-files "./")))))
 
 (defun mkdir (dir)
   (multiple-value-bind (stream code obj)
@@ -212,12 +220,23 @@ map back to the parent, such that later only one git clone is performed.")
 
 (defun work (cwd target)
   "Recursively perform a git clone on every detected dependency."
-  (let ((cache (make-hash-table)))
+  (let ((cache  (make-hash-table)))
     (labels ((recurse (dep-dir)
                (t:transduce
                 (t:comp (t:map #'sexps-from-file)
                         #'t:concatenate
-                        (t:map #'depends-from-sexp)
+                        (t:filter #'system?)
+                        (t:filter (lambda (sys)
+                                    ;; If empty, then we're at the top level
+                                    ;; project and we should accept all systems.
+                                    ;; Otherwise, the `gethash' check here
+                                    ;; serves as a guard, ensuring that only
+                                    ;; systems that were asked for at higher
+                                    ;; levels are actually scanned for
+                                    ;; dependencies.
+                                    (or (zerop (hash-table-count cache))
+                                        (gethash (system-name sys) cache))))
+                        (t:map #'depends-from-system)
                         #'t:concatenate
                         #'t:unique
                         (t:map (lambda (dep) (or (getf +parents+ dep) dep)))
@@ -250,15 +269,3 @@ map back to the parent, such that later only one git clone is performed.")
            (si:exit 1))
           (t (work cwd dir)
              (format t "Done.~%")))))
-
-#++
-(ext:getcwd)
-
-#++
-(t:transduce (t:comp (t:map #'sexps-from-file)
-                     #'t:concatenate
-                     (t:map #'depends-from-sexp)
-                     #'t:concatenate
-                     #'t:unique)
-             #'t:snoc
-             (asd-files "./"))
