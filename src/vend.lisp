@@ -8,65 +8,12 @@
 (in-package :vend)
 
 (defparameter +parents+
-  '(:cffi/c2ffi :cffi
-    :cffi-grovel :cffi
+  '(:cffi-grovel :cffi
     :cffi-toolchain :cffi
-    :cl-ppcre/test :cl-ppcre
     :cl-ppcre-unicode :cl-ppcre
-    :cl-unicode/base :cl-unicode
-    :cxml/dom :cxml
-    :cxml/klacks :cxml
-    :cxml/xml :cxml
-    :fare-quasiquote-extras :fare-quasiquote
-    :fare-quasiquote-optima :fare-quasiquote
-    :fare-quasiquote-readtable :fare-quasiquote
-    :hu.dwim.def/namespace :hu.dwim.def
-    :hu.dwim.def+contextl :hu.dwim.def
-    :hu.dwim.def+swank :hu.dwim.def
-    :hu.dwim.def+hu.dwim.common :hu.dwim.def
-    :hu.dwim.defclass-star+contextl :hu.dwim.defclass-star
-    :hu.dwim.defclass-star+hu.dwim.def :hu.dwim.defclass-star
-    :hu.dwim.defclass-star+hu.dwim.def+contextl :hu.dwim.defclass-star
-    :hu.dwim.defclass-star/test :hu.dwim.defclass-star
-    :hu.dwim.logger.test :hu.dwim.logger
-    :hu.dwim.partial-eval.test :hu.dwim.partial-eval
-    :hu.dwim.stefil+swank :hu.dwim.stefil
-    :hu.dwim.stefil+hu.dwim.def :hu.dwim.stefil
-    :hu.dwim.stefil+hu.dwim.def+swank :hu.dwim.stefil
-    :hu.dwim.util/command-line :hu.dwim.util
-    :hu.dwim.util/error-handling :hu.dwim.util
-    :hu.dwim.util/error-handling+swank :hu.dwim.util
-    :hu.dwim.util/finite-state-machine :hu.dwim.util
-    :hu.dwim.util/i18n :hu.dwim.util
-    :hu.dwim.util/mop :hu.dwim.util
-    :hu.dwim.util/production :hu.dwim.util
-    :hu.dwim.util/soap :hu.dwim.util
-    :hu.dwim.util/source :hu.dwim.util
-    :hu.dwim.util/standard-process :hu.dwim.util
-    :hu.dwim.util/temporary-files :hu.dwim.util
-    :hu.dwim.util/threads :hu.dwim.util
-    :hu.dwim.util/worker-group :hu.dwim.util
-    :hu.dwim.util+iolib :hu.dwim.util
-    :hu.dwim.walker/test :hu.dwim.walker
-    :iolib.common-lisp :iolib
-    :iolib/os :iolib
-    :iolib/pathnames :iolib
-    :iolib/syscalls :iolib
-    :mgl-pax-bootstrap :mgl-pax
     :regression-test :ansi-test
     :rt :ansi-test
-    :transducers/fset :transducers
-    :transducers/jzon :transducers
     :trivia.balland2006 :trivia
-    :trivia.benchmark :trivia
-    :trivia.cffi :trivia
-    :trivia.fset :trivia
-    :trivia.level0 :trivia
-    :trivia.level1 :trivia
-    :trivia.level2 :trivia
-    :trivia.quasiquote :trivia
-    :trivia.ppcre :trivia
-    :trivia.trivial :trivia
     :uiop :asdf)
   "Systems are often bundled together into a single repository. This list helps
 map back to the parent, such that later only one git clone is performed.")
