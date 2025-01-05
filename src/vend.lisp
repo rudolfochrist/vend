@@ -11,11 +11,14 @@
   '(:cffi-grovel :cffi
     :cffi-toolchain :cffi
     :cl-ppcre-unicode :cl-ppcre
+    :cl-unicode/base :cl-unicode
     :dref :mgl-pax
     :mgl-pax-bootstrap :mgl-pax
     :regression-test :ansi-test
     :rt :ansi-test
     :trivia.balland2006 :trivia
+    :trivia.level2 :trivia
+    :trivia.trivial :trivia
     :uiop :asdf)
   "Systems are often bundled together into a single repository. This list helps
 map back to the parent, such that later only one git clone is performed.")
@@ -308,8 +311,10 @@ map back to the parent, such that later only one git clone is performed.")
                         ;; circumstances.
                         (t:map (lambda (sys)
                                  (when (equal dep-dir cwd)
-                                   (setf (gethash (system-name sys) cache) t)
-                                   (setf (gethash (system-name sys) wanted) t))
+                                   (let ((name (system-name sys)))
+                                     (format t "[vend] Precaching top-level: ~a~%" name)
+                                     (setf (gethash name cache) t)
+                                     (setf (gethash name  wanted) t)))
                                  sys))
                         (t:log (lambda (acc sys)
                                  (declare (ignore acc))
@@ -324,6 +329,15 @@ map back to the parent, such that later only one git clone is performed.")
                         (t:map #'depends-from-system)
                         #'t:concatenate
                         #'t:unique
+                        ;; Mark the dep as "wanted", so that if its system is
+                        ;; found, it'll at least be scanned for its transitive
+                        ;; dependencies, although we might not reclone it.
+                        (t:map (lambda (dep)
+                                 (setf (gethash dep wanted) t)
+                                 dep))
+                        ;; Immediately afterwards we check whether or not we
+                        ;; actually want to proceed with cloning. It some cases
+                        ;; its not possible, or just not necessary.
                         (t:map (lambda (dep) (or (getf +parents+ dep) dep)))
                         #'t:unique
                         (t:filter (lambda (dep) (not (gethash dep cache))))
@@ -333,7 +347,6 @@ map back to the parent, such that later only one git clone is performed.")
                                        (cloned (p:ensure-string (p:join target (keyword->string dep)))))
                                    (assert source nil "~a is not a known system.~%Please have it registered into the vend source code." dep)
                                    (setf (gethash dep cache) t)
-                                   (setf (gethash dep wanted) t)
                                    (clone source cloned)
                                    (recurse cloned)))))
                 #'t:for-each
