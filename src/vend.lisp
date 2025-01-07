@@ -394,7 +394,7 @@ Flags:
 (defun vend/repl (args)
   "Start a given repl."
   (let ((compiler (or (car args) "sbcl"))
-        (load '("--eval" "(progn (require :asdf) (asdf:initialize-source-registry `(:source-registry (:tree ,(uiop:getcwd)) :ignore-inherited-configuration)))")))
+        (load '("--eval" "(require :asdf)" "--eval" "(asdf:initialize-source-registry `(:source-registry (:tree ,(uiop:getcwd)) :ignore-inherited-configuration))")))
     (ext:run-program compiler (append (cdr args) load) :output t :input *standard-input*)))
 
 (defun main ()
