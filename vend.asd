@@ -3,6 +3,6 @@
   :author "Colin Woodbury <colin@fosskers.ca>"
   :license "MPL-2.0"
   :homepage "https://github.com/fosskers/vend"
-  :depends-on (:filepaths :transducers)
+  :depends-on (:filepaths :simple-graph :transducers)
   :components ((:module "src" :components ((:file "vend"))))
   :description "Simply vendor your Common Lisp project dependencies.")

@@ -1,6 +1,7 @@
 (defpackage vend
   (:use :cl)
-  (:local-nicknames (#:p #:filepaths)
+  (:local-nicknames (#:g #:simple-graph)
+                    (#:p #:filepaths)
                     (#:t #:transducers))
   (:export #:main)
   (:documentation "Simply vendor your Common Lisp project dependencies."))
@@ -16,6 +17,9 @@
     :mgl-pax-bootstrap :mgl-pax
     :regression-test :ansi-test
     :rt :ansi-test
+    :transducers/fset :transducers
+    :transducers/jzon :transducers
+    :transducers/tests :transducers
     :trivia.balland2006 :trivia
     :trivia.level2 :trivia
     :trivia.trivial :trivia
@@ -307,79 +311,58 @@ map back to the parent, such that later only one git clone is performed.")
 
 (defun work (cwd target)
   "Recursively perform a git clone on every detected dependency."
-  (let ((cache  (make-hash-table))
-        (wanted (make-hash-table)))
-    (labels ((recurse (dep-dir)
-               (format t "[vend] Scanning ~a~%" dep-dir)
-               (t:transduce
-                (t:comp (t:map #'sexps-from-file)
-                        #'t:concatenate
-                        (t:filter #'system?)
-                        ;; If we're at the top level, we need to preemptively
-                        ;; add its systems to the cache. This prevents
-                        ;; reclonings of the project itself in certain
-                        ;; circumstances.
-                        (t:map (lambda (sys)
-                                 (when (equal dep-dir cwd)
-                                   (let ((name (system-name sys)))
-                                     (format t "[vend] Precaching top-level: ~a~%" name)
-                                     (setf (gethash name cache) t)
-                                     (setf (gethash name  wanted) t)))
-                                 sys))
-                        (t:log (lambda (acc sys)
-                                 (declare (ignore acc))
-                                 (format t "[vend] Analysing system: ~a~%" (system-name sys))))
-                        ;; Here we ensure that only systems that were asked for
-                        ;; at higher levels are actually scanned for
-                        ;; dependencies.
-                        (t:filter (lambda (sys) (gethash (system-name sys) wanted)))
-                        (t:log (lambda (acc sys)
-                                 (declare (ignore acc))
-                                 (format t "[vend] Continuing with system: ~a~%" (system-name sys))))
-                        (t:map #'depends-from-system)
-                        #'t:concatenate
-                        #'t:unique
-                        ;; Mark the dep as "wanted", so that if its system is
-                        ;; found, it'll at least be scanned for its transitive
-                        ;; dependencies, although we might not reclone it.
-                        (t:map (lambda (dep)
-                                 (setf (gethash dep wanted) t)
-                                 dep))
-                        ;; Immediately afterwards we check whether or not we
-                        ;; actually want to proceed with cloning. It some cases
-                        ;; its not possible, or just not necessary.
-                        (t:map (lambda (dep) (or (getf +parents+ dep) dep)))
-                        #'t:unique
-                        (t:filter (lambda (dep) (not (gethash dep cache))))
-                        (t:filter (lambda (dep) (not (member dep +exclude+))))
-                        (t:map (lambda (dep)
-                                 (let ((source (getf +sources+ dep))
-                                       (cloned (p:ensure-string (p:join target (keyword->string dep)))))
-                                   (assert source nil "~a is not a known system.~%Please have it registered into the vend source code." dep)
-                                   (setf (gethash dep cache) t)
-                                   (clone source cloned)
-                                   (recurse cloned)))))
-                #'t:for-each
-                (asd-files dep-dir))))
-      (mkdir target)
-      (recurse cwd))))
-
-#++
-(let* ((cwd (ext:getcwd))
-       (dir (p:ensure-directory (p:join cwd "vendored2"))))
-  (work cwd dir))
+  (let ((graph  (g:make-graph))
+        (cloned (make-hash-table)))
+    (labels ((scan-systems (dir)
+               (t:transduce (t:comp (t:map #'sexps-from-file)
+                                    #'t:concatenate
+                                    (t:filter #'system?)
+                                    (t:map (lambda (sys)
+                                             (let ((name (system-name sys)))
+                                               (g:add-node! graph name)
+                                               (dolist (dep (depends-from-system sys))
+                                                 (g:add-node! graph dep)
+                                                 (g:add-edge! graph name dep))
+                                               name))))
+                            #'t:cons (asd-files dir)))
+             (unique-leaves (g)
+               (t:transduce (t:comp (t:map (lambda (leaf) (or (getf +parents+ leaf) leaf)))
+                                    #'t:unique
+                                    (t:filter (lambda (leaf) (not (gethash leaf cloned))))
+                                    (t:filter (lambda (leaf) (not (member leaf +exclude+)))))
+                            #'t:cons (g:leaves g)))
+             (recurse (top dep)
+               (unless (gethash dep cloned)
+                 (let ((url  (getf +sources+ dep))
+                       (path (p:ensure-string (p:join target (keyword->string dep)))))
+                   (assert url nil "~a is not a known system.~%Please have it registered into the vend source code." dep)
+                   (clone url path)
+                   (setf (gethash dep cloned) t)
+                   (scan-systems path)
+                   (dolist (leaf (unique-leaves (apply #'g:subgraph graph top)))
+                     (recurse top leaf))))))
+      (let* ((top  (scan-systems cwd))
+             (root (or (getf +parents+ (car top)) (car top))))
+        ;; This is the root project directory, so it's already considered "cloned".
+        (setf (gethash root cloned) t)
+        (dolist (leaf (unique-leaves graph))
+          (recurse top leaf))
+        (apply #'g:subgraph graph top)))))
 
 #++
 (let* ((cwd #p"/home/colin/code/common-lisp/transducers/")
        (dir (p:ensure-directory (p:join cwd "vendored"))))
-  (work cwd dir))
+  (mkdir dir)
+  (with-open-file (stream #p"deps.dot" :direction :output :if-exists :supersede)
+    (g:to-dot-with-stream (work3 cwd dir) stream)))
 
-;; TODO: 2025-01-05 Expose flag to avoid cloning `asdf'.
 (defun main ()
   (let* ((cwd (ext:getcwd))
          (dir (p:ensure-directory (p:join cwd "vendored"))))
     (cond ((probe-file dir)
            (format t "[vend] Target directory already exists.~%")
            (si:exit 1))
-          (t (work cwd dir)
+          (t (mkdir dir)
+             (work cwd dir)
              (format t "[vend] Done.~%")))))
+
