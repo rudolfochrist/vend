@@ -8,7 +8,7 @@
 
 (in-package :vend)
 
-(defparameter +parents+
+(defconstant +parents+
   '(:cffi-grovel :cffi
     :cffi-toolchain :cffi
     :cl-ppcre-unicode :cl-ppcre
@@ -27,7 +27,7 @@
   "Systems are often bundled together into a single repository. This list helps
 map back to the parent, such that later only one git clone is performed.")
 
-(defparameter +exclude+
+(defconstant +exclude+
   '(;; Not hosted on any public forges.
     :cl-postgres
     :hu.dwim.presentation
@@ -37,7 +37,7 @@ map back to the parent, such that later only one git clone is performed.")
     :asdf)
   "Known naughty systems that we can't do anything about.")
 
-(defparameter +sources+
+(defconstant +sources+
   '(:alexandria      "https://gitlab.common-lisp.net/alexandria/alexandria.git"
     :anaphora        "https://github.com/spwhitton/anaphora.git"
     :ansi-test       "https://gitlab.common-lisp.net/ansi-test/ansi-test.git"
@@ -347,6 +347,8 @@ map back to the parent, such that later only one git clone is performed.")
         (setf (gethash root cloned) t)
         (dolist (leaf (unique-leaves graph))
           (recurse top leaf))
+        ;; Clean the graph one final time so that the user doesn't need to see
+        ;; ugly systems that weren't asked for.
         (apply #'g:subgraph graph top)))))
 
 #++
@@ -356,13 +358,51 @@ map back to the parent, such that later only one git clone is performed.")
   (with-open-file (stream #p"deps.dot" :direction :output :if-exists :supersede)
     (g:to-dot-with-stream (work3 cwd dir) stream)))
 
-(defun main ()
+;; --- Executable --- ;;
+
+(defconstant +help+
+  "vend - Vendor your Common Lisp dependencies
+
+Commands:
+  get   - Download all project dependencies into 'vendored/'
+  graph - Visualise a graph of all transitive project dependencies
+  repl  - Start a Lisp session with only your vendored ASDF systems
+
+Flags:
+  --help    - Display this help message
+  --version - Display the current version of vend
+")
+
+(defconstant +vend-rules+
+  '(("--help" 0 (princ ext:*help-message*))
+    ("--version" 0 (format t "0.1.0~%"))
+    ("get"    0 (vend/get))
+    ("graph"  0 (error "Not yet implemented!"))
+    ("repl"   1 (vend/repl (rest 1)) :stop)))
+
+(defun vend/get ()
+  "Download all dependencies."
   (let* ((cwd (ext:getcwd))
          (dir (p:ensure-directory (p:join cwd "vendored"))))
     (cond ((probe-file dir)
            (format t "[vend] Target directory already exists.~%")
-           (si:exit 1))
+           (ext:quit 1))
           (t (mkdir dir)
              (work cwd dir)
              (format t "[vend] Done.~%")))))
 
+(defun vend/repl (args)
+  "Start a given repl."
+  (let ((compiler (or (car args) "sbcl"))
+        (load '("--eval" "(progn (require :asdf) (asdf:initialize-source-registry `(:source-registry (:tree ,(uiop:getcwd)) :ignore-inherited-configuration)))")))
+    (ext:run-program compiler (append (cdr args) load) :output t :input *standard-input*)))
+
+(defun main ()
+  (let ((ext:*lisp-init-file-list* nil)
+        (ext:*help-message* +help+))
+    (ext:process-command-args :rules +vend-rules+)
+    (ext:quit 0)))
+
+;; vend get
+;; vend graph
+;; vend repl sbcl
