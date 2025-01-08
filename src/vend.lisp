@@ -70,6 +70,7 @@ map back to the parent, such that later only one git clone is performed.")
     :puri
     ;; Compiler Internals
     :sb-posix
+    :extensible-sequences
     ;; QT Confusion
     :qtcore
     :qtopengl
@@ -77,6 +78,8 @@ map back to the parent, such that later only one git clone is performed.")
     :phonon
     ;; CFFI?
     :devil
+    ;; A Corman-specific dependency requested in Bordeaux Threads.
+    :threads
     ;; Way more trouble than its worth.)
     :asdf)
   "Known naughty systems that we can't do anything about.")
@@ -158,6 +161,7 @@ map back to the parent, such that later only one git clone is performed.")
     :float-features  "https://github.com/Shinmera/float-features.git"
     :for             "https://github.com/Shinmera/for.git"
     :fset            "https://gitlab.common-lisp.net/fset/fset.git"
+    :global-vars     "https://github.com/lmj/global-vars.git"
     :glop            "https://github.com/lispgames/glop.git"
     :glsl-toolkit    "https://github.com/Shirakumo/glsl-toolkit.git"
     :harmony         "https://github.com/Shirakumo/harmony.git"
@@ -300,7 +304,7 @@ map back to the parent, such that later only one git clone is performed.")
 #++
 (asd-files "./")
 #++
-(asd-files "/home/colin/code/common-lisp/trial" :shallow t)
+(asd-files "/home/colin/code/common-lisp/trial/vendored/com-inuoe-jzon/")
 
 #++
 (asd-files "/home/colin/code/common-lisp/transducers/vendored/parachute/")
@@ -311,9 +315,20 @@ map back to the parent, such that later only one git clone is performed.")
 #++
 (p:components "/home/colin/code/common-lisp/transducers/vendored/parachute/")
 
+(defun comment? (string)
+  "Is the given STRING a comment line?"
+  (unless (zerop (length string))
+    (eql #\; (aref string 0))))
+
+#++
+(comment? "")
+#++
+(comment? "; Hello!")
+
 (defun string-from-file (path)
-  "Preserves newlines, such that comments will be handled properly by `read'."
+  "Preserves newlines but removes whole-line comments."
   (t:transduce (t:comp (t:map (lambda (line) (string-trim " " line)))
+                       (t:filter (lambda (line) (not (comment? line))))
                        (t:intersperse '(#\Newline))
                        #'t:concatenate)
                #'t:string path))
@@ -380,13 +395,22 @@ map back to the parent, such that later only one git clone is performed.")
        (eql #\f (nth 2 chars))
        (eql #\f (nth 3 chars))
        (eql #\i (nth 4 chars))
-       (eql #\- (nth 5 chars))))
+       (eql #\- (nth 5 chars))
+       (eql #\g (nth 6 chars))
+       (eql #\r (nth 7 chars))
+       (eql #\o (nth 8 chars))
+       (eql #\v (nth 9 chars))
+       (eql #\e (nth 10 chars))
+       (eql #\l (nth 11 chars))
+       (eql #\: (nth 12 chars))))
 
 (defun def? (chars)
   (and (eql #\( (nth 0 chars))
        (eql #\d (nth 1 chars))
        (eql #\e (nth 2 chars))
-       (eql #\f (nth 3 chars))))
+       (eql #\f (nth 3 chars))
+       (or (eql #\c (nth 4 chars))
+           (eql #\m (nth 4 chars)))))
 
 (defun checkl? (chars)
   (and (eql #\( (nth 0 chars))
@@ -435,6 +459,8 @@ map back to the parent, such that later only one git clone is performed.")
             'string)))
 
 #++
+(remove-reader-chars "(defsystem foo)")
+#++
 (remove-reader-chars "(asdf:defsystem :foo :long-description #.(+ 1 1) :foo (asdf:bar))")
 #++
 (remove-reader-chars "(cffi-grovel:foo 1)")
@@ -442,6 +468,8 @@ map back to the parent, such that later only one git clone is performed.")
 (remove-reader-chars "(checkl:foo 1)")
 #++
 (remove-reader-chars "(defmethod foo (a b) (+ 1 1)) (hi)")
+#++
+(remove-reader-chars (string-from-file #p"/home/colin/code/common-lisp/trial/vendored/trivial-features/trivial-features-tests.asd"))
 
 (defun into-keyword (s)
   "Turn anything stringy or symboly into a keyword."
@@ -473,8 +501,9 @@ map back to the parent, such that later only one git clone is performed.")
                           (keyword dep)
                           (string (into-keyword dep))
                           (symbol (into-keyword dep))
-                          (list (destructuring-bind (kw a b) dep
+                          (list (destructuring-bind (kw a &optional b) dep
                                   (cond ((eq :version kw) (into-keyword a))
+                                        ((eq :require kw) (into-keyword a))
                                         ((eq :feature kw)
                                          (typecase b
                                            (list (into-keyword (cadr b)))
@@ -484,7 +513,7 @@ map back to the parent, such that later only one git clone is performed.")
                (getf sexp :depends-on)))
 
 #++
-(depends-from-system (car (sexps-from-file (car (asd-files "./")))))
+(depends-from-system (car (sexps-from-file (car (asd-files "/home/colin/code/common-lisp/trial/vendored/com-inuoe-jzon/")))))
 
 (defun system-name (sexp)
   (let ((name (nth 1 sexp)))
@@ -608,7 +637,6 @@ Flags:
     (ext:process-command-args :rules +vend-rules+)
     (ext:quit 0)))
 
-;; Vendor Trial
 ;; Vendor Alloy
 ;; Vendor Kandria
 ;; Vendor ironclad
