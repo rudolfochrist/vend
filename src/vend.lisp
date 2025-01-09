@@ -539,19 +539,25 @@ map back to the parent, such that later only one git clone is performed.")
 
 (defun depends-from-system (sexp)
   "Extract the `:depends-on' list from a sexp, if it has one."
-  (t:transduce (t:map (lambda (dep)
-                        (etypecase dep
-                          (keyword dep)
-                          (string (into-keyword dep))
-                          (symbol (into-keyword dep))
-                          (list (destructuring-bind (kw a &optional b) dep
-                                  (cond ((eq :version kw) (into-keyword a))
-                                        ((eq :require kw) (into-keyword a))
-                                        ((eq :feature kw)
-                                         (typecase b
-                                           (list (into-keyword (cadr b)))
-                                           (t    (into-keyword b))))
-                                        (t (error "Unknown composite dependency declaration: ~a" dep))))))))
+  (t:transduce (t:filter-map
+                (lambda (dep)
+                  (etypecase dep
+                    (keyword dep)
+                    (string (into-keyword dep))
+                    (symbol (into-keyword dep))
+                    (list (destructuring-bind (kw a &optional b) dep
+                            (cond ((eq :version kw) (into-keyword a))
+                                  ((eq :require kw) (into-keyword a))
+                                  ;; To account for Radiance's higher-level
+                                  ;; implementation injection mechanism.
+                                  ;; `:interface' is otherwise not a keyword
+                                  ;; supported by ASDF.
+                                  ((eq :interface kw) nil)
+                                  ((eq :feature kw)
+                                   (typecase b
+                                     (list (into-keyword (cadr b)))
+                                     (t    (into-keyword b))))
+                                  (t (error "Unknown composite dependency declaration: ~a" dep))))))))
                #'t:snoc
                (getf sexp :depends-on)))
 
