@@ -37,9 +37,8 @@
     :regression-test :ansi-test
     :rt :ansi-test
     :sdf/bmfont :sdf
-    :transducers/fset :transducers
-    :transducers/jzon :transducers
-    :transducers/tests :transducers
+    ;; NOTE: 2025-01-11 This being here overrides the `trial-' mapping in
+    ;; `get-parent' but it is necessary, as `trial-assets' is a separate repo.
     :trial-assets :trial-assets
     :trivia.balland2006 :trivia
     :trivia.level2 :trivia
@@ -57,6 +56,7 @@ map back to the parent, such that later only one git clone is performed.")
     ;; Compiler Internals
     :sb-bsd-sockets
     :sb-cltl2
+    :sb-introspect
     :sb-posix
     :extensible-sequences
     ;; QT Confusion
@@ -79,11 +79,13 @@ map back to the parent, such that later only one git clone is performed.")
     :3bz             "https://github.com/3b/3bz.git"
     :3d-math         "https://github.com/Shinmera/3d-math.git"
     :3d-spaces       "https://github.com/Shirakumo/3d-spaces.git"
+    :action-list     "https://github.com/Shinmera/action-list.git"
     :alexandria      "https://gitlab.common-lisp.net/alexandria/alexandria.git"
     :alloy           "https://github.com/Shirakumo/alloy.git"
     :anaphora        "https://github.com/spwhitton/anaphora.git"
     :ansi-test       "https://gitlab.common-lisp.net/ansi-test/ansi-test.git"
     :array-utils     "https://github.com/Shinmera/array-utils.git"
+    :arrow-macros    "https://github.com/hipeta/arrow-macros.git"
     :asdf            "https://gitlab.common-lisp.net/asdf/asdf.git"
     :atomics         "https://github.com/Shinmera/atomics.git"
     :babel           "https://github.com/cl-babel/babel.git"
@@ -114,6 +116,7 @@ map back to the parent, such that later only one git clone is performed.")
     :cl-l10n         "https://gitlab.common-lisp.net/cl-l10n/cl-l10n.git"
     :cl-markless     "https://github.com/Shirakumo/cl-markless.git"
     :cl-mixed        "https://github.com/Shirakumo/cl-mixed.git"
+    :cl-modio        "https://github.com/Shinmera/cl-modio.git"
     :cl-mpg123       "https://github.com/Shirakumo/cl-mpg123.git"
     :cl-opengl       "https://github.com/3b/cl-opengl.git"
     :cl-opus         "https://github.com/Shirakumo/cl-opus.git"
@@ -130,6 +133,7 @@ map back to the parent, such that later only one git clone is performed.")
     :cl-vorbis       "https://github.com/Shirakumo/cl-vorbis.git"
     :cl-wavefront    "https://github.com/Shirakumo/cl-wavefront.git"
     :classowary      "https://github.com/Shinmera/classowary.git"
+    :clip            "https://github.com/Shinmera/clip.git"
     :closer-mop      "https://github.com/pcostanza/closer-mop.git"
     :closure-common  "https://github.com/sharplispers/closure-common.git"
     :clss            "https://github.com/Shinmera/CLSS.git"
@@ -152,6 +156,7 @@ map back to the parent, such that later only one git clone is performed.")
     :dissect         "https://github.com/Shinmera/dissect.git"
     :documentation-utils "https://github.com/Shinmera/documentation-utils.git"
     :drakma          "https://github.com/edicl/drakma.git"
+    :easing          "https://github.com/vydd/easing.git"
     :fare-quasiquote "https://gitlab.common-lisp.net/frideau/fare-quasiquote.git"
     :fare-utils      "https://gitlab.common-lisp.net/frideau/fare-utils.git"
     :fast-http       "https://github.com/fukamachi/fast-http.git"
@@ -199,6 +204,7 @@ map back to the parent, such that later only one git clone is performed.")
     :jsown           "https://github.com/madnificent/jsown.git"
     :lambda-fiddle   "https://github.com/Shinmera/lambda-fiddle.git"
     :language-codes  "https://github.com/Shinmera/language-codes.git"
+    :lass            "https://github.com/Shinmera/LASS.git"
     :lift            "https://github.com/hraban/lift.git"
     :lisp-namespace  "https://github.com/guicho271828/lisp-namespace.git"
     :lisp-unit       "https://github.com/OdonataResearchLLC/lisp-unit.git"
@@ -259,6 +265,7 @@ map back to the parent, such that later only one git clone is performed.")
     :simple-tasks    "https://github.com/Shinmera/simple-tasks.git"
     :skippy          "https://github.com/xach/skippy.git"
     :smart-buffer    "https://github.com/fukamachi/smart-buffer.git"
+    :speechless      "https://github.com/Shirakumo/speechless.git"
     :split-sequence  "https://github.com/sharplispers/split-sequence.git"
     :static-vectors  "https://github.com/sionescu/static-vectors.git"
     :stealth-mixin   "https://github.com/robert-strandh/Stealth-mixin.git"
@@ -272,6 +279,7 @@ map back to the parent, such that later only one git clone is performed.")
     :trial           "https://github.com/Shirakumo/trial.git"
     :trial-assets    "https://github.com/Shirakumo/trial-assets.git"
     :trivia          "https://github.com/guicho271828/trivia.git"
+    :trivial-arguments "https://github.com/Shinmera/trivial-arguments.git"
     :trivial-channels "https://github.com/rpav/trivial-channels.git"
     :trivial-cltl2   "https://github.com/Zulu-Inuoe/trivial-cltl2.git"
     :trivial-custom-debugger "https://github.com/phoe/trivial-custom-debugger.git"
@@ -293,6 +301,7 @@ map back to the parent, such that later only one git clone is performed.")
     :verbose         "https://github.com/Shinmera/verbose.git"
     :winhttp         "https://github.com/fjames86/winhttp.git"
     :xsubseq         "https://github.com/fukamachi/xsubseq.git"
+    :zip             "https://github.com/bluelisp/zip.git"
     :zippy           "https://github.com/Shinmera/zippy.git"
     :zpb-exif        "https://github.com/xach/zpb-exif.git"
     :zpb-ttf         "https://github.com/xach/zpb-ttf.git"
@@ -309,4 +318,6 @@ map back to the parent, such that later only one git clone is performed.")
       (when (string-starts-with? (symbol-name sys) "CL-MIXED-") :cl-mixed)
       (when (string-starts-with? (symbol-name sys) "ALLOY-")    :alloy)
       (when (string-starts-with? (symbol-name sys) "MEMORY-REGIONS/") :memory-regions)
+      (when (string-starts-with? (symbol-name sys) "CL-MARKLESS-") :cl-markless)
+      (when (string-starts-with? (symbol-name sys) "TRANSDUCERS/") :transducers)
       sys))
