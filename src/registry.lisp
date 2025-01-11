@@ -246,17 +246,20 @@ map back to the parent, such that later only one git clone is performed.")
     :puri            "https://github.com/macrologist/puri.git"
     :pythonic-string-reader "https://github.com/smithzvk/pythonic-string-reader.git"
     :qbase64         "https://github.com/chaitanyagupta/qbase64.git"
-    :queues          "https://github.com/oconnore/queues.git"
+    :qlot            "https://github.com/fukamachi/qlot.git"
     :qoi             "https://github.com/bpanthi977/qoi.git"
+    :queues          "https://github.com/oconnore/queues.git"
     :quri            "https://github.com/fukamachi/quri.git"
     :qt+libs         "https://github.com/commonqt/commonqt.git"
     :qt-libs         "https://github.com/Shinmera/qt-libs.git"
     :qtools          "https://github.com/Shinmera/qtools.git"
     :quickhull       "https://github.com/Shirakumo/quickhull.git"
+    :quicklisp       "https://github.com/quicklisp/quicklisp-client.git"
     :random-sampling "https://github.com/Shinmera/random-sampling.git"
     :random-state    "https://github.com/Shinmera/random-state.git"
     :raster          "https://github.com/Shirakumo/raster.git"
     :retrospectiff   "https://github.com/slyrus/retrospectiff.git"
+    :rove            "https://github.com/fukamachi/rove.git"
     :salza2          "https://github.com/xach/salza2.git"
     :sdf             "https://github.com/lispgames/sdf.git"
     :sdl2            "https://github.com/lispgames/cl-sdl2.git"
@@ -320,4 +323,7 @@ map back to the parent, such that later only one git clone is performed.")
       (when (string-starts-with? (symbol-name sys) "MEMORY-REGIONS/") :memory-regions)
       (when (string-starts-with? (symbol-name sys) "CL-MARKLESS-") :cl-markless)
       (when (string-starts-with? (symbol-name sys) "TRANSDUCERS/") :transducers)
+      (when (string-starts-with? (symbol-name sys) "QLOT/") :qlot)
+      (when (string-starts-with? (symbol-name sys) "QLOT-TESTS/") :qlot)
+      (when (string-starts-with? (symbol-name sys) "ROVE/") :rove)
       sys))

@@ -17,7 +17,7 @@ dependency graph."
                                     (g:add-node! graph dep)
                                     (g:add-edge! graph name dep))
                                   name))))
-               #'t:snoc (asd-files dir :shallow shallow)))
+               #'t:cons (asd-files dir :shallow shallow)))
 
 (defun vend/graph (&key focus)
   "Produce a dependency graph of all systems found in the current directory. If
@@ -125,7 +125,8 @@ Flags:
           (t (ext:process-command-args :rules +vend-rules+)))
     (ext:quit 0)))
 
-;; Vendor Qlot
+;; Vendor Qlot <- impossible due to `package-inferred-system'
+;;
 ;; Vendor ironclad
 ;; vend get --rmgit
 ;; vend open <foo>  <- opens project URL in browser
