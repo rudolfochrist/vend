@@ -157,7 +157,8 @@
        (eql #\e (nth 2 chars))
        (eql #\f (nth 3 chars))
        (or (eql #\c (nth 4 chars))
-           (eql #\m (nth 4 chars)))))
+           (eql #\m (nth 4 chars))
+           (eql #\v (nth 4 chars)))))
 
 (defun checkl? (chars)
   (and (eql #\( (nth 0 chars))
@@ -240,6 +241,8 @@
 (remove-reader-chars (string-from-file #p"/home/colin/code/common-lisp/trial/vendored/trivial-features/trivial-features-tests.asd"))
 #++
 (remove-reader-chars "(asdf/parse-defsystem:defsystem foo)")
+#++
+(remove-reader-chars "(defvar blah 1)")
 
 (defun system? (sexp)
   (and (eq 'cons (type-of sexp))
