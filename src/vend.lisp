@@ -64,7 +64,6 @@ FOCUS is supplied, only considers the subgraph with that FOCUS at the root."
              (root (or (get-parent (car top)) (car top))))
         ;; This is the root project directory, so it's already considered "cloned".
         (setf (gethash root cloned) t)
-        (break)
         (dolist (leaf (unique-leaves graph))
           (recurse top leaf))
         ;; Clean the graph one final time so that the user doesn't need to see
@@ -126,7 +125,6 @@ Flags:
           (t (ext:process-command-args :rules +vend-rules+)))
     (ext:quit 0)))
 
-;; Vendor Kandria
 ;; Vendor Qlot
 ;; Vendor ironclad
 ;; vend get --rmgit

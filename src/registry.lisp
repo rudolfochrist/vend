@@ -52,7 +52,6 @@ map back to the parent, such that later only one git clone is performed.")
     :cl-postgres
     :hu.dwim.presentation
     :hu.dwim.web-server
-    :puri
     ;; Compiler Internals
     :sb-bsd-sockets
     :sb-cltl2
@@ -244,6 +243,7 @@ map back to the parent, such that later only one git clone is performed.")
     :proc-parse      "https://github.com/fukamachi/proc-parse.git"
     :promise         "https://github.com/Shinmera/promise.git"
     :punycode        "https://github.com/Shinmera/punycode.git"
+    :puri            "https://github.com/macrologist/puri.git"
     :pythonic-string-reader "https://github.com/smithzvk/pythonic-string-reader.git"
     :qbase64         "https://github.com/chaitanyagupta/qbase64.git"
     :queues          "https://github.com/oconnore/queues.git"
