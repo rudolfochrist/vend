@@ -2,6 +2,35 @@
 
 (in-package :vend)
 
+;; --- Graph --- ;;
+
+(defun scan-systems (graph dir &key (shallow nil))
+  "Recursively scan directories for systems within `.asd' files and populate a
+dependency graph."
+  (t:transduce (t:comp (t:map #'sexps-from-file)
+                       #'t:concatenate
+                       (t:filter #'system?)
+                       (t:map (lambda (sys)
+                                (let ((name (system-name sys)))
+                                  (g:add-node! graph name)
+                                  (dolist (dep (depends-from-system sys))
+                                    (g:add-node! graph dep)
+                                    (g:add-edge! graph name dep))
+                                  name))))
+               #'t:snoc (asd-files dir :shallow shallow)))
+
+(defun vend/graph (&key focus)
+  "Produce a dependency graph of all systems found in the current directory. If
+FOCUS is supplied, only considers the subgraph with that FOCUS at the root."
+  (let* ((graph (g:make-graph)))
+    (scan-systems graph (ext:getcwd))
+    (let ((final (cond (focus (g:subgraph graph (into-keyword focus)))
+                       (t graph))))
+      (with-open-file (stream #p"deps.dot" :direction :output :if-exists :supersede)
+        (g:to-dot-with-stream final stream)))))
+
+;; --- Downloading --- ;;
+
 (defun clone (url path)
   "Given a source URL to clone from, do a shallow git clone into a given absolute PATH."
   (unless (probe-file path)
@@ -14,22 +43,7 @@
   "Recursively perform a git clone on every detected dependency."
   (let ((graph  (g:make-graph))
         (cloned (make-hash-table)))
-    (labels ((scan-systems (dir &key (shallow nil))
-               (t:transduce (t:comp #++(t:log (lambda (acc item) (format t "[vend] Scanning: ~a~%" item)))
-                                    (t:map #'sexps-from-file)
-                                    #'t:concatenate
-                                    (t:filter #'system?)
-                                    (t:map (lambda (sys)
-                                             (let ((name (system-name sys)))
-                                               #++
-                                               (format t "[vend] Analysing: ~a~%" name)
-                                               (g:add-node! graph name)
-                                               (dolist (dep (depends-from-system sys))
-                                                 (g:add-node! graph dep)
-                                                 (g:add-edge! graph name dep))
-                                               name))))
-                            #'t:cons (asd-files dir :shallow shallow)))
-             (unique-leaves (g)
+    (labels ((unique-leaves (g)
                (t:transduce (t:comp (t:map (lambda (leaf) (or (get-parent leaf) leaf)))
                                     #'t:unique
                                     (t:filter (lambda (leaf) (not (gethash leaf cloned))))
@@ -43,13 +57,14 @@
                    (format t "[vend] Cloning ~a~%" dep)
                    (clone url path)
                    (setf (gethash dep cloned) t)
-                   (scan-systems path)
+                   (scan-systems graph path)
                    (dolist (leaf (unique-leaves (apply #'g:subgraph graph top)))
                      (recurse top leaf))))))
-      (let* ((top  (scan-systems cwd))
+      (let* ((top  (scan-systems graph cwd))
              (root (or (get-parent (car top)) (car top))))
         ;; This is the root project directory, so it's already considered "cloned".
         (setf (gethash root cloned) t)
+        (break)
         (dolist (leaf (unique-leaves graph))
           (recurse top leaf))
         ;; Clean the graph one final time so that the user doesn't need to see
@@ -57,7 +72,7 @@
         (apply #'g:subgraph graph top)))))
 
 #++
-(let* ((cwd #p"/home/colin/code/common-lisp/trial/")
+(let* ((cwd #p"/home/colin/code/common-lisp/kandria/")
        (dir (p:ensure-directory (p:join cwd "vendored"))))
   (with-open-file (stream #p"deps.dot" :direction :output :if-exists :supersede)
     (g:to-dot-with-stream (work cwd dir) stream)))
@@ -77,15 +92,15 @@ Flags:
   --version - Display the current version of vend
 ")
 
-(defun vend/help ()
-  (princ +help+))
-
 (defconstant +vend-rules+
   '((("--help" "-h") 0 (vend/help))
     ("--version" 0 (format t "0.1.0~%"))
-    ("get"    0 (vend/get))
-    ("graph"  0 (error "Not yet implemented!"))
-    ("repl"   1 (vend/repl (rest 1)) :stop)))
+    ("get"   0 (vend/get))
+    ("graph" 1 (vend/graph :focus (cadr 1)) :stop)
+    ("repl"  1 (vend/repl (rest 1)) :stop)))
+
+(defun vend/help ()
+  (princ +help+))
 
 (defun vend/get ()
   "Download all dependencies."
@@ -105,16 +120,18 @@ Flags:
     (ext:run-program compiler (append (cdr args) load) :output t :input *standard-input*)))
 
 (defun main ()
-  (let ((ext:*lisp-init-file-list* nil))
+  (let ((ext:*lisp-init-file-list* nil)
+        (ext:*help-message* +help+))
     (cond ((= 1 (length ext:*command-args*)) (vend/help))
           (t (ext:process-command-args :rules +vend-rules+)))
     (ext:quit 0)))
 
-;; Vendor Alloy
 ;; Vendor Kandria
+;; Vendor Qlot
 ;; Vendor ironclad
 ;; vend get --rmgit
 ;; vend open <foo>  <- opens project URL in browser
+;; vend graph <pkg> <- subgraph of this guy
 
 ;; Bad boys:
 ;; https://github.com/slyrus/opticl/blob/master/opticl-doc.asd
