@@ -7,7 +7,8 @@
 (defun scan-systems (graph dir &key (shallow nil))
   "Recursively scan directories for systems within `.asd' files and populate a
 dependency graph."
-  (t:transduce (t:comp (t:map #'sexps-from-file)
+  (t:transduce (t:comp #++(t:log (lambda (acc path) (format t "[vend] Reading ~a~%" path)))
+                       (t:map #'sexps-from-file)
                        #'t:concatenate
                        (t:filter #'system?)
                        (t:map (lambda (sys)
@@ -22,12 +23,36 @@ dependency graph."
 (defun vend/graph (&key focus)
   "Produce a dependency graph of all systems found in the current directory. If
 FOCUS is supplied, only considers the subgraph with that FOCUS at the root."
-  (let* ((graph (g:make-graph)))
+  (let ((graph (g:make-graph)))
     (scan-systems graph (ext:getcwd))
     (let ((final (cond (focus (g:subgraph graph (into-keyword focus)))
                        (t graph))))
       (with-open-file (stream #p"deps.dot" :direction :output :if-exists :supersede)
         (g:to-dot-with-stream final stream)))))
+
+;; --- Check --- ;;
+
+(defun vend/check (&key focus)
+  "Check the dependency graph for old deps, etc."
+  (let ((graph (g:make-graph)))
+    (scan-systems graph (ext:getcwd))
+    (let ((final (cond (focus (g:subgraph graph (into-keyword focus)))
+                       (t graph))))
+      (t:transduce (t:comp (t:map #'car)
+                           (t:filter-map (lambda (sys)
+                                           (when (member (get-parent sys) +deprecated+)
+                                             sys)))
+                           (t:map (lambda (sys)
+                                    (let* ((routes  (g:paths-to final sys))
+                                           (longest (reverse (cdr (t:transduce (t:map (lambda (route) (cons (length route) route)))
+                                                                               (t:fold (lambda (a b) (if (> (car a) (car b)) a b)))
+                                                                               routes)))))
+                                      (format t "~a is deprecated.~%" sys)
+                                      (format t "  ~a~%~%" longest)))))
+                   #'t:for-each (g:graph-nodes final)))))
+
+#++
+(vend/check)
 
 ;; --- Downloading --- ;;
 
@@ -71,7 +96,7 @@ FOCUS is supplied, only considers the subgraph with that FOCUS at the root."
         (apply #'g:subgraph graph top)))))
 
 #++
-(let* ((cwd #p"/home/colin/code/common-lisp/kandria/")
+(let* ((cwd #p"/home/colin/code/common-lisp/lem/")
        (dir (p:ensure-directory (p:join cwd "vendored"))))
   (with-open-file (stream #p"deps.dot" :direction :output :if-exists :supersede)
     (g:to-dot-with-stream (work cwd dir) stream)))
@@ -82,6 +107,7 @@ FOCUS is supplied, only considers the subgraph with that FOCUS at the root."
   "vend - Vendor your Common Lisp dependencies
 
 Commands:
+  check - Check the dependency graph for issues
   get   - Download all project dependencies into 'vendored/'
   graph - Visualise a graph of all transitive project dependencies
   repl  - Start a Lisp session with only your vendored ASDF systems
@@ -94,6 +120,7 @@ Flags:
 (defconstant +vend-rules+
   '((("--help" "-h") 0 (vend/help))
     ("--version" 0 (format t "0.1.0~%"))
+    ("check" 1 (vend/check :focus (cadr 1)) :stop)
     ("get"   0 (vend/get))
     ("graph" 1 (vend/graph :focus (cadr 1)) :stop)
     ("repl"  1 (vend/repl (rest 1)) :stop)))
@@ -125,10 +152,7 @@ Flags:
           (t (ext:process-command-args :rules +vend-rules+)))
     (ext:quit 0)))
 
-;; Vendor lem
 ;; vend get --rmgit
-;; vend open <foo>  <- opens project URL in browser
-;; vend graph <pkg> <- subgraph of this guy
 ;; vend check
 
 ;; Success:
