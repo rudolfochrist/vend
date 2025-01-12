@@ -11,6 +11,8 @@
 #-ecl
 (error "VEND can only be compiled with ECL.")
 
+;; --- Strings --- ;;
+
 (defun string-starts-with? (string prefix)
   (let ((pos (mismatch prefix string)))
     (or (null pos)
@@ -39,3 +41,24 @@
 (keyword->string :KW)
 #++
 (keyword->string :com.inuoe.jzon)
+
+;; --- Colours --- ;;
+
+(defun bold-red (text)
+  "Highlight some text in red."
+  (format nil "~c[31;1m~a~c[0m" #\escape text #\escape))
+
+(defun bold-cyan (text)
+  "Highlight some text in cyan."
+  (format nil "~c[96;1m~a~c[0m" #\escape text #\escape))
+
+(defun bold (text)
+  "Just enbolden some text without colouring it."
+  (format nil "~c[1m~a~c[0m" #\escape text #\escape))
+
+;; --- Logging --- ;;
+
+(defun vend-log (text &rest rest)
+  (format t "~a " (bold-cyan "[vend]"))
+  (apply #'format t text rest)
+  (format t "~%"))

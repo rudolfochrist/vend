@@ -25,8 +25,8 @@ names of the added systems."
   "Produce a dependency graph of all systems depended upon by systems of the root
 project. If FOCUS is supplied, only considers the subgraph with that FOCUS as
 the root."
-  (let* ((graph    (g:make-graph))
-         (top      (scan-systems! graph (root-asd-files (ext:getcwd)))))
+  (let* ((graph (g:make-graph))
+         (top   (scan-systems! graph (root-asd-files (ext:getcwd)))))
     (scan-systems! graph (asd-files (p:join (ext:getcwd) "vendored")))
     (let ((final (cond (focus (g:subgraph graph (into-keyword focus)))
                        (t (apply #'g:subgraph graph top)))))
@@ -51,7 +51,7 @@ the root."
                                            (longest (reverse (cdr (t:transduce (t:map (lambda (route) (cons (length route) route)))
                                                                                (t:fold (lambda (a b) (if (> (car a) (car b)) a b)))
                                                                                routes)))))
-                                      (format t "~a is deprecated.~%" sys)
+                                      (format t "~a is deprecated.~%" (bold-red sys))
                                       (format t "  ~{~a~^ -> ~}~%" longest)))))
                    #'t:for-each (g:graph-nodes final)))))
 
@@ -83,7 +83,7 @@ the root."
                  (let ((url  (getf +sources+ dep))
                        (path (p:ensure-string (p:join target (keyword->string dep)))))
                    (assert url nil "~a is not a known system.~%Please have it registered into the vend source code." dep)
-                   (format t "[vend] Cloning ~a~%" dep)
+                   (vend-log "Cloning ~a" (bold dep))
                    (clone url path)
                    (setf (gethash dep cloned) t)
                    (scan-systems! graph (asd-files path))
@@ -137,11 +137,11 @@ Flags:
   (let* ((cwd (ext:getcwd))
          (dir (p:ensure-directory (p:join cwd "vendored"))))
     (cond ((probe-file dir)
-           (format t "[vend] Target directory already exists.~%")
+           (vend-log "Target directory already exists.")
            (ext:quit 1))
-          (t (format t "[vend] Downloading dependencies.~%")
+          (t (vend-log "Downloading dependencies.")
              (work cwd dir)
-             (format t "[vend] Done.~%")))))
+             (vend-log "Done.")))))
 
 (defun vend/repl (args)
   "Start a given repl."
@@ -155,9 +155,6 @@ Flags:
     (cond ((= 1 (length ext:*command-args*)) (vend/help))
           (t (ext:process-command-args :rules +vend-rules+)))
     (ext:quit 0)))
-
-;; vend get --rmgit
-;; vend check
 
 ;; Success:
 ;;
