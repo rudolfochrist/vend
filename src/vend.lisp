@@ -52,7 +52,7 @@ the root."
                                                                                (t:fold (lambda (a b) (if (> (car a) (car b)) a b)))
                                                                                routes)))))
                                       (format t "~a is deprecated.~%" sys)
-                                      (format t "  ~a~%~%" longest)))))
+                                      (format t "  ~{~a~^ -> ~}~%" longest)))))
                    #'t:for-each (g:graph-nodes final)))))
 
 #++
