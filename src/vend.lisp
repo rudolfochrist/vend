@@ -125,15 +125,28 @@ Flags:
           (t (ext:process-command-args :rules +vend-rules+)))
     (ext:quit 0)))
 
-;; Vendor Qlot <- impossible due to `package-inferred-system'
-;;
-;; Vendor ironclad
+;; Vendor lem
 ;; vend get --rmgit
 ;; vend open <foo>  <- opens project URL in browser
 ;; vend graph <pkg> <- subgraph of this guy
+;; vend check
+
+;; Success:
+;;
+;; Trial
+;; Alloy
+;; Kandria
+;; Nyxt
+;; Lem
+
+;; Failure:
+;;
+;; qlot <- impossible due to `package-inferred-system'.
+;; cl-torrents <- mockingbird using `package-inferred-system'.
 
 ;; Bad boys:
 ;; https://github.com/slyrus/opticl/blob/master/opticl-doc.asd
 ;; https://github.com/rpav/fast-io/blob/master/fast-io-test.asd
 ;; https://github.com/sharplispers/ironclad/blob/master/ironclad.asd
 ;; https://github.com/sharplispers/chipz/blob/master/chipz.asd
+;; https://github.com/rpav/fast-io/blob/master/fast-io.asd#L15
