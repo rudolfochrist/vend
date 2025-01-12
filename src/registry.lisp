@@ -451,6 +451,15 @@ map back to the parent, such that later only one git clone is performed.")
 #++
 (/ (length +sources+) 2)
 
+;; The longest system name.
+#++
+(t:transduce (t:comp (t:segment 2)
+                     (t:map #'car)
+                     (t:map #'symbol-name)
+                     (t:map #'length))
+             (t:fold #'max)
+             +sources+)
+
 (defun get-parent (sys)
   (or (getf +parents+ sys)
       (when (string-starts-with? (symbol-name sys) "ALLOY-") :alloy)

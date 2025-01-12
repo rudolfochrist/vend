@@ -34,15 +34,26 @@
 (asd-files "./")
 #++
 (asd-files "/home/colin/code/common-lisp/trial/vendored/com-inuoe-jzon/")
-
 #++
 (asd-files "/home/colin/code/common-lisp/transducers/vendored/parachute/")
-
 #++
 (asd-files "/home/colin/code/common-lisp/transducers/vendored/trivial-gray-streams/")
 
+(defun root-asd-files (dir)
+  "Yield the pathnames of all `.asd' outside of `vendored/'."
+  (t:transduce (t:comp (t:filter (lambda (path)
+                                   (let ((dir (car (last (p:components path)))))
+                                     (and (not (string= ".git" dir))
+                                          (not (string= "vendored" dir))))))
+                       (t:map #'asd-files)
+                       (t:once (asd-files dir :shallow t))
+                       #'t:concatenate)
+               #'t:cons (directory (p:ensure-directory (p:join dir "*/")))))
+
 #++
-(p:components "/home/colin/code/common-lisp/transducers/vendored/parachute/")
+(root-asd-files (ext:getcwd))
+#++
+(root-asd-files "/home/colin/code/common-lisp/lem/")
 
 (defun comment? (string)
   "Is the given STRING a comment line?"

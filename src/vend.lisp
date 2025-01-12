@@ -4,9 +4,10 @@
 
 ;; --- Graph --- ;;
 
-(defun scan-systems (graph dir &key (shallow nil))
-  "Recursively scan directories for systems within `.asd' files and populate a
-dependency graph."
+(defun scan-systems! (graph paths)
+  "Given a collection of paths to asd files, extract all their system definitions
+and mutably add them to a given graph. As a return value, yields the keyword
+names of the added systems."
   (t:transduce (t:comp #++(t:log (lambda (acc path) (format t "[vend] Reading ~a~%" path)))
                        (t:map #'sexps-from-file)
                        #'t:concatenate
@@ -18,15 +19,17 @@ dependency graph."
                                     (g:add-node! graph dep)
                                     (g:add-edge! graph name dep))
                                   name))))
-               #'t:cons (asd-files dir :shallow shallow)))
+               #'t:cons paths))
 
 (defun vend/graph (&key focus)
-  "Produce a dependency graph of all systems found in the current directory. If
-FOCUS is supplied, only considers the subgraph with that FOCUS at the root."
-  (let ((graph (g:make-graph)))
-    (scan-systems graph (ext:getcwd))
+  "Produce a dependency graph of all systems depended upon by systems of the root
+project. If FOCUS is supplied, only considers the subgraph with that FOCUS as
+the root."
+  (let* ((graph    (g:make-graph))
+         (top      (scan-systems! graph (root-asd-files (ext:getcwd)))))
+    (scan-systems! graph (asd-files (p:join (ext:getcwd) "vendored")))
     (let ((final (cond (focus (g:subgraph graph (into-keyword focus)))
-                       (t graph))))
+                       (t (apply #'g:subgraph graph top)))))
       (with-open-file (stream #p"deps.dot" :direction :output :if-exists :supersede)
         (g:to-dot-with-stream final stream)))))
 
@@ -34,10 +37,11 @@ FOCUS is supplied, only considers the subgraph with that FOCUS at the root."
 
 (defun vend/check (&key focus)
   "Check the dependency graph for old deps, etc."
-  (let ((graph (g:make-graph)))
-    (scan-systems graph (ext:getcwd))
+  (let* ((graph (g:make-graph))
+         (top   (scan-systems! graph (root-asd-files (ext:getcwd)))))
+    (scan-systems! graph (asd-files (p:join (ext:getcwd) "vendored")))
     (let ((final (cond (focus (g:subgraph graph (into-keyword focus)))
-                       (t graph))))
+                       (t (apply #'g:subgraph graph top)))))
       (t:transduce (t:comp (t:map #'car)
                            (t:filter-map (lambda (sys)
                                            (when (member (get-parent sys) +deprecated+)
@@ -82,10 +86,10 @@ FOCUS is supplied, only considers the subgraph with that FOCUS at the root."
                    (format t "[vend] Cloning ~a~%" dep)
                    (clone url path)
                    (setf (gethash dep cloned) t)
-                   (scan-systems graph path)
+                   (scan-systems! graph (asd-files path))
                    (dolist (leaf (unique-leaves (apply #'g:subgraph graph top)))
                      (recurse top leaf))))))
-      (let* ((top  (scan-systems graph cwd))
+      (let* ((top  (scan-systems! graph (root-asd-files cwd)))
              (root (or (get-parent (car top)) (car top))))
         ;; This is the root project directory, so it's already considered "cloned".
         (setf (gethash root cloned) t)
