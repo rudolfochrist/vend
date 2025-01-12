@@ -75,6 +75,16 @@ map back to the parent, such that later only one git clone is performed.")
     :asdf)
   "Known naughty systems that we can't do anything about.")
 
+(defparameter +deprecated+
+  '(:cl-annot
+    :cl-colors
+    :cl-colors2
+    :cl-syntax
+    :prove
+    :trivial-backtrace
+    :stefil)
+  "Repositories marked as deprecated or archived by their authors.")
+
 ;; TODO: 2024-01-11 Make this a HashTable.
 (defparameter +sources+
   '(:3b-bmfont       "https://github.com/3b/3b-bmfont.git"
@@ -83,6 +93,7 @@ map back to the parent, such that later only one git clone is performed.")
     :3bz             "https://github.com/3b/3bz.git"
     :3d-math         "https://github.com/Shinmera/3d-math.git"
     :3d-spaces       "https://github.com/Shirakumo/3d-spaces.git"
+    :access          "https://github.com/AccelerationNet/access.git"
     :acclimation     "https://github.com/robert-strandh/Acclimation.git"
     :action-list     "https://github.com/Shinmera/action-list.git"
     :alexandria      "https://gitlab.common-lisp.net/alexandria/alexandria.git"
@@ -105,14 +116,19 @@ map back to the parent, such that later only one git clone is performed.")
     :chunga          "https://github.com/edicl/chunga.git"
     :cl+ssl          "https://github.com/cl-plus-ssl/cl-plus-ssl.git"
     :cl-autowrap     "https://github.com/rpav/cl-autowrap.git"
+    :cl-annot        "https://github.com/m2ym/cl-annot.git"
+    :cl-anonfun      "https://github.com/arielnetworks/cl-anonfun.git"
+    :cl-ansi-text    "https://github.com/pnathan/cl-ansi-text.git"
     :cl-base64       "https://github.com/darabi/cl-base64.git"
     :cl-bmp          "https://github.com/Shinmera/cl-bmp.git"
     :cl-cffi-gtk     "https://github.com/sharplispers/cl-cffi-gtk.git"
     :cl-change-case  "https://github.com/rudolfochrist/cl-change-case.git"
+    :cl-colors       "https://github.com/tpapp/cl-colors.git"
     :cl-colors2      "https://codeberg.org/cage/cl-colors2.git"
     :cl-colors-ng    "https://codeberg.org/cage/cl-colors-ng.git"
     :cl-containers   "https://github.com/hraban/cl-containers.git"
     :cl-cookie       "https://github.com/fukamachi/cl-cookie.git"
+    :cl-store        "https://github.com/skypher/cl-store.git"
     :cl-custom-hash-table "https://github.com/metawilm/cl-custom-hash-table.git"
     :cl-electron     "https://github.com/atlas-engineer/cl-electron.git"
     :cl-fad          "https://github.com/edicl/cl-fad.git"
@@ -130,6 +146,7 @@ map back to the parent, such that later only one git clone is performed.")
     :cl-ktx          "https://github.com/Shinmera/cl-ktx.git"
     :cl-l10n         "https://gitlab.common-lisp.net/cl-l10n/cl-l10n.git"
     :cl-markless     "https://github.com/Shirakumo/cl-markless.git"
+    :cl-markup       "https://github.com/arielnetworks/cl-markup.git"
     :cl-mixed        "https://github.com/Shirakumo/cl-mixed.git"
     :cl-modio        "https://github.com/Shinmera/cl-modio.git"
     :cl-mpg123       "https://github.com/Shirakumo/cl-mpg123.git"
@@ -139,11 +156,14 @@ map back to the parent, such that later only one git clone is performed.")
     :cl-prevalence   "https://github.com/40ants/cl-prevalence.git"
     :cl-qoa          "https://github.com/Shinmera/cl-qoa.git"
     :cl-qrencode     "https://github.com/jnjcc/cl-qrencode.git"
+    :cl-readline     "https://github.com/vindarel/cl-readline.git"
     :cl-resvg        "https://github.com/Shirakumo/cl-resvg.git"
     :cl-steamworks   "https://github.com/Shinmera/cl-steamworks.git"
+    :cl-syntax       "https://github.com/m2ym/cl-syntax.git"
     :cl-tga          "https://github.com/fisxoj/cl-tga.git"
     :cl-theora       "https://github.com/Shirakumo/cl-theora.git"
     :cl-tld          "https://github.com/lu4nx/cl-tld.git"
+    :cl-transmission "https://github.com/libre-man/cl-transmission.git"
     :cl-turbojpeg    "https://github.com/Shirakumo/cl-turbojpeg.git"
     :cl-unicode      "https://github.com/edicl/cl-unicode.git"
     :cl-utilities    "https://gitlab.common-lisp.net/cl-utilities/cl-utilities.git"
@@ -151,10 +171,13 @@ map back to the parent, such that later only one git clone is performed.")
     :cl-vorbis       "https://github.com/Shirakumo/cl-vorbis.git"
     :cl-wavefront    "https://github.com/Shirakumo/cl-wavefront.git"
     :cl-webkit2      "https://github.com/joachifm/cl-webkit.git"
+    :clache          "https://github.com/html/clache.git"
+    :clack           "https://github.com/fukamachi/clack.git"
     :classowary      "https://github.com/Shinmera/classowary.git"
     :clip            "https://github.com/Shinmera/clip.git"
     :closer-mop      "https://github.com/pcostanza/closer-mop.git"
     :closure-common  "https://github.com/sharplispers/closure-common.git"
+    :clsql           "https://github.com/UnwashedMeme/clsql.git"
     :clss            "https://github.com/Shinmera/CLSS.git"
     :clump           "https://github.com/robert-strandh/Clump.git"
     :cluffer         "https://github.com/robert-strandh/Cluffer.git"
@@ -179,6 +202,7 @@ map back to the parent, such that later only one git clone is performed.")
     :drakma          "https://github.com/edicl/drakma.git"
     :easing          "https://github.com/vydd/easing.git"
     :enchant         "https://github.com/tlikonen/cl-enchant.git"
+    :esrap           "https://github.com/scymtym/esrap.git"
     :fare-quasiquote "https://gitlab.common-lisp.net/frideau/fare-quasiquote.git"
     :fare-utils      "https://gitlab.common-lisp.net/frideau/fare-utils.git"
     :fast-http       "https://github.com/fukamachi/fast-http.git"
@@ -225,14 +249,18 @@ map back to the parent, such that later only one git clone is performed.")
     :iolib           "https://github.com/sionescu/iolib.git"
     :ironclad        "https://github.com/sharplispers/ironclad.git"
     :iterate         "https://gitlab.common-lisp.net/iterate/iterate.git"
+    :jonathan        "https://github.com/rudolph-miller/jonathan.git"
+    :jpeg-turbo      "https://github.com/shamazmazum/jpeg-turbo.git"
     ;; NOTE: 2025-01-12 These `jpl' libs are dubious! They are both mirrors
     ;; since the originals aren't hosted anywhere.
     :jpl-queues      "https://github.com/jaredkrinke/jpl-queues.git"
     :jpl-util        "https://github.com/hawkir/cl-jpl-util.git"
     :jsown           "https://github.com/madnificent/jsown.git"
+    :lack            "https://github.com/fukamachi/lack.git"
     :lambda-fiddle   "https://github.com/Shinmera/lambda-fiddle.git"
     :language-codes  "https://github.com/Shinmera/language-codes.git"
     :lass            "https://github.com/Shinmera/LASS.git"
+    :let-plus        "https://github.com/sharplispers/let-plus.git"
     :lift            "https://github.com/hraban/lift.git"
     :lisp-namespace  "https://github.com/guicho271828/lisp-namespace.git"
     :lisp-unit       "https://github.com/OdonataResearchLLC/lisp-unit.git"
@@ -252,6 +280,7 @@ map back to the parent, such that later only one git clone is performed.")
     :minheap         "https://github.com/sfrank/minheap.git"
     :misc-extensions "https://gitlab.common-lisp.net/misc-extensions/misc-extensions.git"
     :mmap            "https://github.com/Shinmera/mmap.git"
+    :mockingbird     "https://github.com/pfdietz/mockingbird.git"
     :moptilities     "https://github.com/hraban/moptilities.git"
     :multilang-documentation "https://github.com/Shinmera/multilang-documentation.git"
     :named-readtables "https://github.com/melisgl/named-readtables.git"
@@ -262,6 +291,7 @@ map back to the parent, such that later only one git clone is performed.")
     :njson           "https://github.com/atlas-engineer/njson.git"
     :nkeymaps        "https://github.com/atlas-engineer/nkeymaps.git"
     :nibbles         "https://github.com/sharplispers/nibbles.git"
+    :nodgui          "https://codeberg.org/cage/nodgui.git"
     :north           "https://github.com/Shinmera/north.git"
     :nsymbols        "https://github.com/atlas-engineer/nsymbols.git"
     :nyxt            "https://github.com/atlas-engineer/nyxt.git"
@@ -288,6 +318,7 @@ map back to the parent, such that later only one git clone is performed.")
     :proc-parse      "https://github.com/fukamachi/proc-parse.git"
     :promise         "https://github.com/Shinmera/promise.git"
     :prompter        "https://github.com/atlas-engineer/prompter.git"
+    :prove           "https://github.com/fukamachi/prove.git"
     :punycode        "https://github.com/Shinmera/punycode.git"
     :puri            "https://github.com/macrologist/puri.git"
     :py-configparser "https://github.com/mtstickney/py-configparser.git"
@@ -305,15 +336,19 @@ map back to the parent, such that later only one git clone is performed.")
     :random-sampling "https://github.com/Shinmera/random-sampling.git"
     :random-state    "https://github.com/Shinmera/random-state.git"
     :raster          "https://github.com/Shirakumo/raster.git"
+    :replic          "https://github.com/vindarel/replic.git"
     :retrospectiff   "https://github.com/slyrus/retrospectiff.git"
     :rove            "https://github.com/fukamachi/rove.git"
+    :rutils          "https://github.com/fosskers/rutils.git"
     :s-sysdeps       "https://github.com/svenvc/s-sysdeps.git"
     :s-xml           "https://gitlab.common-lisp.net/s-xml/s-xml.git"
     :salza2          "https://github.com/xach/salza2.git"
     :sdf             "https://github.com/lispgames/sdf.git"
     :sdl2            "https://github.com/lispgames/cl-sdl2.git"
+    :sdl2-ttf        "https://github.com/sharplispers/cl-sdl2-ttf.git"
     :serapeum        "https://github.com/ruricolist/serapeum.git"
     :sha3            "https://github.com/pmai/sha3.git"
+    :shlex           "https://github.com/ruricolist/cl-shlex.git"
     :simple-graph    "https://github.com/fosskers/simple-graph.git"
     :simple-tasks    "https://github.com/Shinmera/simple-tasks.git"
     :skippy          "https://github.com/xach/skippy.git"
@@ -322,6 +357,7 @@ map back to the parent, such that later only one git clone is performed.")
     :speechless      "https://github.com/Shirakumo/speechless.git"
     :split-sequence  "https://github.com/sharplispers/split-sequence.git"
     :spinneret       "https://github.com/ruricolist/spinneret.git"
+    :stefil          "https://gitlab.common-lisp.net/stefil/stefil.git"
     :sqlite          "https://github.com/TeMPOraL/cl-sqlite.git"
     :static-vectors  "https://github.com/sionescu/static-vectors.git"
     :stealth-mixin   "https://github.com/robert-strandh/Stealth-mixin.git"
@@ -338,6 +374,7 @@ map back to the parent, such that later only one git clone is performed.")
     :trial-assets    "https://github.com/Shirakumo/trial-assets.git"
     :trivia          "https://github.com/guicho271828/trivia.git"
     :trivial-arguments "https://github.com/Shinmera/trivial-arguments.git"
+    :trivial-backtrace "https://github.com/hraban/trivial-backtrace.git"
     :trivial-benchmark "https://github.com/Shinmera/trivial-benchmark.git"
     :trivial-channels "https://github.com/rpav/trivial-channels.git"
     :trivial-clipboard "https://github.com/snmsts/trivial-clipboard.git"
@@ -357,6 +394,7 @@ map back to the parent, such that later only one git clone is performed.")
     :trivial-ssh     "https://github.com/eudoxia0/trivial-ssh.git"
     :trivial-timeout "https://github.com/hraban/trivial-timeout.git"
     :trivial-types   "https://github.com/m2ym/trivial-types.git"
+    :trivial-with-current-source-form "https://github.com/scymtym/trivial-with-current-source-form.git"
     :try             "https://github.com/melisgl/try.git"
     :type-i          "https://github.com/guicho271828/type-i.git"
     :type-templates  "https://github.com/Shinmera/type-templates.git"
@@ -365,6 +403,7 @@ map back to the parent, such that later only one git clone is performed.")
     :usocket         "https://github.com/usocket/usocket.git"
     :verbose         "https://github.com/Shinmera/verbose.git"
     :winhttp         "https://github.com/fjames86/winhttp.git"
+    :x.let-star      "https://github.com/ks/X.LET-STAR.git"
     :xsubseq         "https://github.com/fukamachi/xsubseq.git"
     :zip             "https://github.com/bluelisp/zip.git"
     :zippy           "https://github.com/Shinmera/zippy.git"
@@ -381,11 +420,16 @@ map back to the parent, such that later only one git clone is performed.")
       (when (string-starts-with? (symbol-name sys) "ALLOY-") :alloy)
       (when (string-starts-with? (symbol-name sys) "CL-MARKLESS-") :cl-markless)
       (when (string-starts-with? (symbol-name sys) "CL-MIXED-") :cl-mixed)
+      (when (string-starts-with? (symbol-name sys) "CL-SYNTAX-") :cl-syntax)
+      (when (string-starts-with? (symbol-name sys) "CLACK-") :clack)
       (when (string-starts-with? (symbol-name sys) "IOLIB/") :iolib)
       (when (string-starts-with? (symbol-name sys) "IRONCLAD/") :ironclad)
+      (when (string-starts-with? (symbol-name sys) "LACK-") :lack)
       (when (string-starts-with? (symbol-name sys) "MEMORY-REGIONS/") :memory-regions)
+      (when (string-starts-with? (symbol-name sys) "MOCKINGBIRD/") :mockingbird)
       (when (string-starts-with? (symbol-name sys) "NJSON/") :njson)
       (when (string-starts-with? (symbol-name sys) "NYXT/") :nyxt)
+      (when (string-starts-with? (symbol-name sys) "PROVE-") :prove)
       (when (string-starts-with? (symbol-name sys) "QLOT-TESTS/") :qlot)
       (when (string-starts-with? (symbol-name sys) "QLOT/") :qlot)
       (when (string-starts-with? (symbol-name sys) "ROVE/") :rove)
