@@ -8,7 +8,7 @@
   "Given a collection of paths to asd files, extract all their system definitions
 and mutably add them to a given graph. As a return value, yields the keyword
 names of the added systems."
-  (t:transduce (t:comp #++(t:log (lambda (acc path) (format t "[vend] Reading ~a~%" path)))
+  (t:transduce (t:comp #++(t:log (lambda (acc path) (vend-log "Reading ~a" path)))
                        (t:map #'sexps-from-file)
                        #'t:concatenate
                        (t:filter #'system?)
@@ -82,8 +82,10 @@ the root."
                (unless (gethash dep cloned)
                  (let ((url  (getf +sources+ dep))
                        (path (p:ensure-string (p:join target (keyword->string dep)))))
-                   (assert url nil "~a is not a known system.~%Please have it registered into the vend source code." dep)
-                   (vend-log "Cloning ~a" (bold dep))
+                   (unless url
+                     (let ((route (reverse (car (g:paths-to graph dep)))))
+                       (error "~a is not a known system.~%~%  ~{~a~^ -> ~}~%~%Please have it registered in the vend source code" (bold-red dep) route)))
+                   (vend-log "Fetching ~a" (bold dep))
                    (clone url path)
                    (setf (gethash dep cloned) t)
                    (scan-systems! graph (asd-files path))

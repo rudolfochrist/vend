@@ -236,6 +236,7 @@ map back to the parent, such that later only one git clone is performed.")
     :fiveam          "https://github.com/lispci/fiveam.git"
     :flexi-streams   "https://github.com/edicl/flexi-streams.git"
     :float-features  "https://github.com/Shinmera/float-features.git"
+    :fn-macro        "https://github.com/fosskers/fn-macro.git"
     :for             "https://github.com/Shinmera/for.git"
     :framebuffers    "https://github.com/Shirakumo/framebuffers.git"
     :frugal-uuid     "https://github.com/ak-coram/cl-frugal-uuid.git"
