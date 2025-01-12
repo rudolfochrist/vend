@@ -182,6 +182,16 @@
        (eql #\e (nth 8 chars))
        (eql #\n (nth 9 chars))))
 
+(defun gendoc? (chars)
+  (and (eql #\( (nth 0 chars))
+       (eql #\g (nth 1 chars))
+       (eql #\e (nth 2 chars))
+       (eql #\n (nth 3 chars))
+       (eql #\d (nth 4 chars))
+       (eql #\o (nth 5 chars))
+       (eql #\c (nth 6 chars))
+       (eql #\: (nth 7 chars))))
+
 (defun remove-reader-chars (str)
   "Replace any `#.' sexp with T."
   (labels ((keep (acc chars)
@@ -211,6 +221,8 @@
                       (keep (cons #\t acc) (chuck 1 (cddr tail))))
                      ((asdf-/-call? chars)
                       (keep (cons #\( acc) (until-colon tail)))
+                     ((gendoc? chars)
+                      (keep (cons #\( acc) (nthcdr 7 tail)))
                      (t (keep (cons head acc) tail)))))
            (chuck (parens chars)
              (let ((head (car chars)))
@@ -243,6 +255,8 @@
 (remove-reader-chars "(asdf/parse-defsystem:defsystem foo)")
 #++
 (remove-reader-chars "(defvar blah 1)")
+#++
+(remove-reader-chars "(gendoc:define-gendoc-load-op blah 1)")
 
 (defun system? (sexp)
   (and (eq 'cons (type-of sexp))
@@ -259,10 +273,10 @@
                     (list (destructuring-bind (kw a &optional b) dep
                             (cond ((eq :version kw) (into-keyword a))
                                   ((eq :require kw) (into-keyword a))
-                                  ;; To account for Radiance's higher-level
-                                  ;; implementation injection mechanism.
-                                  ;; `:interface' is otherwise not a keyword
-                                  ;; supported by ASDF.
+                                  ;; HACK: To account for Radiance's
+                                  ;; higher-level implementation injection
+                                  ;; mechanism. `:interface' is otherwise not a
+                                  ;; keyword supported by ASDF.
                                   ((eq :interface kw) nil)
                                   ((eq :feature kw)
                                    (typecase b

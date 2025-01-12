@@ -46,7 +46,7 @@
     :trivia.level2 :trivia
     :trivia.trivial :trivia
     :uiop :asdf)
-  "systems are often bundled together into a single repository. this list helps
+  "Systems are often bundled together into a single repository. This list helps
 map back to the parent, such that later only one git clone is performed.")
 
 (defparameter +exclude+
@@ -55,6 +55,7 @@ map back to the parent, such that later only one git clone is performed.")
     :hu.dwim.presentation
     :hu.dwim.web-server
     ;; Compiler Internals
+    :osi
     :sb-bsd-sockets
     :sb-cltl2
     :sb-introspect
@@ -82,6 +83,7 @@ map back to the parent, such that later only one git clone is performed.")
     :3bz             "https://github.com/3b/3bz.git"
     :3d-math         "https://github.com/Shinmera/3d-math.git"
     :3d-spaces       "https://github.com/Shirakumo/3d-spaces.git"
+    :acclimation     "https://github.com/robert-strandh/Acclimation.git"
     :action-list     "https://github.com/Shinmera/action-list.git"
     :alexandria      "https://gitlab.common-lisp.net/alexandria/alexandria.git"
     :alloy           "https://github.com/Shirakumo/alloy.git"
@@ -122,6 +124,7 @@ map back to the parent, such that later only one git clone is performed.")
     :cl-gobject-introspection "https://github.com/andy128k/cl-gobject-introspection.git"
     :cl-gog-galaxy   "https://github.com/Shinmera/cl-gog-galaxy.git"
     :cl-gopher       "https://github.com/knusbaum/cl-gopher.git"
+    :cl-interpol     "https://github.com/edicl/cl-interpol.git"
     :cl-jpeg         "https://github.com/sharplispers/cl-jpeg.git"
     :cl-json         "https://github.com/sharplispers/cl-json.git"
     :cl-ktx          "https://github.com/Shinmera/cl-ktx.git"
@@ -153,6 +156,7 @@ map back to the parent, such that later only one git clone is performed.")
     :closer-mop      "https://github.com/pcostanza/closer-mop.git"
     :closure-common  "https://github.com/sharplispers/closure-common.git"
     :clss            "https://github.com/Shinmera/CLSS.git"
+    :clump           "https://github.com/robert-strandh/Clump.git"
     :cluffer         "https://github.com/robert-strandh/Cluffer.git"
     :cocoas          "https://github.com/Shinmera/cocoas.git"
     :colored         "https://github.com/Shinmera/colored.git"
@@ -178,7 +182,7 @@ map back to the parent, such that later only one git clone is performed.")
     :fare-quasiquote "https://gitlab.common-lisp.net/frideau/fare-quasiquote.git"
     :fare-utils      "https://gitlab.common-lisp.net/frideau/fare-utils.git"
     :fast-http       "https://github.com/fukamachi/fast-http.git"
-    :fast-io         "https://github.com/rpav/fast-io.git"
+    :fast-io         "https://github.com/fosskers/fast-io.git"
     :feedback        "https://github.com/Shirakumo/feedback.git"
     :file-select     "https://github.com/Shinmera/file-select.git"
     :flow            "https://github.com/Shinmera/flow.git"
@@ -286,6 +290,7 @@ map back to the parent, such that later only one git clone is performed.")
     :prompter        "https://github.com/atlas-engineer/prompter.git"
     :punycode        "https://github.com/Shinmera/punycode.git"
     :puri            "https://github.com/macrologist/puri.git"
+    :py-configparser "https://github.com/mtstickney/py-configparser.git"
     :pythonic-string-reader "https://github.com/smithzvk/pythonic-string-reader.git"
     :qbase64         "https://github.com/chaitanyagupta/qbase64.git"
     :qlot            "https://github.com/fukamachi/qlot.git"
@@ -317,6 +322,7 @@ map back to the parent, such that later only one git clone is performed.")
     :speechless      "https://github.com/Shirakumo/speechless.git"
     :split-sequence  "https://github.com/sharplispers/split-sequence.git"
     :spinneret       "https://github.com/ruricolist/spinneret.git"
+    :sqlite          "https://github.com/TeMPOraL/cl-sqlite.git"
     :static-vectors  "https://github.com/sionescu/static-vectors.git"
     :stealth-mixin   "https://github.com/robert-strandh/Stealth-mixin.git"
     :str             "https://github.com/vindarel/cl-str.git"
@@ -375,6 +381,7 @@ map back to the parent, such that later only one git clone is performed.")
       (when (string-starts-with? (symbol-name sys) "ALLOY-") :alloy)
       (when (string-starts-with? (symbol-name sys) "CL-MARKLESS-") :cl-markless)
       (when (string-starts-with? (symbol-name sys) "CL-MIXED-") :cl-mixed)
+      (when (string-starts-with? (symbol-name sys) "IOLIB/") :iolib)
       (when (string-starts-with? (symbol-name sys) "IRONCLAD/") :ironclad)
       (when (string-starts-with? (symbol-name sys) "MEMORY-REGIONS/") :memory-regions)
       (when (string-starts-with? (symbol-name sys) "NJSON/") :njson)
@@ -383,6 +390,7 @@ map back to the parent, such that later only one git clone is performed.")
       (when (string-starts-with? (symbol-name sys) "QLOT/") :qlot)
       (when (string-starts-with? (symbol-name sys) "ROVE/") :rove)
       (when (string-starts-with? (symbol-name sys) "SLYNK/") :slynk)
+      (when (string-starts-with? (symbol-name sys) "SWANK/") :swank)
       (when (string-starts-with? (symbol-name sys) "TRANSDUCERS/") :transducers)
       (when (string-starts-with? (symbol-name sys) "TRIAL-") :trial)
       sys))
