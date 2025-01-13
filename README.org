@@ -59,13 +59,14 @@ distribution system brought us [[https://github.com/ocicl/ocicl][OCICL]].
 But, could there be a simpler paradigm that just /downloading the code and
 putting it right there/?
 
-With =vend= there is no need:
+With =vend=:
 
-- ...to perform bespoke installation scripts to get started.
-- ...to wait for Quicklisp to update.
-- ...to relegate all your systems to =~/common-lisp/=.
-- ...to worry about where ASDF is looking for systems.
-- ...to fret over tooling performing strange internal overrides.
+- We need not perform bespoke installation scripts to get started.
+- We need not wait for Quicklisp to update.
+- We need not relegate all our systems to =~/common-lisp/=.
+- We need not worry about where ASDF is looking for systems.
+- We need not fret over tools performing strange internal overrides.
+- We need not manage extra config files or lockfiles.
 
 Plus, =vend= is actually an external tool with extra commands to help you inspect
 and manage your dependencies.
@@ -98,6 +99,6 @@ and manage your dependencies.
 | Mito     | ✅       | ✅       |                                  |
 | Nyxt     | ✅       | ✅       |                                  |
 | Qlot     | ❌       | ❌       | Usage of =package-inferred-system= |
-| Radiance | ✅       | ❌       | Requires QL, but: [[https://github.com/quicklisp/quicklisp-client/issues/125][[1]​]] [[https://github.com/quicklisp/quicklisp-client/issues/140][[2]​]]       |
+| Radiance | ✅       | ❌       | Requires QL, but: [[https://github.com/quicklisp/quicklisp-client/issues/125][(1)​]] [[https://github.com/quicklisp/quicklisp-client/issues/140][(2)​]]       |
 | Trial    | ✅       | ✅       |                                  |
 | Woo      | ✅       | ✅       |                                  |
