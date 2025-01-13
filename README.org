@@ -1,0 +1,103 @@
+#+title: Vend
+
+=vend= is a dependency management tool for Common Lisp. The concept is simple:
+
+#+begin_quote
+Just vendor your dependencies!
+#+end_quote
+
+=vend='s focus is first and foremost on *simplicity*.
+
+- =vend get= to fetch dependencies directly into your project.
+- =vend repl= to open an isolated Lisp session.
+- =vend= only has 3 dependencies itself and compiles to a 300kb binary.
+- Neither Quicklisp (the tool) nor Quicklisp (the repository) are used.
+
+It's time for some peace of mind.
+
+* Table of Contents :TOC_5_gh:noexport:
+- [[#why-vendor-dependencies][Why vendor dependencies?]]
+  - [[#why-vend][Why vend?]]
+  - [[#best-practices][Best Practices]]
+- [[#installation][Installation]]
+  - [[#building][Building]]
+  - [[#editor-integration][Editor Integration]]
+    - [[#emacs][Emacs]]
+      - [[#doom-emacs][Doom Emacs]]
+- [[#usage][Usage]]
+  - [[#vend-get][vend get]]
+  - [[#vend-repl][vend repl]]
+  - [[#vend-graph][vend graph]]
+  - [[#vend-check][vend check]]
+- [[#coverage][Coverage]]
+
+* Why vendor dependencies?
+
+Fast internet connections and centralised repositories have gotten us used to
+the idea that dependencies are free; things we can pluck off a shelf and employ
+with no risk. In languages like Javascript and Rust, it's not uncommon to have
+projects with several hundred dependencies.
+
+But are these really free? Have you inspected each one? Do you know and trust
+the authors, as well as the pipeline that feeds you updates? Is your project
+still guaranteed to compile in 5-10 years with no extra intervention? Can you
+write code on a plane? Can users reliably build your project after little more
+than a =git clone=?
+
+The truth is that your dependencies are your code. And quite literally so - they
+might make up the majority of your final compiled artifact. By vendoring your
+dependencies directly into your project, you're taking responsibility for its
+true form.
+
+** Why vend?
+
+Dependency management in Common Lisp has traditionally centred around [[https://www.quicklisp.org/beta/][Quicklisp]].
+A desire for access to more rapid package updates spawned [[https://ultralisp.org/][Ultralisp]]. The need
+for version pinning and isolation birthed [[https://github.com/fukamachi/qlot][Qlot]]. The want for a better
+distribution system brought us [[https://github.com/ocicl/ocicl][OCICL]].
+
+But, could there be a simpler paradigm that just /downloading the code and
+putting it right there/?
+
+With =vend= there is no need:
+
+- ...to perform bespoke installation scripts to get started.
+- ...to wait for Quicklisp to update.
+- ...to relegate all your systems to =~/common-lisp/=.
+- ...to worry about where ASDF is looking for systems.
+- ...to fret over tooling performing strange internal overrides.
+
+Plus, =vend= is actually an external tool with extra commands to help you inspect
+and manage your dependencies.
+
+** Best Practices
+
+* Installation
+** Building
+
+=vend= requires
+
+** Editor Integration
+*** Emacs
+**** Doom Emacs
+* Usage
+** vend get
+** vend repl
+** vend graph
+** vend check
+* Coverage
+
+- Resolves: Does =vend get= complete?
+- Compiles: Does =(asdf:load-system :foo)= within =vend repl= complete?
+
+| Project  | Resolves? | Compiles? | Notes                            |
+|----------+-----------+-----------+----------------------------------|
+| Alloy    | ✅       | ✅       |                                  |
+| Kandria  | ✅       | ✅       |                                  |
+| Lem      | ✅       | ✅       |                                  |
+| Mito     | ✅       | ✅       |                                  |
+| Nyxt     | ✅       | ✅       |                                  |
+| Qlot     | ❌       | ❌       | Usage of =package-inferred-system= |
+| Radiance | ✅       | ❌       | Requires QL, but: [[https://github.com/quicklisp/quicklisp-client/issues/125][[1]​]] [[https://github.com/quicklisp/quicklisp-client/issues/140][[2]​]]       |
+| Trial    | ✅       | ✅       |                                  |
+| Woo      | ✅       | ✅       |                                  |
