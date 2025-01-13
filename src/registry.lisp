@@ -29,6 +29,7 @@
     :dref :mgl-pax
     :feedback-client :feedback
     :lem-mailbox :lem-mailbox
+    :list-of :asdf-finalizers
     :machine-state/opengl :machine-state
     :mgl-pax-bootstrap :mgl-pax
     :nasdf :nyxt
@@ -115,6 +116,7 @@ map back to the parent, such that later only one git clone is performed.")
     :array-utils     "https://github.com/Shinmera/array-utils.git"
     :arrow-macros    "https://github.com/hipeta/arrow-macros.git"
     :asdf            "https://gitlab.common-lisp.net/asdf/asdf.git"
+    :asdf-finalizers "https://gitlab.common-lisp.net/asdf/asdf-finalizers.git"
     :assoc-utils     "https://github.com/fukamachi/assoc-utils.git"
     :async-process   "https://github.com/lem-project/async-process.git"
     :atomics         "https://github.com/Shinmera/atomics.git"
