@@ -19,6 +19,7 @@
     :cl-plus-c :cl-autowrap
     :cl-ppcre-unicode :cl-ppcre
     :cl-unicode/base :cl-unicode
+    :clack-handler-woo :woo
     :depot-in-memory :depot
     :depot-virtual :depot
     :depot-zip :depot
@@ -57,6 +58,7 @@ map back to the parent, such that later only one git clone is performed.")
     :osi
     :sb-bsd-sockets
     :sb-cltl2
+    :sb-concurrency
     :sb-introspect
     :sb-posix
     :syscalls
@@ -149,6 +151,7 @@ map back to the parent, such that later only one git clone is performed.")
     :cl-gog-galaxy   "https://github.com/Shinmera/cl-gog-galaxy.git"
     :cl-gopher       "https://github.com/knusbaum/cl-gopher.git"
     :cl-interpol     "https://github.com/edicl/cl-interpol.git"
+    :cl-isaac        "https://github.com/thephoeron/cl-isaac.git"
     :cl-jpeg         "https://github.com/sharplispers/cl-jpeg.git"
     :cl-json         "https://github.com/sharplispers/cl-json.git"
     :cl-ktx          "https://github.com/Shinmera/cl-ktx.git"
@@ -172,6 +175,7 @@ map back to the parent, such that later only one git clone is performed.")
     :cl-readline     "https://github.com/vindarel/cl-readline.git"
     :cl-resvg        "https://github.com/Shirakumo/cl-resvg.git"
     :cl-setlocale    "https://github.com/shamazmazum/cl-setlocale.git"
+    :cl-speedy-queue "https://github.com/zkat/cl-speedy-queue.git"
     :cl-slug         "https://github.com/EuAndreh/cl-slug.git"
     :cl-steamworks   "https://github.com/Shinmera/cl-steamworks.git"
     :cl-syntax       "https://github.com/m2ym/cl-syntax.git"
@@ -250,6 +254,7 @@ map back to the parent, such that later only one git clone is performed.")
     :harmony         "https://github.com/Shirakumo/harmony.git"
     :history-tree    "https://github.com/atlas-engineer/history-tree.git"
     :html-encode     "https://github.com/fosskers/html-encode.git"
+    :http-body       "https://github.com/fukamachi/http-body.git"
     :hu.dwim.common  "https://github.com/hu-dwim/hu.dwim.common.git"
     :hu.dwim.common-lisp "https://github.com/hu-dwim/hu.dwim.common-lisp.git"
     :hu.dwim.def     "https://github.com/hu-dwim/hu.dwim.def.git"
@@ -287,6 +292,7 @@ map back to the parent, such that later only one git clone is performed.")
     :lem             "https://github.com/lem-project/lem.git"
     :lem-mailbox     "https://github.com/lem-project/lem-mailbox.git"
     :let-plus        "https://github.com/sharplispers/let-plus.git"
+    :lev             "https://github.com/fukamachi/lev.git"
     :lift            "https://github.com/hraban/lift.git"
     :lisp-namespace  "https://github.com/guicho271828/lisp-namespace.git"
     :lisp-preprocessor "https://github.com/cxxxr/lisp-preprocessor.git"
@@ -443,7 +449,9 @@ map back to the parent, such that later only one git clone is performed.")
     :usocket         "https://github.com/usocket/usocket.git"
     :uuid            "https://github.com/dardoria/uuid.git"
     :verbose         "https://github.com/Shinmera/verbose.git"
+    :vom             "https://github.com/orthecreedence/vom.git"
     :winhttp         "https://github.com/fjames86/winhttp.git"
+    :woo             "https://github.com/fukamachi/woo.git"
     :x.let-star      "https://github.com/ks/X.LET-STAR.git"
     :xsubseq         "https://github.com/fukamachi/xsubseq.git"
     :yason           "https://github.com/phmarek/yason.git"
@@ -480,6 +488,7 @@ map back to the parent, such that later only one git clone is performed.")
       (when (string-starts-with? (symbol-name sys) "JSONRPC/") :jsonrpc)
       (when (string-starts-with? (symbol-name sys) "LACK-") :lack)
       (when (string-starts-with? (symbol-name sys) "LEM-") :lem)
+      (when (string-starts-with? (symbol-name sys) "LEV-") :lev)
       (when (string-starts-with? (symbol-name sys) "MEMORY-REGIONS/") :memory-regions)
       (when (string-starts-with? (symbol-name sys) "MOCKINGBIRD/") :mockingbird)
       (when (string-starts-with? (symbol-name sys) "NJSON/") :njson)
