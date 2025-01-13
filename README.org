@@ -282,7 +282,7 @@ still free to do so.
 
 Probably not. At least, =vend= assumes that Quicklisp doesn't exist, and it tells
 ASDF to only look for systems in the current directory tree. It's not clear what
-a call to =(ql:quicklisp ...)= would do in that case.
+a call to =(ql:quickload ...)= would do in that case.
 
 If you want new packages available to =vend repl=, you can:
 
@@ -302,7 +302,10 @@ you're still able to:
 #+begin_example
 rm -rf vendored/old-dep
 vend get
+rm -rf vendored/old-dep/.git/
 #+end_example
+
+But you're discouraged from doing this habitually.
 
 ** Why ECL?
 
