@@ -110,6 +110,10 @@
 #++
 (reader-macro? (coerce "" 'list))
 
+(defun other-reader? (chars)
+  (and (eql #\# (nth 0 chars))
+       (eql #\. (nth 1 chars))))
+
 (defun asdf-call? (chars)
   (and (eql #\( (nth 0 chars))
        (eql #\a (nth 1 chars))
@@ -221,6 +225,8 @@
                      ;; proactively remove them.
                      ((reader-macro? chars)
                       (keep (cons #\t acc) (chuck 1 (cddr tail))))
+                     ((other-reader? chars)
+                      (keep acc (cdr tail)))
                      ;; Likewise, some clever package authors like to utilise
                      ;; `asdf' and `uiop' directly in their system definitions.
                      ;; This similarly causes problems with `read', so we remove
@@ -280,6 +286,8 @@
 (remove-reader-chars "(defvar blah 1)")
 #++
 (remove-reader-chars "(gendoc:define-gendoc-load-op blah 1)")
+#++
+(remove-reader-chars "#.*foo*")
 
 (defun system? (sexp)
   (and (eq 'cons (type-of sexp))

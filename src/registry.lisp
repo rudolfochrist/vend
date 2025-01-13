@@ -17,8 +17,11 @@
     :cl-paths :cl-vectors
     :cl-paths-ttf :cl-vectors
     :cl-plus-c :cl-autowrap
+    :cl-postgres :postmodern
     :cl-ppcre-unicode :cl-ppcre
     :cl-unicode/base :cl-unicode
+    ;; NOTE: 2025-01-13 Breaking the normal pattern, this Clack-related system
+    ;; actually lives in Woo.
     :clack-handler-woo :woo
     :depot-in-memory :depot
     :depot-virtual :depot
@@ -40,6 +43,7 @@
     :regression-test :ansi-test
     :rt :ansi-test
     :sdf/bmfont :sdf
+    :simple-date :postmodern
     ;; NOTE: 2025-01-11 This being here overrides the `trial-' mapping in
     ;; `get-parent' but it is necessary, as `trial-assets' is a separate repo.
     :trial-assets :trial-assets
@@ -53,9 +57,9 @@ map back to the parent, such that later only one git clone is performed.")
 
 (defparameter +exclude+
   '(;; Not hosted on any public forges.
-    :cl-postgres
     :hu.dwim.presentation
     :hu.dwim.web-server
+    :list-of
     ;; Compiler Internals
     :osi
     :sb-bsd-sockets
@@ -86,6 +90,7 @@ map back to the parent, such that later only one git clone is performed.")
     :cl-slug
     :cl-syntax
     :cl-yaml
+    :dynamic-classes
     :prove
     :trivial-backtrace
     :trivial-open-browser
@@ -140,6 +145,7 @@ map back to the parent, such that later only one git clone is performed.")
     :cl-colors-ng    "https://codeberg.org/cage/cl-colors-ng.git"
     :cl-containers   "https://github.com/hraban/cl-containers.git"
     :cl-cookie       "https://github.com/fukamachi/cl-cookie.git"
+    :cl-csv          "https://github.com/AccelerationNet/cl-csv.git"
     :cl-store        "https://github.com/skypher/cl-store.git"
     :cl-custom-hash-table "https://github.com/metawilm/cl-custom-hash-table.git"
     :cl-electron     "https://github.com/atlas-engineer/cl-electron.git"
@@ -159,6 +165,8 @@ map back to the parent, such that later only one git clone is performed.")
     :cl-ktx          "https://github.com/Shinmera/cl-ktx.git"
     :cl-l10n         "https://gitlab.common-lisp.net/cl-l10n/cl-l10n.git"
     :cl-libyaml      "https://github.com/eudoxia0/cl-libyaml.git"
+    :cl-log          "https://github.com/nicklevine/cl-log.git"
+    :cl-markdown     "https://gitlab.common-lisp.net/cl-markdown/cl-markdown.git"
     :cl-markless     "https://github.com/Shirakumo/cl-markless.git"
     :cl-markup       "https://github.com/arielnetworks/cl-markup.git"
     :cl-migemo       "https://github.com/snmsts/cl-migemo.git"
@@ -214,6 +222,7 @@ map back to the parent, such that later only one git clone is performed.")
     :convex-covering "https://github.com/Shirakumo/convex-covering.git"
     :cxml            "https://github.com/sharplispers/cxml.git"
     :damn-fast-priority-queue "https://github.com/phoe/damn-fast-priority-queue.git"
+    :db3             "https://github.com/dimitri/cl-db3.git"
     :dbi             "https://github.com/fukamachi/cl-dbi.git"
     :deflate         "https://github.com/pmai/Deflate.git"
     :defpackage-plus "https://github.com/rpav/defpackage-plus.git"
@@ -224,6 +233,7 @@ map back to the parent, such that later only one git clone is performed.")
     :dissect         "https://github.com/Shinmera/dissect.git"
     :documentation-utils "https://github.com/Shinmera/documentation-utils.git"
     :drakma          "https://github.com/edicl/drakma.git"
+    :dynamic-classes "https://github.com/hraban/dynamic-classes.git"
     :easing          "https://github.com/vydd/easing.git"
     :enchant         "https://github.com/tlikonen/cl-enchant.git"
     :esrap           "https://github.com/scymtym/esrap.git"
@@ -249,6 +259,7 @@ map back to the parent, such that later only one git clone is performed.")
     :framebuffers    "https://github.com/Shirakumo/framebuffers.git"
     :frugal-uuid     "https://github.com/ak-coram/cl-frugal-uuid.git"
     :fset            "https://gitlab.common-lisp.net/fset/fset.git"
+    :garbage-pools   "https://github.com/archimag/garbage-pools.git"
     :glfw            "https://github.com/Shirakumo/glfw.git"
     :global-vars     "https://github.com/lmj/global-vars.git"
     :glop            "https://github.com/lispgames/glop.git"
@@ -279,6 +290,7 @@ map back to the parent, such that later only one git clone is performed.")
     :inquisitor      "https://github.com/t-sin/inquisitor.git"
     :ironclad        "https://github.com/sharplispers/ironclad.git"
     :iterate         "https://gitlab.common-lisp.net/iterate/iterate.git"
+    :ixf             "https://github.com/dimitri/cl-ixf.git"
     :jonathan        "https://github.com/rudolph-miller/jonathan.git"
     :jpeg-turbo      "https://github.com/shamazmazum/jpeg-turbo.git"
     ;; NOTE: 2025-01-12 These `jpl' libs are dubious! They are both mirrors
@@ -323,6 +335,7 @@ map back to the parent, such that later only one git clone is performed.")
     :modularize-hooks "https://github.com/Shinmera/modularize-hooks.git"
     :modularize-interfaces "https://github.com/Shinmera/modularize-interfaces.git"
     :moptilities     "https://github.com/hraban/moptilities.git"
+    :mssql           "https://github.com/archimag/cl-mssql.git"
     :multilang-documentation "https://github.com/Shinmera/multilang-documentation.git"
     :named-readtables "https://github.com/melisgl/named-readtables.git"
     :nclasses        "https://github.com/atlas-engineer/nclasses.git"
@@ -354,6 +367,7 @@ map back to the parent, such that later only one git clone is performed.")
     :piping          "https://github.com/Shinmera/piping.git"
     :png-read        "https://github.com/Ramarren/png-read.git"
     :pngload         "https://github.com/3b/pngload.git"
+    :postmodern      "https://github.com/marijnh/Postmodern.git"
     :precise-time    "https://github.com/Shinmera/precise-time.git"
     :priority-queue  "https://github.com/dsorokin/priority-queue.git"
     :proc-parse      "https://github.com/fukamachi/proc-parse.git"
@@ -366,6 +380,7 @@ map back to the parent, such that later only one git clone is performed.")
     :pythonic-string-reader "https://github.com/smithzvk/pythonic-string-reader.git"
     :qbase64         "https://github.com/chaitanyagupta/qbase64.git"
     :qlot            "https://github.com/fukamachi/qlot.git"
+    :qmynd           "https://github.com/qitab/qmynd.git"
     :qoi             "https://github.com/bpanthi977/qoi.git"
     :queues          "https://github.com/oconnore/queues.git"
     :quri            "https://github.com/fukamachi/quri.git"
@@ -450,6 +465,7 @@ map back to the parent, such that later only one git clone is performed.")
     :type-i          "https://github.com/guicho271828/type-i.git"
     :type-templates  "https://github.com/Shinmera/type-templates.git"
     :uax-14          "https://github.com/Shinmera/uax-14.git"
+    :uax-15          "https://github.com/sabracrolleton/uax-15.git"
     :ubiquitous      "https://github.com/Shinmera/ubiquitous.git"
     :unix-opts       "https://github.com/libre-man/unix-opts.git"
     :usocket         "https://github.com/usocket/usocket.git"
@@ -465,7 +481,8 @@ map back to the parent, such that later only one git clone is performed.")
     :zippy           "https://github.com/Shinmera/zippy.git"
     :zpb-exif        "https://github.com/xach/zpb-exif.git"
     :zpb-ttf         "https://github.com/xach/zpb-ttf.git"
-    :zpng            "https://github.com/xach/zpng.git")
+    :zpng            "https://github.com/xach/zpng.git"
+    :zs3             "https://github.com/xach/zs3.git")
   "All actively depended-on Common Lisp libraries.")
 
 #++
