@@ -116,9 +116,10 @@ Sly and Slime have variables for setting how Lisp REPLs should be launched:
 
 #+begin_src emacs-lisp
 (setq sly-default-lisp 'sbcl
-      sly-lisp-implementations '((sbcl ("vend" "repl" "sbcl") :coding-system utf-8-unix)
-                                 (ecl  ("vend" "repl" "ecl")  :coding-system utf-8-unix)
-                                 (abcl ("vend" "repl" "abcl") :coding-system utf-8-unix)))
+      sly-lisp-implementations '((sbcl  ("vend" "repl" "sbcl")  :coding-system utf-8-unix)
+                                 (ecl   ("vend" "repl" "ecl")   :coding-system utf-8-unix)
+                                 (abcl  ("vend" "repl" "abcl")  :coding-system utf-8-unix)
+                                 (clasp ("vend" "repl" "clasp") :coding-system utf-8-unix)))
 #+end_src
 
 Adjust as necessary for Slime.
@@ -158,6 +159,9 @@ are free to inspect, edit, and remove them as you please.
 [vend] Done.
 #+end_example
 
+If during your usage of =vend= you discover a project that fails to resolve,
+please [[https://github.com/fosskers/vend/issues][open an Issue]].
+
 ** vend repl
 
 From the top-level directory of your project, =vend repl= opens a Lisp REPL while
@@ -166,7 +170,7 @@ instructing ASDF to only look within this directory tree for =.asd= files.
 #+begin_example
 > vend repl
 This is SBCL 2.4.9, an implementation of ANSI Common Lisp.
-> (asdf:load-system :thinking)
+> (asdf:load-system :transducers)
 ; Lots of compilation here.
 T
 >
@@ -189,8 +193,7 @@ additional settings for hungry projects like [[https://github.com/Shirakumo/tria
 
 ** vend graph
 
-After running =vend get=, you can inspect your full dependency graph via =vend
-graph=:
+After running =vend get=, you can inspect your full dependency graph via =vend graph=:
 
 #+begin_example
 > vend graph
@@ -213,8 +216,7 @@ In the case of =vend=, this produces an image like:
 
 [[file:deps.png]]
 
-If the graph is too messy, you can "focus" it with an extra argument to =vend
-graph=:
+If the graph is too messy, you can "focus" it with an extra argument to =vend graph=:
 
 #+begin_example
 vend graph lem
@@ -225,7 +227,7 @@ core application and not its test suites, etc.
 
 ** vend check
 
-Since your dependencies are you code, you should care about what's in there.
+Since your dependencies are your code, you should care about what's in there.
 
 #+begin_example
 > vend check
