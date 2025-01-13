@@ -123,6 +123,14 @@
 #++
 (asdf-call? (coerce "(foo)" 'list))
 
+(defun command-asdf-call? (chars)
+  (and (eql #\space (nth 0 chars))
+       (eql #\a (nth 1 chars))
+       (eql #\s (nth 2 chars))
+       (eql #\d (nth 3 chars))
+       (eql #\f (nth 4 chars))
+       (eql #\: (nth 5 chars))))
+
 (defun quoted-asdf-call? (chars)
   (and (eql #\' (nth 0 chars))
        (eql #\a (nth 1 chars))
@@ -222,6 +230,8 @@
                       (keep (cons #\( acc) (nthcdr 5 tail)))
                      ((quoted-asdf-call? chars)
                       (keep (cons #\' acc) (nthcdr 5 tail)))
+                     ((command-asdf-call? chars)
+                      (keep (cons #\space acc) (nthcdr 5 tail)))
                      ((grovel-call? chars)
                       (keep (cons #\( acc) (nthcdr 12 tail)))
                      ((def? chars)
@@ -254,6 +264,8 @@
 (remove-reader-chars "(defsystem foo)")
 #++
 (remove-reader-chars "(asdf:defsystem :foo :long-description #.(+ 1 1) :foo (asdf:bar))")
+#++
+(remove-reader-chars " asdf:foo")
 #++
 (remove-reader-chars "(cffi-grovel:foo 1)")
 #++

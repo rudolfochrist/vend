@@ -102,7 +102,7 @@ the root."
         (apply #'g:subgraph graph top)))))
 
 #++
-(let* ((cwd #p"/home/colin/code/common-lisp/woo/")
+(let* ((cwd #p"/home/colin/code/common-lisp/radiance/")
        (dir (p:ensure-directory (p:join cwd "vendored"))))
   (with-open-file (stream #p"deps.dot" :direction :output :if-exists :supersede)
     (g:to-dot-with-stream (work cwd dir) stream)))
@@ -167,6 +167,11 @@ Flags:
 ;; Lem
 ;; Mito
 ;; Woo
+
+;; Semi:
+;; Radiance <- Resolves, but needs QL to compile, but QL can't be loaded by ASDF alone:
+;;   - https://github.com/quicklisp/quicklisp-client/issues/125
+;;   - https://github.com/quicklisp/quicklisp-client/issues/140
 
 ;; Failure:
 ;;

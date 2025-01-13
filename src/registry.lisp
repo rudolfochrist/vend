@@ -32,6 +32,7 @@
     :north-drakma :north
     :nsymbols/star :nsymbols
     :plump-dom :plump
+    :ql-dist :quicklisp
     :queues.priority-queue :queues
     :qtcore :qt+libs
     :qtgui :qt+libs
@@ -45,6 +46,7 @@
     :trivia.balland2006 :trivia
     :trivia.level2 :trivia
     :trivia.trivial :trivia
+    :ubiquitous-concurrent :ubiquitous
     :uiop :asdf)
   "Systems are often bundled together into a single repository. This list helps
 map back to the parent, such that later only one git clone is performed.")
@@ -317,6 +319,9 @@ map back to the parent, such that later only one git clone is performed.")
     :mito            "https://github.com/fukamachi/mito.git"
     :mmap            "https://github.com/Shinmera/mmap.git"
     :mockingbird     "https://github.com/pfdietz/mockingbird.git"
+    :modularize      "https://github.com/Shinmera/modularize.git"
+    :modularize-hooks "https://github.com/Shinmera/modularize-hooks.git"
+    :modularize-interfaces "https://github.com/Shinmera/modularize-interfaces.git"
     :moptilities     "https://github.com/hraban/moptilities.git"
     :multilang-documentation "https://github.com/Shinmera/multilang-documentation.git"
     :named-readtables "https://github.com/melisgl/named-readtables.git"
@@ -445,6 +450,7 @@ map back to the parent, such that later only one git clone is performed.")
     :type-i          "https://github.com/guicho271828/type-i.git"
     :type-templates  "https://github.com/Shinmera/type-templates.git"
     :uax-14          "https://github.com/Shinmera/uax-14.git"
+    :ubiquitous      "https://github.com/Shinmera/ubiquitous.git"
     :unix-opts       "https://github.com/libre-man/unix-opts.git"
     :usocket         "https://github.com/usocket/usocket.git"
     :uuid            "https://github.com/dardoria/uuid.git"
