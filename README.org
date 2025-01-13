@@ -33,6 +33,11 @@ It's time for some peace of mind.
   - [[#vend-graph][vend graph]]
   - [[#vend-check][vend check]]
 - [[#coverage][Coverage]]
+- [[#faq][FAQ]]
+  - [[#does-this-use-git-submodules][Does this use git submodules?]]
+  - [[#can-i-install-new-dependencies-while-vend-repl-is-running][Can I install new dependencies while =vend repl= is running?]]
+  - [[#how-do-i-update-dependencies][How do I update dependencies?]]
+  - [[#why-ecl][Why ECL?]]
 
 * Why vendor dependencies?
 
@@ -251,15 +256,56 @@ projects:
 
 | Project  | Resolves? | Compiles? | Notes                            |
 |----------+-----------+-----------+----------------------------------|
-| Alloy    | ✅       | ✅       |                                  |
-| Kandria  | ✅       | ✅       |                                  |
-| Lem      | ✅       | ✅       |                                  |
-| Mito     | ✅       | ✅       |                                  |
-| Nyxt     | ✅       | ✅       |                                  |
-| Qlot     | ❌       | ❌       | Usage of =package-inferred-system= |
-| Radiance | ✅       | ❌       | Requires QL, but: [[https://github.com/quicklisp/quicklisp-client/issues/125][(1)​]] [[https://github.com/quicklisp/quicklisp-client/issues/140][(2)​]]       |
-| Trial    | ✅       | ✅       |                                  |
-| Woo      | ✅       | ✅       |                                  |
+| [[https://github.com/Shirakumo/alloy][Alloy]]    | ✅       | ✅       |                                  |
+| [[https://github.com/Shirakumo/kandria][Kandria]]  | ✅       | ✅       |                                  |
+| [[https://github.com/lem-project/lem][Lem]]      | ✅       | ✅       |                                  |
+| [[https://github.com/fukamachi/mito][Mito]]     | ✅       | ✅       |                                  |
+| [[https://github.com/atlas-engineer/nyxt][Nyxt]]     | ✅       | ✅       |                                  |
+| [[https://github.com/fukamachi/qlot][Qlot]]     | ❌       | ❌       | Usage of =package-inferred-system= |
+| [[https://github.com/Shirakumo/radiance][Radiance]] | ✅       | ❌       | Requires QL, but: [[https://github.com/quicklisp/quicklisp-client/issues/125][(1)​]] [[https://github.com/quicklisp/quicklisp-client/issues/140][(2)​]]       |
+| [[https://github.com/Shirakumo/trial][Trial]]    | ✅       | ✅       |                                  |
+| [[https://github.com/fukamachi/woo][Woo]]      | ✅       | ✅       |                                  |
 
 If during your usage of =vend= you discover a project that fails to resolve,
 please [[https://github.com/fosskers/vend/issues][open an Issue]].
+
+* FAQ
+
+** Does this use git submodules?
+
+No. Submodules need to be recloned by your users, which is a weaker long-term
+guarantee than true vendoring. Submodules are also a pain in the neck to manage.
+If you want to change and make new commits to vendored dependencies, you're
+still free to do so.
+
+** Can I install new dependencies while =vend repl= is running?
+
+Probably not. At least, =vend= assumes that Quicklisp doesn't exist, and it tells
+ASDF to only look for systems in the current directory tree. It's not clear what
+a call to =(ql:quicklisp ...)= would do in that case.
+
+If you want new packages available to =vend repl=, you can:
+
+- Manually clone them into =vendored/=.
+- Add them to your =.asd= explicitly and call =vend get=.
+
+** How do I update dependencies?
+
+The intent is that by vendoring, you're taking responsibility for the "true
+shape" of your program. So, upgrading dependencies should always be a conscious
+choice, done for a specific reason. Therefore there is no "bulk update" button.
+
+To update a single dependency, you can =git pull= it specifically. If you've
+already committed that dependency to your repo (as in the application case),
+you're still able to:
+
+#+begin_example
+rm -rf vendored/old-dep
+vend get
+#+end_example
+
+** Why ECL?
+
+=vend= itself is built with ECL but you're free to use it to manage Lisp projects
+of any compiler. ECL typically produces very small binaries; in the case of
+=vend= it's only a few hundred kilobytes, which eases distribution.
