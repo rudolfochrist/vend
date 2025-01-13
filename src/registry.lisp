@@ -23,10 +23,12 @@
     ;; NOTE: 2025-01-13 Breaking the normal pattern, this Clack-related system
     ;; actually lives in Woo.
     :clack-handler-woo :woo
+    :coalton/hashtable-shim :coalton
     :depot-in-memory :depot
     :depot-virtual :depot
     :depot-zip :depot
     :dref :mgl-pax
+    :eclector-concrete-syntax-tree :eclector
     :feedback-client :feedback
     :lem-mailbox :lem-mailbox
     :list-of :asdf-finalizers
@@ -66,7 +68,9 @@ map back to the parent, such that later only one git clone is performed.")
     :sb-bsd-sockets
     :sb-cltl2
     :sb-concurrency
+    :sb-gmp
     :sb-introspect
+    :sb-mpfr
     :sb-posix
     :syscalls
     :extensible-sequences
@@ -220,6 +224,8 @@ map back to the parent, such that later only one git clone is performed.")
     :com.inuoe.jzon  "https://github.com/Zulu-Inuoe/jzon.git"
     :com-on          "https://github.com/Shinmera/com-on.git"
     :command-line-arguments "https://github.com/fare/command-line-arguments.git"
+    :computable-reals "https://github.com/stylewarning/computable-reals.git"
+    :concrete-syntax-tree "https://github.com/s-expressionists/Concrete-Syntax-Tree.git"
     :contextl        "https://github.com/pcostanza/contextl.git"
     :convex-covering "https://github.com/Shirakumo/convex-covering.git"
     :cxml            "https://github.com/sharplispers/cxml.git"
@@ -237,6 +243,7 @@ map back to the parent, such that later only one git clone is performed.")
     :drakma          "https://github.com/edicl/drakma.git"
     :dynamic-classes "https://github.com/hraban/dynamic-classes.git"
     :easing          "https://github.com/vydd/easing.git"
+    :eclector        "https://github.com/s-expressionists/Eclector.git"
     :enchant         "https://github.com/tlikonen/cl-enchant.git"
     :esrap           "https://github.com/scymtym/esrap.git"
     :fare-quasiquote "https://gitlab.common-lisp.net/frideau/fare-quasiquote.git"
@@ -269,6 +276,7 @@ map back to the parent, such that later only one git clone is performed.")
     :harmony         "https://github.com/Shirakumo/harmony.git"
     :history-tree    "https://github.com/atlas-engineer/history-tree.git"
     :html-encode     "https://github.com/fosskers/html-encode.git"
+    :html-entities   "https://github.com/BnMcGn/html-entities.git"
     :http-body       "https://github.com/fukamachi/http-body.git"
     :hu.dwim.common  "https://github.com/hu-dwim/hu.dwim.common.git"
     :hu.dwim.common-lisp "https://github.com/hu-dwim/hu.dwim.common-lisp.git"
