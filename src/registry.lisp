@@ -161,6 +161,7 @@ map back to the parent, such that later only one git clone is performed.")
     :cl-modio        "https://github.com/Shinmera/cl-modio.git"
     :cl-mpg123       "https://github.com/Shirakumo/cl-mpg123.git"
     :cl-mustache     "https://github.com/kanru/cl-mustache.git"
+    :cl-mysql        "https://github.com/hackinghat/cl-mysql.git"
     :cl-opengl       "https://github.com/3b/cl-opengl.git"
     :cl-opus         "https://github.com/Shirakumo/cl-opus.git"
     :cl-package-locks "https://github.com/elliottjohnson/cl-package-locks.git"
@@ -207,6 +208,7 @@ map back to the parent, such that later only one git clone is performed.")
     :convex-covering "https://github.com/Shirakumo/convex-covering.git"
     :cxml            "https://github.com/sharplispers/cxml.git"
     :damn-fast-priority-queue "https://github.com/phoe/damn-fast-priority-queue.git"
+    :dbi             "https://github.com/fukamachi/cl-dbi.git"
     :deflate         "https://github.com/pmai/Deflate.git"
     :defpackage-plus "https://github.com/rpav/defpackage-plus.git"
     :deploy          "https://github.com/Shinmera/deploy.git"
@@ -306,6 +308,7 @@ map back to the parent, such that later only one git clone is performed.")
     :micros          "https://github.com/lem-project/micros.git"
     :minheap         "https://github.com/sfrank/minheap.git"
     :misc-extensions "https://gitlab.common-lisp.net/misc-extensions/misc-extensions.git"
+    :mito            "https://github.com/fukamachi/mito.git"
     :mmap            "https://github.com/Shinmera/mmap.git"
     :mockingbird     "https://github.com/pfdietz/mockingbird.git"
     :moptilities     "https://github.com/hraban/moptilities.git"
@@ -395,6 +398,7 @@ map back to the parent, such that later only one git clone is performed.")
     :string-case     "https://github.com/pkhuong/string-case.git"
     :swank           "https://github.com/slime/slime.git"
     :swap-bytes      "https://github.com/sionescu/swap-bytes.git"
+    :sxql            "https://github.com/fukamachi/sxql.git"
     :symbol-munger   "https://github.com/AccelerationNet/symbol-munger.git"
     :system-locale   "https://github.com/Shinmera/system-locale.git"
     :terrable        "https://github.com/Shirakumo/terrable.git"
@@ -437,6 +441,7 @@ map back to the parent, such that later only one git clone is performed.")
     :uax-14          "https://github.com/Shinmera/uax-14.git"
     :unix-opts       "https://github.com/libre-man/unix-opts.git"
     :usocket         "https://github.com/usocket/usocket.git"
+    :uuid            "https://github.com/dardoria/uuid.git"
     :verbose         "https://github.com/Shinmera/verbose.git"
     :winhttp         "https://github.com/fjames86/winhttp.git"
     :x.let-star      "https://github.com/ks/X.LET-STAR.git"
@@ -469,6 +474,7 @@ map back to the parent, such that later only one git clone is performed.")
       (when (string-starts-with? (symbol-name sys) "CL-SYNTAX-") :cl-syntax)
       (when (string-starts-with? (symbol-name sys) "CFFI-") :cffi)
       (when (string-starts-with? (symbol-name sys) "CLACK-") :clack)
+      (when (string-starts-with? (symbol-name sys) "DBD-") :dbi)
       (when (string-starts-with? (symbol-name sys) "IOLIB/") :iolib)
       (when (string-starts-with? (symbol-name sys) "IRONCLAD/") :ironclad)
       (when (string-starts-with? (symbol-name sys) "JSONRPC/") :jsonrpc)
