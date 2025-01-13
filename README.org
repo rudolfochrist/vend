@@ -12,6 +12,7 @@ Just vendor your dependencies!
 - =vend repl= to open an isolated Lisp session.
 - =vend= only has 3 dependencies itself and compiles to a 300kb binary.
 - Neither Quicklisp (the tool) nor Quicklisp (the repository) are used.
+- Trivial integration with Sly / Slime.
 
 It's time for some peace of mind.
 
@@ -20,10 +21,12 @@ It's time for some peace of mind.
   - [[#why-vend][Why vend?]]
   - [[#best-practices][Best Practices]]
 - [[#installation][Installation]]
-  - [[#building][Building]]
-  - [[#editor-integration][Editor Integration]]
-    - [[#emacs][Emacs]]
-      - [[#doom-emacs][Doom Emacs]]
+  - [[#from-source][From Source]]
+  - [[#linux][Linux]]
+    - [[#arch][Arch]]
+- [[#editor-integration][Editor Integration]]
+  - [[#emacs][Emacs]]
+    - [[#doom-emacs][Doom Emacs]]
 - [[#usage][Usage]]
   - [[#vend-get][vend get]]
   - [[#vend-repl][vend repl]]
@@ -56,7 +59,7 @@ A desire for access to more rapid package updates spawned [[https://ultralisp.or
 for version pinning and isolation birthed [[https://github.com/fukamachi/qlot][Qlot]]. The want for a better
 distribution system brought us [[https://github.com/ocicl/ocicl][OCICL]].
 
-But, could there be a simpler paradigm that just /downloading the code and
+But, could there be a simpler paradigm than just /downloading the code and
 putting it right there/?
 
 With =vend=:
@@ -73,20 +76,173 @@ and manage your dependencies.
 
 ** Best Practices
 
+For library development, you are encouraged to:
+
+1. =vend get= to fetch dependencies.
+2. Add =vendored/*= to your =.gitignore=.
+
+As this allows downstream users the most freedom when consuming your library.
+
+For application development, you are encouraged to:
+
+1. =vend get= to fetch dependencies.
+2. =rm -rf vendored/**/.git/=
+3. Actively commit =vendored/= to git.
+
+By committing these dependencies directly, it is never a mystery to your users
+how your software should be provisioned.
+
 * Installation
-** Building
 
-=vend= requires
+In all cases, =vend= requires [[https://ecl.common-lisp.dev/][ECL]] to build and run.
 
-** Editor Integration
-*** Emacs
-**** Doom Emacs
+** From Source
+
+=vend='s dependencies are all vendored, so it is enough to run:
+
+#+begin_example
+ecl --load build.lisp
+mv vend ~/.local/bin/
+#+end_example
+
+** Linux
+
+*** Arch
+
+* Editor Integration
+** Emacs
+
+Sly and Slime have variables for setting how Lisp REPLs should be launched:
+
+#+begin_src emacs-lisp
+(setq sly-default-lisp 'sbcl
+      sly-lisp-implementations '((sbcl ("vend" "repl" "sbcl") :coding-system utf-8-unix)
+                                 (ecl  ("vend" "repl" "ecl")  :coding-system utf-8-unix)
+                                 (abcl ("vend" "repl" "abcl") :coding-system utf-8-unix)))
+#+end_src
+
+Adjust as necessary for Slime.
+
+Note that adding ="--dynamic-space-size" "4GB"= to the =sbcl= list is useful for
+hungry projects like [[https://github.com/Shirakumo/trial][Trial]].
+
+#+begin_quote
+⚠ You must start your Lisp session from the top-level of the repository. Doing
+so from the =.asd= file makes it easy.
+#+end_quote
+
+*** Doom Emacs
+
+As of 2025 January, you also need to manually disable =sly-stepper= and
+=sly-quicklisp= or they will interfere with the REPL starting:
+
+#+begin_src emacs-lisp
+(package! sly-stepper :disable t)
+(package! sly-quicklisp :disable t)
+#+end_src
+
 * Usage
 ** vend get
+
+From the top-level directory of your project, simply =vend get= to fetch all
+dependencies. They will be stored in =vendored/=. From here, they are yours. You
+are free to inspect, edit, and remove them as you please.
+
+#+begin_example
+> vend get
+[vend] Downloading dependencies.
+[vend] Fetching FN-MACRO
+[vend] Fetching ARROW-MACROS
+[vend] Fetching TRANSDUCERS
+...
+[vend] Done.
+#+end_example
+
 ** vend repl
+
+From the top-level directory of your project, =vend repl= opens a Lisp REPL while
+instructing ASDF to only look within this directory tree for =.asd= files.
+
+#+begin_example
+> vend repl
+This is SBCL 2.4.9, an implementation of ANSI Common Lisp.
+> (asdf:load-system :thinking)
+; Lots of compilation here.
+T
+>
+#+end_example
+
+By default, =vend repl= starts SBCL. You can easily override this:
+
+#+begin_example
+> vend repl ecl
+ECL (Embeddable Common-Lisp) 24.5.10
+> (+ 1 1)
+#+end_example
+
+=vend repl= actually accepts any number of arguments, which is useful for adding
+additional settings for hungry projects like [[https://github.com/Shirakumo/trial][Trial]]:
+
+#+begin_example
+> vend repl sbcl --dynamic-space-size 4GB
+#+end_example
+
 ** vend graph
+
+After running =vend get=, you can inspect your full dependency graph via =vend
+graph=:
+
+#+begin_example
+> vend graph
+#+end_example
+
+This produces a =deps.dot= file, which can be viewed directly with =xdot=:
+
+#+begin_example
+> xdot deps.dot
+#+end_example
+
+Or you can render it into a static PNG to send around to your friends to brag
+about how few dependencies you're using:
+
+#+begin_example
+> cat deps.dot | dot -Tpng -o deps.png
+#+end_example
+
+In the case of =vend=, this produces an image like:
+
+[[file:deps.png]]
+
+If the graph is too messy, you can "focus" it with an extra argument to =vend
+graph=:
+
+#+begin_example
+vend graph lem
+#+end_example
+
+In the case of the large [[https://github.com/lem-project/lem][Lem]] project, this would display a graph of only the
+core application and not its test suites, etc.
+
 ** vend check
+
+Since your dependencies are you code, you should care about what's in there.
+
+#+begin_example
+> vend check
+DYNAMIC-CLASSES is deprecated.
+  PGLOADER -> CL-MARKDOWN -> DYNAMIC-CLASSES
+TRIVIAL-BACKTRACE is deprecated.
+  PGLOADER -> TRIVIAL-BACKTRACE
+#+end_example
+
+Woops! And while Common Lisp has a culture of "done means done, not dead", it's
+still important to know what you're getting yourself into.
+
 * Coverage
+
+=vend= does not cover all of what's available on Quicklisp, but it does have
+significant enough coverage to resolve and compile a number of large, modern
+projects:
 
 - Resolves: Does =vend get= complete?
 - Compiles: Does =(asdf:load-system :foo)= within =vend repl= complete?
@@ -102,3 +258,6 @@ and manage your dependencies.
 | Radiance | ✅       | ❌       | Requires QL, but: [[https://github.com/quicklisp/quicklisp-client/issues/125][(1)​]] [[https://github.com/quicklisp/quicklisp-client/issues/140][(2)​]]       |
 | Trial    | ✅       | ✅       |                                  |
 | Woo      | ✅       | ✅       |                                  |
+
+If during your usage of =vend= you discover a project that fails to resolve,
+please [[https://github.com/fosskers/vend/issues][open an Issue]].

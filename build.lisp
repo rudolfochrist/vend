@@ -19,9 +19,6 @@
   (asdf:make-build :vend
                    :type :program
                    :move-here #p"./"
-                   :epilogue-code
-                   '(progn
-                     (vend:main)
-                     (si:exit)))
+                   :epilogue-code '(vend:main))
   (format t "--- DONE ---~%")
-  (si:exit))
+  (ext:quit 0))
