@@ -155,21 +155,6 @@ Flags:
           (t (ext:process-command-args :rules +vend-rules+)))
     (ext:quit 0)))
 
-;; Success:
-;;
-;; Trial
-;; Alloy
-;; Kandria
-;; Nyxt
-;; Lem
-;; Mito
-;; Woo
-
-;; Semi:
-;; Radiance <- Resolves, but needs QL to compile, and QL can't be loaded by ASDF alone:
-;;   - https://github.com/quicklisp/quicklisp-client/issues/125
-;;   - https://github.com/quicklisp/quicklisp-client/issues/140
-
 ;; Failure:
 ;;
 ;; qlot <- impossible due to `package-inferred-system'.
