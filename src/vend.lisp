@@ -8,7 +8,7 @@
   "Given a collection of paths to asd files, extract all their system definitions
 and mutably add them to a given graph. As a return value, yields the keyword
 names of the added systems."
-  (t:transduce (t:comp #++(t:log (lambda (acc path) (vend-log "Reading ~a" path)))
+  (t:transduce (t:comp #++(t:log (lambda (acc path) (vlog "Reading ~a" path)))
                        (t:map #'sexps-from-file)
                        #'t:concatenate
                        (t:filter #'system?)
@@ -85,7 +85,7 @@ the root."
                    (unless url
                      (let ((route (reverse (car (g:paths-to graph dep)))))
                        (error "~a is not a known system.~%~%  ~{~a~^ -> ~}~%~%Please have it registered in the vend source code" (bold-red dep) route)))
-                   (vend-log "Fetching ~a" (bold dep))
+                   (vlog "Fetching ~a" (bold dep))
                    (clone url path)
                    (setf (gethash dep cloned) t)
                    (scan-systems! graph (asd-files path))
@@ -102,7 +102,7 @@ the root."
         (apply #'g:subgraph graph top)))))
 
 #++
-(let* ((cwd #p"/home/colin/code/common-lisp/radiance/")
+(let* ((cwd #p"/home/colin/code/common-lisp/pgloader/")
        (dir (p:ensure-directory (p:join cwd "vendored"))))
   (with-open-file (stream #p"deps.dot" :direction :output :if-exists :supersede)
     (g:to-dot-with-stream (work cwd dir) stream)))
@@ -113,10 +113,10 @@ the root."
   "vend - Vendor your Common Lisp dependencies
 
 Commands:
-  check - Check the dependency graph for issues
-  get   - Download all project dependencies into 'vendored/'
-  graph - Visualise a graph of all transitive project dependencies
-  repl  - Start a Lisp session with only your vendored ASDF systems
+  check [focus] - Check your dependencies for issues
+  get           - Download all project dependencies into 'vendored/'
+  graph [focus] - Visualise a graph of transitive project dependencies
+  repl  [args]  - Start a Lisp session with only your vendored ASDF systems
 
 Flags:
   --help    - Display this help message
@@ -138,12 +138,9 @@ Flags:
   "Download all dependencies."
   (let* ((cwd (ext:getcwd))
          (dir (p:ensure-directory (p:join cwd "vendored"))))
-    (cond ((probe-file dir)
-           (vend-log "Target directory already exists.")
-           (ext:quit 1))
-          (t (vend-log "Downloading dependencies.")
-             (work cwd dir)
-             (vend-log "Done.")))))
+    (vlog "Downloading dependencies.")
+    (work cwd dir)
+    (vlog "Done.")))
 
 (defun vend/repl (args)
   "Start a given repl."
@@ -169,7 +166,7 @@ Flags:
 ;; Woo
 
 ;; Semi:
-;; Radiance <- Resolves, but needs QL to compile, but QL can't be loaded by ASDF alone:
+;; Radiance <- Resolves, but needs QL to compile, and QL can't be loaded by ASDF alone:
 ;;   - https://github.com/quicklisp/quicklisp-client/issues/125
 ;;   - https://github.com/quicklisp/quicklisp-client/issues/140
 
@@ -177,6 +174,7 @@ Flags:
 ;;
 ;; qlot <- impossible due to `package-inferred-system'.
 ;; cl-torrents <- mockingbird using `package-inferred-system'.
+;; pgloader <- `list-of' doesn't exist.
 
 ;; Bad boys:
 ;; https://github.com/slyrus/opticl/blob/master/opticl-doc.asd

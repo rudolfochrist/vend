@@ -58,7 +58,7 @@
 
 ;; --- Logging --- ;;
 
-(defun vend-log (text &rest rest)
+(defun vlog (text &rest rest)
   (format t "~a " (bold-cyan "[vend]"))
   (apply #'format t text rest)
   (format t "~%"))
