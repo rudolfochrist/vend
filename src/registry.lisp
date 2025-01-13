@@ -9,6 +9,7 @@
     :alloy-animation :alloy
     :alloy-simple :alloy
     :alloy-simple-presentations :alloy
+    :array-operations/all :array-operations
     :binpack/2 :binpack
     :cl-aa :cl-vectors
     :cl-aa-misc :cl-vectors
@@ -33,6 +34,7 @@
     :lem-mailbox :lem-mailbox
     :list-of :asdf-finalizers
     :machine-state/opengl :machine-state
+    :maxpc-apache :april
     :mgl-pax-bootstrap :mgl-pax
     :nasdf :nyxt
     :north-drakma :north
@@ -117,6 +119,7 @@ map back to the parent, such that later only one git clone is performed.")
     :alloy           "https://github.com/Shirakumo/alloy.git"
     :anaphora        "https://github.com/spwhitton/anaphora.git"
     :ansi-test       "https://gitlab.common-lisp.net/ansi-test/ansi-test.git"
+    :array-operations "https://github.com/Lisp-Stat/array-operations.git"
     :array-utils     "https://github.com/Shinmera/array-utils.git"
     :arrow-macros    "https://github.com/hipeta/arrow-macros.git"
     :asdf            "https://gitlab.common-lisp.net/asdf/asdf.git"
@@ -228,6 +231,7 @@ map back to the parent, such that later only one git clone is performed.")
     :concrete-syntax-tree "https://github.com/s-expressionists/Concrete-Syntax-Tree.git"
     :contextl        "https://github.com/pcostanza/contextl.git"
     :convex-covering "https://github.com/Shirakumo/convex-covering.git"
+    :croatoan        "https://codeberg.org/McParen/croatoan.git"
     :cxml            "https://github.com/sharplispers/cxml.git"
     :damn-fast-priority-queue "https://github.com/phoe/damn-fast-priority-queue.git"
     :db3             "https://github.com/dimitri/cl-db3.git"
@@ -318,6 +322,7 @@ map back to the parent, such that later only one git clone is performed.")
     :let-plus        "https://github.com/sharplispers/let-plus.git"
     :lev             "https://github.com/fukamachi/lev.git"
     :lift            "https://github.com/hraban/lift.git"
+    :lisp-binary     "https://github.com/j3pic/lisp-binary.git"
     :lisp-namespace  "https://github.com/guicho271828/lisp-namespace.git"
     :lisp-preprocessor "https://github.com/cxxxr/lisp-preprocessor.git"
     :lisp-unit       "https://github.com/OdonataResearchLLC/lisp-unit.git"
@@ -329,6 +334,7 @@ map back to the parent, such that later only one git clone is performed.")
     :lru-cache       "https://github.com/Shinmera/lru-cache.git"
     :machine-state   "https://github.com/Shinmera/machine-state.git"
     :manifolds       "https://github.com/Shirakumo/manifolds.git"
+    :maxpc           "https://github.com/eugeneia/maxpc.git"
     :md5             "https://github.com/pmai/md5.git"
     :memory-regions  "https://github.com/Shinmera/memory-regions.git"
     :messagebox      "https://github.com/Shinmera/messagebox.git"
@@ -392,6 +398,7 @@ map back to the parent, such that later only one git clone is performed.")
     :qlot            "https://github.com/fukamachi/qlot.git"
     :qmynd           "https://github.com/qitab/qmynd.git"
     :qoi             "https://github.com/bpanthi977/qoi.git"
+    :quasiquote-2.0  "https://github.com/mabragor/quasiquote-2.0.git"
     :queues          "https://github.com/oconnore/queues.git"
     :quri            "https://github.com/fukamachi/quri.git"
     :qt+libs         "https://github.com/commonqt/commonqt.git"
@@ -418,6 +425,7 @@ map back to the parent, such that later only one git clone is performed.")
     :sha1            "https://github.com/massung/sha1.git"
     :sha3            "https://github.com/pmai/sha3.git"
     :shlex           "https://github.com/ruricolist/cl-shlex.git"
+    :simple-date-time "https://github.com/quek/simple-date-time.git"
     :simple-graph    "https://github.com/fosskers/simple-graph.git"
     :simple-tasks    "https://github.com/Shinmera/simple-tasks.git"
     :skippy          "https://github.com/xach/skippy.git"

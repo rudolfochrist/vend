@@ -257,6 +257,7 @@ projects:
 | Project  | Resolves? | Compiles? | Notes                            |
 |----------+-----------+-----------+----------------------------------|
 | [[https://github.com/Shirakumo/alloy][Alloy]]    | ✅       | ✅       |                                  |
+| [[https://github.com/phantomics/april][April]]    | ✅       | ✅       |                                  |
 | [[https://github.com/coalton-lang/coalton][Coalton]]  | ✅       | ✅       |                                  |
 | [[https://github.com/Shirakumo/kandria][Kandria]]  | ✅       | ✅       |                                  |
 | [[https://github.com/lem-project/lem][Lem]]      | ✅       | ✅       |                                  |
