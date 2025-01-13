@@ -139,7 +139,10 @@ Flags:
   (let* ((cwd (ext:getcwd))
          (dir (p:ensure-directory (p:join cwd "vendored"))))
     (vlog "Downloading dependencies.")
-    (work cwd dir)
+    (handler-bind ((error (lambda (c)
+                            (format t "~a~%" c)
+                            (ext:quit 1))))
+      (work cwd dir))
     (vlog "Done.")))
 
 (defun vend/repl (args)
