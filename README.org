@@ -114,6 +114,12 @@ mv vend ~/.local/bin/
 
 *** Arch
 
+=vend= is [[https://aur.archlinux.org/packages/vend][available on the AUR]] and can be installed with tools like [[https://github.com/fosskers/aura][Aura]]:
+
+#+begin_example
+aura -A vend
+#+end_example
+
 * Editor Integration
 ** Emacs
 
