@@ -311,6 +311,6 @@ But you're discouraged from doing this habitually.
 
 ** Why ECL?
 
-=vend= itself is built with ECL but you're free to use it to manage Lisp projects
+=vend= itself is built with [[https://ecl.common-lisp.dev/main.html][ECL]] but you're free to use it to manage Lisp projects
 of any compiler. ECL typically produces very small binaries; in the case of
 =vend= it's only a few hundred kilobytes, which eases distribution.
