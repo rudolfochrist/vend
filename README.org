@@ -258,6 +258,7 @@ projects:
 |-----------+-----------+-----------+----------+----------------------------------|
 | [[https://github.com/Shirakumo/alloy][Alloy]]     | ✅       | ✅       | UI       |                                  |
 | [[https://github.com/phantomics/april][April]]     | ✅       | ✅       | Language |                                  |
+| [[https://github.com/rabbibotton/clog][Clog]]      | ✅       | ✅       | GUI      |                                  |
 | [[https://github.com/coalton-lang/coalton][Coalton]]   | ✅       | ✅       | Language |                                  |
 | [[https://github.com/Shirakumo/kandria][Kandria]]   | ✅       | ✅       | Game     |                                  |
 | [[https://github.com/lem-project/lem][Lem]]       | ✅       | ✅       | Editor   |                                  |
