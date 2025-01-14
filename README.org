@@ -254,19 +254,20 @@ projects:
 - Resolves: Does =vend get= complete?
 - Compiles: Does =(asdf:load-system :foo)= within =vend repl= complete?
 
-| Project  | Resolves? | Compiles? | Notes                            |
-|----------+-----------+-----------+----------------------------------|
-| [[https://github.com/Shirakumo/alloy][Alloy]]    | ✅       | ✅       |                                  |
-| [[https://github.com/phantomics/april][April]]    | ✅       | ✅       |                                  |
-| [[https://github.com/coalton-lang/coalton][Coalton]]  | ✅       | ✅       |                                  |
-| [[https://github.com/Shirakumo/kandria][Kandria]]  | ✅       | ✅       |                                  |
-| [[https://github.com/lem-project/lem][Lem]]      | ✅       | ✅       |                                  |
-| [[https://github.com/fukamachi/mito][Mito]]     | ✅       | ✅       |                                  |
-| [[https://github.com/atlas-engineer/nyxt][Nyxt]]     | ✅       | ✅       |                                  |
-| [[https://github.com/fukamachi/qlot][Qlot]]     | ❌       | ❌       | Usage of =package-inferred-system= |
-| [[https://github.com/Shirakumo/radiance][Radiance]] | ✅       | ❌       | Requires QL, but: [[https://github.com/quicklisp/quicklisp-client/issues/125][(1)​]] [[https://github.com/quicklisp/quicklisp-client/issues/140][(2)​]]       |
-| [[https://github.com/Shirakumo/trial][Trial]]    | ✅       | ✅       |                                  |
-| [[https://github.com/fukamachi/woo][Woo]]      | ✅       | ✅       |                                  |
+| Project   | Resolves? | Compiles? | Category | Notes                            |
+|-----------+-----------+-----------+----------+----------------------------------|
+| [[https://github.com/Shirakumo/alloy][Alloy]]     | ✅       | ✅       | UI       |                                  |
+| [[https://github.com/phantomics/april][April]]     | ✅       | ✅       | Language |                                  |
+| [[https://github.com/coalton-lang/coalton][Coalton]]   | ✅       | ✅       | Language |                                  |
+| [[https://github.com/Shirakumo/kandria][Kandria]]   | ✅       | ✅       | Game     |                                  |
+| [[https://github.com/lem-project/lem][Lem]]       | ✅       | ✅       | Editor   |                                  |
+| [[https://github.com/Lisp-Stat/lisp-stat][Lisp-stat]] | ✅       | ✅       | Math     |                                  |
+| [[https://github.com/fukamachi/mito][Mito]]      | ✅       | ✅       | Database |                                  |
+| [[https://github.com/atlas-engineer/nyxt][Nyxt]]      | ✅       | ✅       | Browser  |                                  |
+| [[https://github.com/fukamachi/qlot][Qlot]]      | ❌       | ❌       | Dev tool | Usage of =package-inferred-system= |
+| [[https://github.com/Shirakumo/radiance][Radiance]]  | ✅       | ❌       | Web      | Requires QL, but: [[https://github.com/quicklisp/quicklisp-client/issues/125][(1)​]] [[https://github.com/quicklisp/quicklisp-client/issues/140][(2)​]]       |
+| [[https://github.com/Shirakumo/trial][Trial]]     | ✅       | ✅       | Gamedev  |                                  |
+| [[https://github.com/fukamachi/woo][Woo]]       | ✅       | ✅       | Web      |                                  |
 
 If during your usage of =vend= you discover a project that fails to resolve,
 please [[https://github.com/fosskers/vend/issues][open an Issue]].
