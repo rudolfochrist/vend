@@ -61,13 +61,15 @@
   "Systems are often bundled together into a single repository. This list helps
 map back to the parent, such that later only one git clone is performed.")
 
-(defparameter +exclude+
-  '(;; Not hosted on any public forges.
-    :hu.dwim.presentation
+(defparameter +missing+
+  '(:hu.dwim.presentation
     :hu.dwim.web-server
     :kmrcl
-    :ptester
-    ;; Compiler Internals
+    :ptester)
+  "Could not be found on a public repository.")
+
+(defparameter +exclude+
+  '(;; Compiler Internals
     :osi
     :sb-bsd-sockets
     :sb-cltl2
@@ -82,10 +84,6 @@ map back to the parent, such that later only one git clone is performed.")
     :syscalls
     :extensible-sequences
     :unix
-    ;; QT Confusion
-    ;; :qtcore
-    ;; :qtopengl
-    ;; :phonon
     ;; CFFI?
     :devil
     ;; A Corman-specific dependency requested in Bordeaux Threads.
