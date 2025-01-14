@@ -33,6 +33,7 @@ It's time for some peace of mind.
   - [[#vend-graph][vend graph]]
   - [[#vend-check][vend check]]
 - [[#coverage][Coverage]]
+- [[#compiler-compatibility][Compiler Compatibility]]
 - [[#faq][FAQ]]
   - [[#does-this-use-git-submodules][Does this use git submodules?]]
   - [[#can-i-install-new-dependencies-while-vend-repl-is-running][Can I install new dependencies while =vend repl= is running?]]
@@ -280,6 +281,22 @@ projects:
 If during your usage of =vend= you discover a project that fails to resolve,
 please [[https://github.com/fosskers/vend/issues][open an Issue]].
 
+* Compiler Compatibility
+
+=vend repl= works with the following compilers:
+
+| Compiler  | Status | Notes          |
+|-----------+--------+----------------|
+| SBCL      | ✅    |                |
+| ECL       | ✅    |                |
+| ABCL      | ✅    |                |
+| Clasp     | ✅    |                |
+| CCL       | ✅    |                |
+| Allegro   | ❌    | No =--eval= flag |
+| LispWorks | ❓    |                |
+
+[[https://wiki.archlinux.org/title/Common_Lisp#Historical][Historical implementations]] are not considered.
+
 * FAQ
 
 ** Does this use git submodules?
@@ -321,5 +338,5 @@ But you're discouraged from doing this habitually.
 ** Why ECL?
 
 =vend= itself is built with [[https://ecl.common-lisp.dev/main.html][ECL]] but you're free to use it to manage Lisp projects
-of any compiler. ECL typically produces very small binaries; in the case of
-=vend= it's only a few hundred kilobytes, which eases distribution.
+of any (modern) compiler. ECL typically produces very small binaries; in the
+case of =vend= it's only a few hundred kilobytes, which eases distribution.
