@@ -65,7 +65,8 @@ map back to the parent, such that later only one git clone is performed.")
   '(;; Not hosted on any public forges.
     :hu.dwim.presentation
     :hu.dwim.web-server
-    :list-of
+    :kmrcl
+    :ptester
     ;; Compiler Internals
     :osi
     :sb-bsd-sockets
@@ -73,8 +74,11 @@ map back to the parent, such that later only one git clone is performed.")
     :sb-concurrency
     :sb-gmp
     :sb-introspect
+    :sb-md5
     :sb-mpfr
     :sb-posix
+    :sb-sprof
+    :sb-rotate-byte
     :syscalls
     :extensible-sequences
     :unix
@@ -113,9 +117,11 @@ map back to the parent, such that later only one git clone is performed.")
     :3bz             "https://github.com/3b/3bz.git"
     :3d-math         "https://github.com/Shinmera/3d-math.git"
     :3d-spaces       "https://github.com/Shirakumo/3d-spaces.git"
+    :40ants-doc      "https://github.com/40ants/doc.git"
     :access          "https://github.com/AccelerationNet/access.git"
     :acclimation     "https://github.com/robert-strandh/Acclimation.git"
     :action-list     "https://github.com/Shinmera/action-list.git"
+    :adopt           "https://github.com/sjl/adopt.git"
     :alexandria      "https://gitlab.common-lisp.net/alexandria/alexandria.git"
     :alexandria+     "https://github.com/Symbolics/alexandria-plus.git"
     :alloy           "https://github.com/Shirakumo/alloy.git"
@@ -126,10 +132,12 @@ map back to the parent, such that later only one git clone is performed.")
     :arrow-macros    "https://github.com/hipeta/arrow-macros.git"
     :asdf            "https://gitlab.common-lisp.net/asdf/asdf.git"
     :asdf-finalizers "https://gitlab.common-lisp.net/asdf/asdf-finalizers.git"
+    :asdf-release-ops "https://github.com/daewok/asdf-release-ops.git"
     :assoc-utils     "https://github.com/fukamachi/assoc-utils.git"
     :async-process   "https://github.com/lem-project/async-process.git"
     :atomics         "https://github.com/Shinmera/atomics.git"
     :babel           "https://github.com/cl-babel/babel.git"
+    :bobbin          "https://github.com/sjl/bobbin.git"
     :bodge-heap      "https://github.com/borodust/bodge-heap.git"
     :bordeaux-threads "https://github.com/sionescu/bordeaux-threads.git"
     :binary-structures "https://github.com/Shinmera/binary-structures.git"
@@ -159,6 +167,7 @@ map back to the parent, such that later only one git clone is performed.")
     :cl-colors-ng    "https://codeberg.org/cage/cl-colors-ng.git"
     :cl-containers   "https://github.com/hraban/cl-containers.git"
     :cl-cookie       "https://github.com/fukamachi/cl-cookie.git"
+    :cl-coveralls    "https://github.com/fukamachi/cl-coveralls.git"
     :cl-csv          "https://github.com/AccelerationNet/cl-csv.git"
     :cl-store        "https://github.com/skypher/cl-store.git"
     :cl-custom-hash-table "https://github.com/metawilm/cl-custom-hash-table.git"
@@ -353,6 +362,7 @@ map back to the parent, such that later only one git clone is performed.")
     :lru-cache       "https://github.com/Shinmera/lru-cache.git"
     :machine-state   "https://github.com/Shinmera/machine-state.git"
     :manifolds       "https://github.com/Shirakumo/manifolds.git"
+    :marshal         "https://github.com/wlbr/cl-marshal.git"
     :maxpc           "https://github.com/eugeneia/maxpc.git"
     :md5             "https://github.com/pmai/md5.git"
     :memory-regions  "https://github.com/Shinmera/memory-regions.git"
@@ -375,6 +385,7 @@ map back to the parent, such that later only one git clone is performed.")
     :named-readtables "https://github.com/melisgl/named-readtables.git"
     :nclasses        "https://github.com/atlas-engineer/nclasses.git"
     :ndebug          "https://github.com/atlas-engineer/ndebug.git"
+    :net.didierverna.asdf-flv "https://github.com/didierverna/asdf-flv.git"
     :nfiles          "https://github.com/atlas-engineer/nfiles.git"
     :nhooks          "https://github.com/atlas-engineer/nhooks.git"
     :njson           "https://github.com/atlas-engineer/njson.git"
@@ -501,6 +512,7 @@ map back to the parent, such that later only one git clone is performed.")
     :trivial-rfc-1123 "https://github.com/stacksmith/trivial-rfc-1123.git"
     :trivial-shell   "https://github.com/hraban/trivial-shell.git"
     :trivial-ssh     "https://github.com/eudoxia0/trivial-ssh.git"
+    :trivial-sockets "https://github.com/usocket/trivial-sockets.git"
     :trivial-timeout "https://github.com/hraban/trivial-timeout.git"
     :trivial-types   "https://github.com/m2ym/trivial-types.git"
     :trivial-utf-8   "https://gitlab.common-lisp.net/trivial-utf-8/trivial-utf-8.git"
@@ -512,6 +524,7 @@ map back to the parent, such that later only one git clone is performed.")
     :uax-14          "https://github.com/Shinmera/uax-14.git"
     :uax-15          "https://github.com/sabracrolleton/uax-15.git"
     :ubiquitous      "https://github.com/Shinmera/ubiquitous.git"
+    :unit-test       "https://github.com/hanshuebner/unit-test.git"
     :unix-opts       "https://github.com/libre-man/unix-opts.git"
     :usocket         "https://github.com/usocket/usocket.git"
     :uuid            "https://github.com/dardoria/uuid.git"
@@ -519,6 +532,7 @@ map back to the parent, such that later only one git clone is performed.")
     :vom             "https://github.com/orthecreedence/vom.git"
     :websocket-driver "https://github.com/fukamachi/websocket-driver.git"
     :winhttp         "https://github.com/fjames86/winhttp.git"
+    :with-user-abort "https://github.com/compufox/with-user-abort.git"
     :woo             "https://github.com/fukamachi/woo.git"
     :x.let-star      "https://github.com/ks/X.LET-STAR.git"
     :xsubseq         "https://github.com/fukamachi/xsubseq.git"
@@ -545,6 +559,8 @@ map back to the parent, such that later only one git clone is performed.")
 
 (defun get-parent (sys)
   (or (getf +parents+ sys)
+      (when (string-starts-with? (symbol-name sys) "40ANTS-DOC-") :40ants-doc)
+      (when (string-starts-with? (symbol-name sys) "40ANTS-DOC/") :40ants-doc)
       (when (string-starts-with? (symbol-name sys) "ALLOY-") :alloy)
       (when (string-starts-with? (symbol-name sys) "CL-MARKLESS-") :cl-markless)
       (when (string-starts-with? (symbol-name sys) "CL-MIXED-") :cl-mixed)
