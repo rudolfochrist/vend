@@ -1,6 +1,10 @@
 # vend
 
-## Unreleased
+## 0.1.1 (2025-01-15)
+
+#### Added
+
+- Dependency support for more large projects.
 
 #### Fixed
 
