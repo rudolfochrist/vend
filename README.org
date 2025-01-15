@@ -274,7 +274,8 @@ projects:
 | [[https://github.com/atlas-engineer/nyxt][Nyxt]]      | ✅       | ✅       | Browser  |                                  |
 | [[https://github.com/ocicl/ocicl][OCICL]]     | ✅       | ✅       | Dev tool |                                  |
 | [[https://github.com/fukamachi/qlot][Qlot]]      | ❌       | ❌       | Dev tool | Usage of =package-inferred-system= |
-| [[https://github.com/Shirakumo/radiance][Radiance]]  | ✅       | ❌       | Web      | Requires QL, but: [[https://github.com/quicklisp/quicklisp-client/issues/125][(1)​]] [[https://github.com/quicklisp/quicklisp-client/issues/140][(2)​]]       |
+| [[https://github.com/quicklisp/quicklisp-client][Quicklisp]] | ✅       | ❌       | Dev tool | System is unloadable: [[https://github.com/quicklisp/quicklisp-client/issues/125][(1)​]] [[https://github.com/quicklisp/quicklisp-client/issues/140][(2)​]]   |
+| [[https://github.com/Shirakumo/radiance][Radiance]]  | ✅       | ✅       | Web      |                                  |
 | [[https://github.com/Shirakumo/trial][Trial]]     | ✅       | ✅       | Gamedev  |                                  |
 | [[https://github.com/fukamachi/woo][Woo]]       | ✅       | ✅       | Web      |                                  |
 
