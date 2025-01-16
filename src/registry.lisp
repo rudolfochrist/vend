@@ -27,6 +27,7 @@
     ;; NOTE: 2025-01-13 Breaking the normal pattern, this Clack-related system
     ;; actually lives in Woo.
     :clack-handler-woo :woo
+    :clim-lisp :mcclim
     :coalton/hashtable-shim :coalton
     :depot-in-memory :depot
     :depot-virtual :depot

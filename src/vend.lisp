@@ -8,7 +8,7 @@
   "Given a collection of paths to asd files, extract all their system definitions
 and mutably add them to a given graph. As a return value, yields the keyword
 names of the added systems."
-  (t:transduce (t:comp (t:log (lambda (acc path) (vlog "Reading ~a" path)))
+  (t:transduce (t:comp #++(t:log (lambda (acc path) (vlog "Reading ~a" path)))
                        (t:map #'systems-from-file)
                        #'t:concatenate
                        (t:map (lambda (sys)
@@ -97,7 +97,9 @@ the root."
                    (dolist (leaf (unique-leaves (apply #'g:subgraph graph top)))
                      (recurse top leaf))))))
       (let* ((top  (scan-systems! graph (root-asd-files cwd)))
-             (root (or (get-parent (car top)) (car top))))
+             (root (t:transduce (t:comp (t:map #'get-parent)
+                                        #'t:unique)
+                                #'t:first top)))
         ;; This is the root project directory, so it's already considered "cloned".
         (setf (gethash root cloned) t)
         (dolist (leaf (unique-leaves graph))
