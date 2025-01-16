@@ -85,18 +85,6 @@
 #++
 (string-from-file #p"vend.asd")
 
-(defun sexps-from-file (path)
-  "Read the sexps from a given file PATH without evaluating them."
-  (let* ((str    (string-from-file path))
-         (clean  (remove-reader-chars str))
-         (stream (make-string-input-stream clean)))
-    (loop for sexp = (read stream nil :eof)
-          until (eq sexp :eof)
-          collect sexp)))
-
-#++
-(sexps-from-file (car (asd-files "./")))
-
 (defun systems-from-file (path)
   "Extract all `defsystem' forms as proper sexp from a file."
   (t:transduce (t:map (lambda (sys)
@@ -119,10 +107,6 @@
 (reader-macro? (coerce "(+ 1 1)" 'list))
 #++
 (reader-macro? (coerce "" 'list))
-
-(defun other-reader? (chars)
-  (and (eql #\# (nth 0 chars))
-       (eql #\. (nth 1 chars))))
 
 (defun asdf-call? (chars)
   (and (eql #\( (nth 0 chars))
@@ -153,14 +137,6 @@
        (eql #\f (nth 4 chars))
        (eql #\: (nth 5 chars))))
 
-(defun asdf-/-call? (chars)
-  (and (eql #\( (nth 0 chars))
-       (eql #\a (nth 1 chars))
-       (eql #\s (nth 2 chars))
-       (eql #\d (nth 3 chars))
-       (eql #\f (nth 4 chars))
-       (eql #\/ (nth 5 chars))))
-
 (defun uiop-call? (chars)
   (and (eql #\( (nth 0 chars))
        (eql #\u (nth 1 chars))
@@ -184,15 +160,6 @@
        (eql #\l (nth 11 chars))
        (eql #\: (nth 12 chars))))
 
-(defun def? (chars)
-  (and (eql #\( (nth 0 chars))
-       (eql #\d (nth 1 chars))
-       (eql #\e (nth 2 chars))
-       (eql #\f (nth 3 chars))
-       (or (eql #\c (nth 4 chars))
-           (eql #\m (nth 4 chars))
-           (eql #\v (nth 4 chars)))))
-
 (defun checkl? (chars)
   (and (eql #\( (nth 0 chars))
        (eql #\c (nth 1 chars))
@@ -201,28 +168,6 @@
        (eql #\c (nth 4 chars))
        (eql #\k (nth 5 chars))
        (eql #\l (nth 6 chars))
-       (eql #\: (nth 7 chars))))
-
-(defun eval-when? (chars)
-  (and (eql #\( (nth 0 chars))
-       (eql #\e (nth 1 chars))
-       (eql #\v (nth 2 chars))
-       (eql #\a (nth 3 chars))
-       (eql #\l (nth 4 chars))
-       (eql #\- (nth 5 chars))
-       (eql #\w (nth 6 chars))
-       (eql #\h (nth 7 chars))
-       (eql #\e (nth 8 chars))
-       (eql #\n (nth 9 chars))))
-
-(defun gendoc? (chars)
-  (and (eql #\( (nth 0 chars))
-       (eql #\g (nth 1 chars))
-       (eql #\e (nth 2 chars))
-       (eql #\n (nth 3 chars))
-       (eql #\d (nth 4 chars))
-       (eql #\o (nth 5 chars))
-       (eql #\c (nth 6 chars))
        (eql #\: (nth 7 chars))))
 
 (defun at-defsystem? (str ix)
@@ -268,7 +213,6 @@ to continue from."
 #++
 (extract-defsystem "" 0)
 
-;; TODO: 2025-01-16 Get around `ironclad' doing a `defsystem' inside of a macro.
 (defun all-system-strings (str)
   "Extract all `defsystem' forms as substrings from some parent string."
   (let ((len (length str)))
@@ -296,66 +240,6 @@ succeeding as-is on a given string."
                      ;; proactively remove them.
                      ((reader-macro? chars)
                       (keep (cons #\t acc) (chuck 1 (cddr tail))))
-                     ;; ((other-reader? chars)
-                     ;;  (keep acc (cdr tail)))
-                     ;; ;; Likewise, some clever package authors like to utilise
-                     ;; ;; `asdf' and `uiop' directly in their system definitions.
-                     ;; ;; This similarly causes problems with `read', so we remove
-                     ;; ;; such calls.
-                     ((or (asdf-call? chars)
-                          (uiop-call? chars))
-                      (keep (cons #\( acc) (nthcdr 5 tail)))
-                     ((quoted-asdf-call? chars)
-                      (keep (cons #\' acc) (nthcdr 5 tail)))
-                     ((command-asdf-call? chars)
-                      (keep (cons #\space acc) (nthcdr 5 tail)))
-                     ((grovel-call? chars)
-                      (keep (cons #\t acc) (chuck 1 (cddr tail))))
-                     ;; ((def? chars)
-                     ;;  (keep (cons #\t acc) (chuck 1 (cddr tail))))
-                     ((checkl? chars)
-                      (keep (cons #\t acc) (chuck 1 (cddr tail))))
-                     ;; ((eval-when? chars)
-                     ;;  (keep (cons #\t acc) (chuck 1 (cddr tail))))
-                     ;; ((asdf-/-call? chars)
-                     ;;  (keep (cons #\( acc) (until-colon tail)))
-                     ;; ((gendoc? chars)
-                     ;;  (keep (cons #\( acc) (nthcdr 7 tail)))
-                     (t (keep (cons head acc) tail)))))
-           (chuck (parens chars)
-             (let ((head (car chars)))
-               (cond ((zerop parens) chars)
-                     ((null head) '())
-                     ((eql #\( head) (chuck (1+ parens) (cdr chars)))
-                     ((eql #\) head) (chuck (1- parens) (cdr chars)))
-                     (t (chuck parens (cdr chars))))))
-           (until-colon (chars)
-             (let ((head (car chars)))
-               (cond ((null head) '())
-                     ((eql #\: head) (cdr chars))
-                     (t (until-colon (cdr chars)))))))
-    (coerce (reverse (keep '() (coerce str 'list)))
-            'string)))
-
-#++
-(sanitize "(asdf:defsystem :foo
-:long-description #.(+ 1 1)
-:foo (asdf:bar)
-:baz (cffi-grovel:grovel-file 1)
-:beep (checkl:tests 1))")
-
-(defun remove-reader-chars (str)
-  "Replace any `#.' sexp with T."
-  (labels ((keep (acc chars)
-             (let ((head (car chars))
-                   (tail (cdr chars)))
-               (cond ((null head) acc)
-                     ;; The presence of read-time macros confuses `read', so we
-                     ;; proactively remove them.
-                     ((reader-macro? chars)
-                      (keep (cons #\t acc) (chuck 1 (cddr tail))))
-                     ((other-reader? chars)
-                      (keep acc (cdr tail)))
                      ;; Likewise, some clever package authors like to utilise
                      ;; `asdf' and `uiop' directly in their system definitions.
                      ;; This similarly causes problems with `read', so we remove
@@ -368,17 +252,9 @@ succeeding as-is on a given string."
                      ((command-asdf-call? chars)
                       (keep (cons #\space acc) (nthcdr 5 tail)))
                      ((grovel-call? chars)
-                      (keep (cons #\( acc) (nthcdr 12 tail)))
-                     ((def? chars)
                       (keep (cons #\t acc) (chuck 1 (cddr tail))))
                      ((checkl? chars)
-                      (keep (cons #\( acc) (nthcdr 7 tail)))
-                     ((eval-when? chars)
                       (keep (cons #\t acc) (chuck 1 (cddr tail))))
-                     ((asdf-/-call? chars)
-                      (keep (cons #\( acc) (until-colon tail)))
-                     ((gendoc? chars)
-                      (keep (cons #\( acc) (nthcdr 7 tail)))
                      (t (keep (cons head acc) tail)))))
            (chuck (parens chars)
              (let ((head (car chars)))
@@ -386,41 +262,17 @@ succeeding as-is on a given string."
                      ((null head) '())
                      ((eql #\( head) (chuck (1+ parens) (cdr chars)))
                      ((eql #\) head) (chuck (1- parens) (cdr chars)))
-                     (t (chuck parens (cdr chars))))))
-           (until-colon (chars)
-             (let ((head (car chars)))
-               (cond ((null head) '())
-                     ((eql #\: head) (cdr chars))
-                     (t (until-colon (cdr chars)))))))
+                     (t (chuck parens (cdr chars)))))))
     (coerce (reverse (keep '() (coerce str 'list)))
             'string)))
 
 #++
-(remove-reader-chars "(defsystem foo)")
-#++
-(remove-reader-chars "(asdf:defsystem :foo :long-description #.(+ 1 1) :foo (asdf:bar))")
-#++
-(remove-reader-chars " asdf:foo")
-#++
-(remove-reader-chars "(cffi-grovel:foo 1)")
-#++
-(remove-reader-chars "(checkl:foo 1)")
-#++
-(remove-reader-chars "(defmethod foo (a b) (+ 1 1)) (hi)")
-#++
-(remove-reader-chars (string-from-file #p"/home/colin/code/common-lisp/trial/vendored/trivial-features/trivial-features-tests.asd"))
-#++
-(remove-reader-chars "(asdf/parse-defsystem:defsystem foo)")
-#++
-(remove-reader-chars "(defvar blah 1)")
-#++
-(remove-reader-chars "(gendoc:define-gendoc-load-op blah 1)")
-#++
-(remove-reader-chars "#.*foo*")
-
-(defun system? (sexp)
-  (and (eq 'cons (type-of sexp))
-       (string= "DEFSYSTEM" (symbol-name (car sexp)))))
+(sanitize "(asdf:defsystem :foo
+:long-description #.(+ 1 1)
+:foo (asdf:bar)
+:baz (cffi-grovel:grovel-file 1)
+:beep (checkl:tests 1)
+:action asdf:do-it)")
 
 (defun depends-from-system (sexp)
   "Extract the `:depends-on' list from a sexp, if it has one."

@@ -165,12 +165,6 @@ Flags:
           (t (ext:process-command-args :rules +vend-rules+)))
     (ext:quit 0)))
 
-;; Failure:
-;;
-;; qlot <- impossible due to `package-inferred-system'.
-;; cl-torrents <- mockingbird using `package-inferred-system'.
-;; pgloader <- `list-of' doesn't exist.
-
 ;; Bad boys:
 ;; https://github.com/slyrus/opticl/blob/master/opticl-doc.asd
 ;; https://github.com/rpav/fast-io/blob/master/fast-io-test.asd
