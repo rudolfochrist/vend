@@ -76,10 +76,8 @@
 
 (defun string-from-file (path)
   "Preserves newlines but removes whole-line comments."
-  (t:transduce (t:comp (t:map (lambda (line) (string-trim " " line)))
-                       (t:filter (lambda (line) (not (comment? line))))
-                       ;; HACK: 2025-01-11 chipz is a naughty system.
-                       (t:filter (lambda (line) (not (chipz? line))))
+  (t:transduce (t:comp (t:filter (lambda (line) (not (comment? line))))
+                       (t:filter (lambda (line) (not (chipz? (string-left-trim " " line)))))
                        (t:intersperse '(#\Newline))
                        #'t:concatenate)
                #'t:string path))
@@ -98,6 +96,17 @@
 
 #++
 (sexps-from-file (car (asd-files "./")))
+
+(defun systems-from-file (path)
+  "Extract all `defsystem' forms as proper sexp from a file."
+  (t:transduce (t:map (lambda (sys)
+                        (let* ((clean (sanitize sys))
+                               (stream (make-string-input-stream clean)))
+                          (read stream nil :eof))))
+               #'t:cons (all-system-strings (string-from-file path))))
+
+#++
+(systems-from-file (car (asd-files "./")))
 
 (defun reader-macro? (chars)
   (and (eql #\# (nth 0 chars))
@@ -215,6 +224,125 @@
        (eql #\o (nth 5 chars))
        (eql #\c (nth 6 chars))
        (eql #\: (nth 7 chars))))
+
+(defun at-defsystem? (str ix)
+  "Does the string at the given index start with a defsystem form?"
+  (and (or (string-starts-with? str "(defsystem " :from ix)
+           (string-starts-with? str "(asdf:defsystem " :from ix))
+       (or (zerop ix)
+           ;; Due to Ironclad's ridiculous ASD file.
+           (eql #\newline (aref str (1- ix))))))
+
+#++
+(at-defsystem? "(defsystem :foo)" 0)
+#++
+(at-defsystem? " (defsystem :foo)" 1)
+#++
+(at-defsystem? " (asdf:defsystem :foo)" 1)
+#++
+(at-defsystem? "(push 1 2)" 0)
+#++
+(at-defsystem? "`(defsystem :foo)" 1)
+
+(defun extract-defsystem (str ix)
+  "Given a starting index into a string, and the knowledge that a `defsystem' form
+starts there, extract that substring. As a second return value, yields the index
+to continue from."
+  (let ((len (length str)))
+    (labels ((find-closing-paren (parens curr-ix)
+               (let ((char (aref str curr-ix)))
+                 (cond ((>= curr-ix len) nil)
+                       ((eql #\( char) (find-closing-paren (1+ parens) (1+ curr-ix)))
+                       ((and (eql #\) char) (= 1 parens)) curr-ix)
+                       ((eql #\) char) (find-closing-paren (1- parens) (1+ curr-ix)))
+                       (t (find-closing-paren parens (1+ curr-ix)))))))
+      (let ((end (find-closing-paren 1 (1+ ix))))
+        (when end
+          (values (subseq str ix (1+ end))
+                  (1+ end)))))))
+
+#++
+(extract-defsystem "(defsystem :foo :depends-on (:a :b :c)) (next)" 0)
+#++
+(extract-defsystem " (defsystem :foo :depends-on (:a :b :c)) (next)" 1)
+#++
+(extract-defsystem "" 0)
+
+;; TODO: 2025-01-16 Get around `ironclad' doing a `defsystem' inside of a macro.
+(defun all-system-strings (str)
+  "Extract all `defsystem' forms as substrings from some parent string."
+  (let ((len (length str)))
+    (labels ((recurse (acc ix)
+               (cond ((>= ix len) acc)
+                     ((at-defsystem? str ix)
+                      (multiple-value-bind (sub next) (extract-defsystem str ix)
+                        (recurse (cons sub acc) next)))
+                     (t (recurse acc (1+ ix))))))
+      (nreverse (recurse '() 0)))))
+
+#++
+(all-system-strings "(foo) (defsystem :bar) (push 1 2) (defsystem :baz) t")
+#++
+(all-system-strings "")
+
+(defun sanitize (str)
+  "Remove and/or replace a number of naughty forms that prevent `read' from
+succeeding as-is on a given string."
+  (labels ((keep (acc chars)
+             (let ((head (car chars))
+                   (tail (cdr chars)))
+               (cond ((null head) acc)
+                     ;; The presence of read-time macros confuses `read', so we
+                     ;; proactively remove them.
+                     ((reader-macro? chars)
+                      (keep (cons #\t acc) (chuck 1 (cddr tail))))
+                     ;; ((other-reader? chars)
+                     ;;  (keep acc (cdr tail)))
+                     ;; ;; Likewise, some clever package authors like to utilise
+                     ;; ;; `asdf' and `uiop' directly in their system definitions.
+                     ;; ;; This similarly causes problems with `read', so we remove
+                     ;; ;; such calls.
+                     ((or (asdf-call? chars)
+                          (uiop-call? chars))
+                      (keep (cons #\( acc) (nthcdr 5 tail)))
+                     ((quoted-asdf-call? chars)
+                      (keep (cons #\' acc) (nthcdr 5 tail)))
+                     ;; ((command-asdf-call? chars)
+                     ;;  (keep (cons #\space acc) (nthcdr 5 tail)))
+                     ((grovel-call? chars)
+                      (keep (cons #\t acc) (chuck 1 (cddr tail))))
+                     ;; ((def? chars)
+                     ;;  (keep (cons #\t acc) (chuck 1 (cddr tail))))
+                     ((checkl? chars)
+                      (keep (cons #\t acc) (chuck 1 (cddr tail))))
+                     ;; ((eval-when? chars)
+                     ;;  (keep (cons #\t acc) (chuck 1 (cddr tail))))
+                     ;; ((asdf-/-call? chars)
+                     ;;  (keep (cons #\( acc) (until-colon tail)))
+                     ;; ((gendoc? chars)
+                     ;;  (keep (cons #\( acc) (nthcdr 7 tail)))
+                     (t (keep (cons head acc) tail)))))
+           (chuck (parens chars)
+             (let ((head (car chars)))
+               (cond ((zerop parens) chars)
+                     ((null head) '())
+                     ((eql #\( head) (chuck (1+ parens) (cdr chars)))
+                     ((eql #\) head) (chuck (1- parens) (cdr chars)))
+                     (t (chuck parens (cdr chars))))))
+           (until-colon (chars)
+             (let ((head (car chars)))
+               (cond ((null head) '())
+                     ((eql #\: head) (cdr chars))
+                     (t (until-colon (cdr chars)))))))
+    (coerce (reverse (keep '() (coerce str 'list)))
+            'string)))
+
+#++
+(sanitize "(asdf:defsystem :foo
+:long-description #.(+ 1 1)
+:foo (asdf:bar)
+:baz (cffi-grovel:grovel-file 1)
+:beep (checkl:tests 1))")
 
 (defun remove-reader-chars (str)
   "Replace any `#.' sexp with T."

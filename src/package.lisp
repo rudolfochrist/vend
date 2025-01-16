@@ -13,8 +13,8 @@
 
 ;; --- Strings --- ;;
 
-(defun string-starts-with? (string prefix)
-  (let ((pos (mismatch prefix string)))
+(defun string-starts-with? (string prefix &key (from 0))
+  (let ((pos (mismatch prefix string :start2 from)))
     (or (null pos)
         (>= pos (length prefix)))))
 
@@ -22,6 +22,8 @@
 (string-starts-with? "trial-alloy" "trial-")
 #++
 (string-starts-with? "hello" "b")
+#++
+(string-starts-with? "hello" "llo" :from 2)
 
 (defun into-keyword (s)
   "Turn anything stringy or symboly into a keyword."

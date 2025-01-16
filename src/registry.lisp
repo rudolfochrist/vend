@@ -10,6 +10,7 @@
     :alloy-simple :alloy
     :alloy-simple-presentations :alloy
     :array-operations/all :array-operations
+    :automaton :mcclim
     :binpack/2 :binpack
     :cl-aa :cl-vectors
     :cl-aa-misc :cl-vectors
@@ -36,10 +37,12 @@
     :list-of :asdf-finalizers
     :machine-state/opengl :machine-state
     :maxpc-apache :april
+    :mcclim-layouts :mcclim
     :mgl-pax-bootstrap :mgl-pax
     :nasdf :nyxt
     :north-drakma :north
     :nsymbols/star :nsymbols
+    :persistent :mcclim
     :plump-dom :plump
     :ql-dist :quicklisp
     :queues.priority-queue :queues
@@ -173,6 +176,7 @@ map back to the parent, such that later only one git clone is performed.")
     :cl-fad          "https://github.com/edicl/cl-fad.git"
     :cl-fbx          "https://github.com/Shirakumo/cl-fbx.git"
     :cl-fond         "https://github.com/Shirakumo/cl-fond.git"
+    :cl-freetype2    "https://github.com/rpav/cl-freetype2.git"
     :cl-ftp          "https://github.com/pinterface/cl-ftp.git"
     :cl-gamepad      "https://github.com/Shirakumo/cl-gamepad.git"
     :cl-gltf         "https://github.com/Shirakumo/cl-gltf.git"
@@ -238,6 +242,7 @@ map back to the parent, such that later only one git clone is performed.")
     :clss            "https://github.com/Shinmera/CLSS.git"
     :clump           "https://github.com/robert-strandh/Clump.git"
     :cluffer         "https://github.com/robert-strandh/Cluffer.git"
+    :clx             "https://github.com/sharplispers/clx.git"
     :cocoas          "https://github.com/Shinmera/cocoas.git"
     :colored         "https://github.com/Shinmera/colored.git"
     :colorize        "https://github.com/kingcons/colorize.git"
@@ -281,20 +286,21 @@ map back to the parent, such that later only one git clone is performed.")
     :fast-io         "https://github.com/fosskers/fast-io.git"
     :fast-websocket  "https://github.com/fukamachi/fast-websocket.git"
     :feedback        "https://github.com/Shirakumo/feedback.git"
-    :file-select     "https://github.com/Shinmera/file-select.git"
-    :flow            "https://github.com/Shinmera/flow.git"
-    :font-discovery  "https://github.com/Shinmera/font-discovery.git"
-    :form-fiddle     "https://github.com/Shinmera/form-fiddle.git"
     :fiasco          "https://github.com/joaotavora/fiasco.git"
     :file-attributes "https://github.com/Shinmera/file-attributes.git"
     :file-notify     "https://github.com/Shinmera/file-notify.git"
+    :file-select     "https://github.com/Shinmera/file-select.git"
     :filepaths       "https://codeberg.org/fosskers/filepaths.git"
     :filesystem-utils "https://github.com/Shinmera/filesystem-utils.git"
     :fiveam          "https://github.com/lispci/fiveam.git"
     :flexi-streams   "https://github.com/edicl/flexi-streams.git"
+    :flexichain      "https://github.com/robert-strandh/Flexichain.git"
     :float-features  "https://github.com/Shinmera/float-features.git"
+    :flow            "https://github.com/Shinmera/flow.git"
     :fn-macro        "https://github.com/fosskers/fn-macro.git"
+    :font-discovery  "https://github.com/Shinmera/font-discovery.git"
     :for             "https://github.com/Shinmera/for.git"
+    :form-fiddle     "https://github.com/Shinmera/form-fiddle.git"
     :framebuffers    "https://github.com/Shirakumo/framebuffers.git"
     :frugal-uuid     "https://github.com/ak-coram/cl-frugal-uuid.git"
     :fset            "https://gitlab.common-lisp.net/fset/fset.git"
@@ -355,6 +361,7 @@ map back to the parent, such that later only one git clone is performed.")
     :lisp-unit2      "https://github.com/AccelerationNet/lisp-unit2.git"
     :local-time      "https://github.com/dlowe-net/local-time.git"
     :log4cl          "https://github.com/sharplispers/log4cl.git"
+    :lorem-ipsum     "https://github.com/phoe/lorem-ipsum.git"
     :lparallel       "https://github.com/lmj/lparallel.git"
     :lquery          "https://github.com/Shinmera/lquery.git"
     :lru-cache       "https://github.com/Shinmera/lru-cache.git"
@@ -362,6 +369,7 @@ map back to the parent, such that later only one git clone is performed.")
     :manifolds       "https://github.com/Shirakumo/manifolds.git"
     :marshal         "https://github.com/wlbr/cl-marshal.git"
     :maxpc           "https://github.com/eugeneia/maxpc.git"
+    :mcclim          "https://codeberg.org/McCLIM/McCLIM.git"
     :md5             "https://github.com/pmai/md5.git"
     :memory-regions  "https://github.com/Shinmera/memory-regions.git"
     :messagebox      "https://github.com/Shinmera/messagebox.git"

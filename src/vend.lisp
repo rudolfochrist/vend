@@ -8,10 +8,9 @@
   "Given a collection of paths to asd files, extract all their system definitions
 and mutably add them to a given graph. As a return value, yields the keyword
 names of the added systems."
-  (t:transduce (t:comp #++(t:log (lambda (acc path) (vlog "Reading ~a" path)))
-                       (t:map #'sexps-from-file)
+  (t:transduce (t:comp (t:log (lambda (acc path) (vlog "Reading ~a" path)))
+                       (t:map #'systems-from-file)
                        #'t:concatenate
-                       (t:filter #'system?)
                        (t:map (lambda (sys)
                                 (let ((name (system-name sys)))
                                   (g:add-node! graph name)
@@ -108,7 +107,7 @@ the root."
         (apply #'g:subgraph graph top)))))
 
 #++
-(let* ((cwd #p"/home/colin/code/common-lisp/ocicl/")
+(let* ((cwd #p"/home/colin/code/common-lisp/trial/")
        (dir (p:ensure-directory (p:join cwd "vendored"))))
   (with-open-file (stream #p"deps.dot" :direction :output :if-exists :supersede)
     (g:to-dot-with-stream (work cwd dir) stream)))
