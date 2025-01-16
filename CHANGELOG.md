@@ -1,10 +1,11 @@
 # vend
 
-## Unreleased
+## 0.1.2 (2025-01-17)
 
 #### Added
 
 - `vend check` also warns about dependencies that couldn't be fetched.
+- Improved dependency scanning accuracy and performance.
 
 ## 0.1.1 (2025-01-15)
 
