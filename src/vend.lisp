@@ -107,7 +107,7 @@ the root."
         (apply #'g:subgraph graph top)))))
 
 #++
-(let* ((cwd #p"/home/colin/code/common-lisp/trial/")
+(let* ((cwd #p"/home/colin/code/common-lisp/McCLIM/")
        (dir (p:ensure-directory (p:join cwd "vendored"))))
   (with-open-file (stream #p"deps.dot" :direction :output :if-exists :supersede)
     (g:to-dot-with-stream (work cwd dir) stream)))

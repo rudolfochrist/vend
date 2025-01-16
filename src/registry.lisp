@@ -19,6 +19,7 @@
     :cl-glut :cl-opengl
     :cl-paths :cl-vectors
     :cl-paths-ttf :cl-vectors
+    :cl-pdf-parser :cl-pdf
     :cl-plus-c :cl-autowrap
     :cl-postgres :postmodern
     :cl-ppcre-unicode :cl-ppcre
@@ -172,6 +173,8 @@ map back to the parent, such that later only one git clone is performed.")
     :cl-csv          "https://github.com/AccelerationNet/cl-csv.git"
     :cl-store        "https://github.com/skypher/cl-store.git"
     :cl-custom-hash-table "https://github.com/metawilm/cl-custom-hash-table.git"
+    :cl-dejavu       "https://codeberg.org/TurtleWare/cl-dejavu.git"
+    :cl-dot          "https://github.com/michaelw/cl-dot.git"
     :cl-electron     "https://github.com/atlas-engineer/cl-electron.git"
     :cl-fad          "https://github.com/edicl/cl-fad.git"
     :cl-fbx          "https://github.com/Shirakumo/cl-fbx.git"
@@ -205,6 +208,7 @@ map back to the parent, such that later only one git clone is performed.")
     :cl-opus         "https://github.com/Shirakumo/cl-opus.git"
     :cl-package-locks "https://github.com/elliottjohnson/cl-package-locks.git"
     :cl-pass         "https://github.com/eudoxia0/cl-pass.git"
+    :cl-pdf          "https://github.com/mbattyani/cl-pdf.git"
     :cl-ppcre        "https://github.com/edicl/cl-ppcre.git"
     :cl-prevalence   "https://github.com/40ants/cl-prevalence.git"
     :cl-qoa          "https://github.com/Shinmera/cl-qoa.git"
@@ -228,6 +232,7 @@ map back to the parent, such that later only one git clone is performed.")
     :cl-vorbis       "https://github.com/Shirakumo/cl-vorbis.git"
     :cl-wavefront    "https://github.com/Shirakumo/cl-wavefront.git"
     :cl-webkit2      "https://github.com/joachifm/cl-webkit.git"
+    :cl-who          "https://github.com/edicl/cl-who.git"
     :cl-yaml         "https://github.com/eudoxia0/cl-yaml.git"
     :clache          "https://github.com/html/clache.git"
     :clack           "https://github.com/fukamachi/clack.git"
@@ -465,6 +470,7 @@ map back to the parent, such that later only one git clone is performed.")
     :serapeum        "https://github.com/ruricolist/serapeum.git"
     :sha1            "https://github.com/massung/sha1.git"
     :sha3            "https://github.com/pmai/sha3.git"
+    :shasht          "https://github.com/yitzchak/shasht.git"
     :shlex           "https://github.com/ruricolist/cl-shlex.git"
     :simple-date-time "https://github.com/quek/simple-date-time.git"
     :simple-graph    "https://github.com/fosskers/simple-graph.git"
@@ -472,6 +478,7 @@ map back to the parent, such that later only one git clone is performed.")
     :skippy          "https://github.com/xach/skippy.git"
     :slynk           "https://github.com/joaotavora/sly.git"
     :smart-buffer    "https://github.com/fukamachi/smart-buffer.git"
+    :spatial-trees   "https://github.com/rpav/spatial-trees.git"
     :special-functions "https://github.com/Lisp-Stat/special-functions.git"
     :speechless      "https://github.com/Shirakumo/speechless.git"
     :split-sequence  "https://github.com/sharplispers/split-sequence.git"
@@ -504,6 +511,7 @@ map back to the parent, such that later only one git clone is performed.")
     :trivial-cltl2   "https://github.com/Zulu-Inuoe/trivial-cltl2.git"
     :trivial-custom-debugger "https://github.com/phoe/trivial-custom-debugger.git"
     :trivial-deprecate "https://github.com/Shinmera/trivial-deprecate.git"
+    :trivial-do      "https://github.com/yitzchak/trivial-do.git"
     :trivial-extensible-sequences "https://github.com/Shinmera/trivial-extensible-sequences.git"
     :trivial-garbage "https://github.com/trivial-garbage/trivial-garbage.git"
     :trivial-gray-streams "https://github.com/trivial-gray-streams/trivial-gray-streams.git"
