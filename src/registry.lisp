@@ -28,6 +28,7 @@
     ;; actually lives in Woo.
     :clack-handler-woo :woo
     :clim-lisp :mcclim
+    :clue :alive-lsp
     :coalton/hashtable-shim :coalton
     :depot-in-memory :depot
     :depot-virtual :depot
@@ -79,6 +80,7 @@ map back to the parent, such that later only one git clone is performed.")
     :sb-bsd-sockets
     :sb-cltl2
     :sb-concurrency
+    :sb-cover
     :sb-gmp
     :sb-introspect
     :sb-md5
@@ -89,6 +91,8 @@ map back to the parent, such that later only one git clone is performed.")
     :syscalls
     :extensible-sequences
     :unix
+    ;; Test systems
+    :foo :foo/2
     ;; CFFI?
     :devil
     ;; A Corman-specific dependency requested in Bordeaux Threads.
