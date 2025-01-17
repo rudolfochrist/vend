@@ -27,6 +27,8 @@ It's time for some peace of mind.
 - [[#editor-integration][Editor Integration]]
   - [[#emacs][Emacs]]
     - [[#doom-emacs][Doom Emacs]]
+  - [[#lem][Lem]]
+  - [[#vim][Vim]]
 - [[#usage][Usage]]
   - [[#vend-get][vend get]]
   - [[#vend-repl][vend repl]]
@@ -122,9 +124,12 @@ aura -A vend
 #+end_example
 
 * Editor Integration
+
+If rough order of support / integration quality.
+
 ** Emacs
 
-Sly and Slime have variables for setting how Lisp REPLs should be launched:
+[[https://github.com/joaotavora/sly][Sly]] and [[https://github.com/slime/slime][Slime]] have variables for setting how Lisp REPLs should be launched:
 
 #+begin_src emacs-lisp
 (setq sly-default-lisp 'sbcl
@@ -153,6 +158,39 @@ As of 2025 January, you also need to manually disable =sly-stepper= and
 (package! sly-stepper :disable t)
 (package! sly-quicklisp :disable t)
 #+end_src
+
+** Lem
+
+[[https://lem-project.github.io/][Lem]] is built and configured in Common Lisp and so offers excellent support for
+it. To start a REPL with =vend=:
+
+#+begin_example
+C-u M-x slime <RET> vend repl
+#+end_example
+
+And all your local systems will be available for loading.
+
+** Vim
+
+[[https://github.com/kovisoft/slimv][Slimv]] is a port of Slime from Emacs that utilises Slime's Swank backend server
+for a very similar experience to Emacs. However, unlike Emacs which supports
+multiple running Lisps, Slimv requires one standalone server that persists
+through Vim restarts.
+
+If we want our dependencies in =vendored/= to be visible to Slimv, we must start
+its server manually from our project directory:
+
+#+begin_example
+> cd project/
+> vend repl ecl --load /home/YOU/.vim/pack/common-lisp/start/slimv/slime/start-swank.lisp
+#+end_example
+
+Now, =,c= (REPL Connect) within Vim will automatically find the running server,
+and you can load any system available in your project and in =vendored/=.
+
+If you want to switch projects, you would need to quit the REPL server manually
+and restart it as above. You may also wish to set a shell alias or create a
+wrapper script for the long invocation shown above.
 
 * Usage
 ** vend get
@@ -261,24 +299,24 @@ projects:
 - Resolves: Does =vend get= complete?
 - Compiles: Does =(asdf:load-system :foo)= within =vend repl= complete?
 
-| Project   | Resolves? | Compiles? | Category | Notes                            |
-|-----------+-----------+-----------+----------+----------------------------------|
-| [[https://github.com/Shirakumo/alloy][Alloy]]     | ✅        | ✅        | UI       |                                  |
-| [[https://github.com/phantomics/april][April]]     | ✅        | ✅        | Language |                                  |
-| [[https://github.com/rabbibotton/clog][Clog]]      | ✅        | ✅        | GUI      |                                  |
-| [[https://github.com/coalton-lang/coalton][Coalton]]   | ✅        | ✅        | Language |                                  |
-| [[https://github.com/Shirakumo/kandria][Kandria]]   | ✅        | ✅        | Game     |                                  |
-| [[https://github.com/lem-project/lem][Lem]]       | ✅        | ✅        | Editor   |                                  |
-| [[https://github.com/Lisp-Stat/lisp-stat][Lisp-stat]] | ✅        | ✅        | Math     |                                  |
-| [[https://codeberg.org/McCLIM/McCLIM][McCLIM]]    | ✅        | ✅        | GUI      |                                  |
-| [[https://github.com/fukamachi/mito][Mito]]      | ✅        | ✅        | Database |                                  |
-| [[https://github.com/atlas-engineer/nyxt][Nyxt]]      | ✅        | ✅        | Browser  |                                  |
-| [[https://github.com/ocicl/ocicl][OCICL]]     | ✅        | ✅        | Dev tool |                                  |
-| [[https://github.com/fukamachi/qlot][Qlot]]      | ❌        | ❌        | Dev tool | Usage of =package-inferred-system= |
-| [[https://github.com/quicklisp/quicklisp-client][Quicklisp]] | ✅        | ❌        | Dev tool | System is unloadable: [[https://github.com/quicklisp/quicklisp-client/issues/125][(1)​]] [[https://github.com/quicklisp/quicklisp-client/issues/140][(2)​]]   |
-| [[https://github.com/Shirakumo/radiance][Radiance]]  | ✅        | ✅        | Web      |                                  |
-| [[https://github.com/Shirakumo/trial][Trial]]     | ✅        | ✅        | Gamedev  |                                  |
-| [[https://github.com/fukamachi/woo][Woo]]       | ✅        | ✅        | Web      |                                  |
+| Project   | Resolves? | Compiles? | Category | Notes                              |
+|-----------+-----------+-----------+----------+------------------------------------|
+| [[https://github.com/Shirakumo/alloy][Alloy]]     | ✅       | ✅       | UI       |                                    |
+| [[https://github.com/phantomics/april][April]]     | ✅       | ✅       | Language |                                    |
+| [[https://github.com/rabbibotton/clog][Clog]]      | ✅       | ✅       | GUI      |                                    |
+| [[https://github.com/coalton-lang/coalton][Coalton]]   | ✅       | ✅       | Language |                                    |
+| [[https://github.com/Shirakumo/kandria][Kandria]]   | ✅       | ✅       | Game     |                                    |
+| [[https://github.com/lem-project/lem][Lem]]       | ✅       | ❌       | Editor   | Usage of =package-inferred-system= |
+| [[https://github.com/Lisp-Stat/lisp-stat][Lisp-stat]] | ✅       | ✅       | Math     |                                    |
+| [[https://codeberg.org/McCLIM/McCLIM][McCLIM]]    | ✅       | ✅       | GUI      |                                    |
+| [[https://github.com/fukamachi/mito][Mito]]      | ✅       | ✅       | Database |                                    |
+| [[https://github.com/atlas-engineer/nyxt][Nyxt]]      | ✅       | ✅       | Browser  |                                    |
+| [[https://github.com/ocicl/ocicl][OCICL]]     | ✅       | ✅       | Dev tool |                                    |
+| [[https://github.com/fukamachi/qlot][Qlot]]      | ❌       | ❌       | Dev tool | Usage of =package-inferred-system=   |
+| [[https://github.com/quicklisp/quicklisp-client][Quicklisp]] | ✅       | ❌       | Dev tool | System is unloadable: [[https://github.com/quicklisp/quicklisp-client/issues/125][(1)​]] [[https://github.com/quicklisp/quicklisp-client/issues/140][(2)​]]     |
+| [[https://github.com/Shirakumo/radiance][Radiance]]  | ✅       | ✅       | Web      |                                    |
+| [[https://github.com/Shirakumo/trial][Trial]]     | ✅       | ✅       | Gamedev  |                                    |
+| [[https://github.com/fukamachi/woo][Woo]]       | ✅       | ✅       | Web      |                                    |
 
 If during your usage of =vend= you discover a project that fails to resolve,
 please [[https://github.com/fosskers/vend/issues][open an Issue]].
