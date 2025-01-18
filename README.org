@@ -129,8 +129,8 @@ aura -A vend
 If rough order of support / integration quality.
 
 #+begin_quote
-⚠ In all cases below, you must start your Lisp session from the top-level of the
-repository. Doing so from the =.asd= file makes it easy.
+⚠ In all cases below, when starting a Lisp session, you must do so from the
+top-level of the repository. Doing this from the =.asd= file makes it easy.
 #+end_quote
 
 ** Emacs
@@ -344,8 +344,8 @@ please [[https://github.com/fosskers/vend/issues][open an Issue]].
 
 No. Submodules need to be recloned by your users, which is a weaker long-term
 guarantee than true vendoring. Submodules are also a pain in the neck to manage.
-If you want to change and make new commits to vendored dependencies, you're
-still free to do so.
+With =vend=, if you want to change and make new commits to vendored dependencies,
+you're still free to do so.
 
 ** Can I install new dependencies while =vend repl= is running?
 
