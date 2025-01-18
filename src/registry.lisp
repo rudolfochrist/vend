@@ -256,6 +256,7 @@ map back to the parent, such that later only one git clone is performed.")
     :clsql           "https://github.com/UnwashedMeme/clsql.git"
     :clss            "https://github.com/Shinmera/CLSS.git"
     :clump           "https://github.com/robert-strandh/Clump.git"
+    :clunit2         "https://codeberg.org/cage/clunit2.git"
     :cluffer         "https://github.com/robert-strandh/Cluffer.git"
     :clx             "https://github.com/sharplispers/clx.git"
     :cocoas          "https://github.com/Shinmera/cocoas.git"
