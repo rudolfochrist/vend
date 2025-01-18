@@ -106,7 +106,7 @@ the root."
           (recurse top leaf))))))
 
 #++
-(let* ((cwd #p"/home/colin/code/common-lisp/nodgui/")
+(let* ((cwd #p"/home/colin/code/common-lisp/tinmop/")
        (dir (p:ensure-directory (p:join cwd "vendored"))))
   (work cwd dir))
 
