@@ -377,6 +377,7 @@ map back to the parent, such that later only one git clone is performed.")
     :lparallel       "https://github.com/lmj/lparallel.git"
     :lquery          "https://github.com/Shinmera/lquery.git"
     :lru-cache       "https://github.com/Shinmera/lru-cache.git"
+    :ltk             "https://github.com/ghollisjr/ltk.git"
     :machine-state   "https://github.com/Shinmera/machine-state.git"
     :manifolds       "https://github.com/Shirakumo/manifolds.git"
     :marshal         "https://github.com/wlbr/cl-marshal.git"
