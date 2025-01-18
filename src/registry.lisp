@@ -15,8 +15,10 @@
     :cl-aa :cl-vectors
     :cl-aa-misc :cl-vectors
     :cl-dbi :dbi
+    :cl-gio :cl-glib
     :cl-glu :cl-opengl
     :cl-glut :cl-opengl
+    :cl-gobject :cl-glib
     :cl-paths :cl-vectors
     :cl-paths-ttf :cl-vectors
     :cl-pdf-parser :cl-pdf
@@ -177,6 +179,7 @@ map back to the parent, such that later only one git clone is performed.")
     :cl-coveralls    "https://github.com/fukamachi/cl-coveralls.git"
     :cl-csv          "https://github.com/AccelerationNet/cl-csv.git"
     :cl-store        "https://github.com/skypher/cl-store.git"
+    :cl-cairo2       "https://github.com/rpav/cl-cairo2.git"
     :cl-custom-hash-table "https://github.com/metawilm/cl-custom-hash-table.git"
     :cl-dejavu       "https://codeberg.org/TurtleWare/cl-dejavu.git"
     :cl-dot          "https://github.com/michaelw/cl-dot.git"
@@ -187,8 +190,10 @@ map back to the parent, such that later only one git clone is performed.")
     :cl-freetype2    "https://github.com/rpav/cl-freetype2.git"
     :cl-ftp          "https://github.com/pinterface/cl-ftp.git"
     :cl-gamepad      "https://github.com/Shirakumo/cl-gamepad.git"
+    :cl-glib         "https://github.com/bohonghuang/cl-glib.git"
     :cl-gltf         "https://github.com/Shirakumo/cl-gltf.git"
     :cl-gobject-introspection "https://github.com/andy128k/cl-gobject-introspection.git"
+    :cl-gobject-introspection-wrapper "https://github.com/bohonghuang/cl-gobject-introspection-wrapper.git"
     :cl-gog-galaxy   "https://github.com/Shinmera/cl-gog-galaxy.git"
     :cl-gopher       "https://github.com/knusbaum/cl-gopher.git"
     :cl-indentify    "https://github.com/yitzchak/cl-indentify.git"
