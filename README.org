@@ -40,6 +40,7 @@ It's time for some peace of mind.
   - [[#does-this-use-git-submodules][Does this use git submodules?]]
   - [[#can-i-install-new-dependencies-while-vend-repl-is-running][Can I install new dependencies while =vend repl= is running?]]
   - [[#how-do-i-update-dependencies][How do I update dependencies?]]
+  - [[#how-can-i-build-executables-of-my-application][How can I build executables of my application?]]
   - [[#why-ecl][Why ECL?]]
 
 * Why vendor dependencies?
@@ -377,6 +378,17 @@ rm -rf vendored/old-dep/.git/
 #+end_example
 
 But you're discouraged from doing this habitually.
+
+** How can I build executables of my application?
+
+See [[file:build.lisp][build.lisp]] for how I build =vend=, which uses ECL. For SBCL, consider adding:
+
+#+begin_src lisp
+(sb-ext:save-lisp-and-die #p"foobar"
+                          :toplevel #'foobar:launch
+                          :executable t
+                          :compression t)
+#+end_src
 
 ** Why ECL?
 
