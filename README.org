@@ -12,7 +12,7 @@ Just vendor your dependencies!
 - =vend repl= to open an isolated Lisp session.
 - =vend= only has 3 dependencies itself and compiles to a 300kb binary.
 - Neither Quicklisp (the tool) nor Quicklisp (the repository) are used.
-- Trivial integration with Sly / Slime.
+- Trivial integration with Sly / Slime / Lem / Slimv.
 
 It's time for some peace of mind.
 
@@ -127,6 +127,11 @@ aura -A vend
 
 If rough order of support / integration quality.
 
+#+begin_quote
+⚠ In all cases below, you must start your Lisp session from the top-level of the
+repository. Doing so from the =.asd= file makes it easy.
+#+end_quote
+
 ** Emacs
 
 [[https://github.com/joaotavora/sly][Sly]] and [[https://github.com/slime/slime][Slime]] have variables for setting how Lisp REPLs should be launched:
@@ -143,11 +148,6 @@ Adjust as necessary for Slime.
 
 Note that adding ="--dynamic-space-size" "4GB"= to the =sbcl= list is useful for
 hungry projects like [[https://github.com/Shirakumo/trial][Trial]].
-
-#+begin_quote
-⚠ You must start your Lisp session from the top-level of the repository. Doing
-so from the =.asd= file makes it easy.
-#+end_quote
 
 *** Doom Emacs
 
@@ -299,24 +299,24 @@ projects:
 - Resolves: Does =vend get= complete?
 - Compiles: Does =(asdf:load-system :foo)= within =vend repl= complete?
 
-| Project   | Resolves? | Compiles? | Category | Notes                              |
-|-----------+-----------+-----------+----------+------------------------------------|
-| [[https://github.com/Shirakumo/alloy][Alloy]]     | ✅       | ✅       | UI       |                                    |
-| [[https://github.com/phantomics/april][April]]     | ✅       | ✅       | Language |                                    |
-| [[https://github.com/rabbibotton/clog][Clog]]      | ✅       | ✅       | GUI      |                                    |
-| [[https://github.com/coalton-lang/coalton][Coalton]]   | ✅       | ✅       | Language |                                    |
-| [[https://github.com/Shirakumo/kandria][Kandria]]   | ✅       | ✅       | Game     |                                    |
-| [[https://github.com/lem-project/lem][Lem]]       | ✅       | ❌       | Editor   | Usage of =package-inferred-system= |
-| [[https://github.com/Lisp-Stat/lisp-stat][Lisp-stat]] | ✅       | ✅       | Math     |                                    |
-| [[https://codeberg.org/McCLIM/McCLIM][McCLIM]]    | ✅       | ✅       | GUI      |                                    |
-| [[https://github.com/fukamachi/mito][Mito]]      | ✅       | ✅       | Database |                                    |
-| [[https://github.com/atlas-engineer/nyxt][Nyxt]]      | ✅       | ✅       | Browser  |                                    |
-| [[https://github.com/ocicl/ocicl][OCICL]]     | ✅       | ✅       | Dev tool |                                    |
-| [[https://github.com/fukamachi/qlot][Qlot]]      | ❌       | ❌       | Dev tool | Usage of =package-inferred-system=   |
-| [[https://github.com/quicklisp/quicklisp-client][Quicklisp]] | ✅       | ❌       | Dev tool | System is unloadable: [[https://github.com/quicklisp/quicklisp-client/issues/125][(1)​]] [[https://github.com/quicklisp/quicklisp-client/issues/140][(2)​]]     |
-| [[https://github.com/Shirakumo/radiance][Radiance]]  | ✅       | ✅       | Web      |                                    |
-| [[https://github.com/Shirakumo/trial][Trial]]     | ✅       | ✅       | Gamedev  |                                    |
-| [[https://github.com/fukamachi/woo][Woo]]       | ✅       | ✅       | Web      |                                    |
+| Project   | Resolves? | Compiles? | Category | Notes                               |
+|-----------+-----------+-----------+----------+-------------------------------------|
+| [[https://github.com/Shirakumo/alloy][Alloy]]     | ✅        | ✅        | UI       |                                     |
+| [[https://github.com/phantomics/april][April]]     | ✅        | ✅        | Language |                                     |
+| [[https://github.com/rabbibotton/clog][Clog]]      | ✅        | ✅        | GUI      |                                     |
+| [[https://github.com/coalton-lang/coalton][Coalton]]   | ✅        | ✅        | Language |                                     |
+| [[https://github.com/Shirakumo/kandria][Kandria]]   | ✅        | ✅        | Game     |                                     |
+| [[https://github.com/lem-project/lem][Lem]]       | ✅        | ❌        | Editor   | Usage of =package-inferred-system=    |
+| [[https://github.com/Lisp-Stat/lisp-stat][Lisp-stat]] | ✅        | ✅        | Math     |                                     |
+| [[https://codeberg.org/McCLIM/McCLIM][McCLIM]]    | ✅        | ✅        | GUI      |                                     |
+| [[https://github.com/fukamachi/mito][Mito]]      | ✅        | ✅        | Database |                                     |
+| [[https://github.com/atlas-engineer/nyxt][Nyxt]]      | ✅        | ✅        | Browser  |                                     |
+| [[https://github.com/ocicl/ocicl][OCICL]]     | ✅        | ✅        | Dev tool |                                     |
+| [[https://github.com/fukamachi/qlot][Qlot]]      | ❌        | ❌        | Dev tool | Usage of =package-inferred-system=    |
+| [[https://github.com/quicklisp/quicklisp-client][Quicklisp]] | ✅        | ❌        | Dev tool | System is unloadable: [[https://github.com/quicklisp/quicklisp-client/issues/125][(1)​]] [[https://github.com/quicklisp/quicklisp-client/issues/140][(2)​]]      |
+| [[https://github.com/Shirakumo/radiance][Radiance]]  | ✅        | ✅        | Web      |                                     |
+| [[https://github.com/Shirakumo/trial][Trial]]     | ✅        | ✅        | Gamedev  | [[https://github.com/Shirakumo/trial-assets/][trial-assets]] manual setup for demos |
+| [[https://github.com/fukamachi/woo][Woo]]       | ✅        | ✅        | Web      |                                     |
 
 If during your usage of =vend= you discover a project that fails to resolve,
 please [[https://github.com/fosskers/vend/issues][open an Issue]].
@@ -354,8 +354,11 @@ a call to =(ql:quickload ...)= would do in that case.
 
 If you want new packages available to =vend repl=, you can:
 
-- Manually clone them into =vendored/=.
+- Manually clone them into =vendored/= (discouraged).
 - Add them to your =.asd= explicitly and call =vend get=.
+
+Either way, it's expected that you ensure that when a user freshly clones your
+repository, runs =vend get=, and then loads your system, everything should work.
 
 ** How do I update dependencies?
 

@@ -103,16 +103,15 @@ the root."
         ;; This is the root project directory, so it's already considered "cloned".
         (setf (gethash root cloned) t)
         (dolist (leaf (unique-leaves graph))
-          (recurse top leaf))
-        ;; Clean the graph one final time so that the user doesn't need to see
-        ;; ugly systems that weren't asked for.
-        (apply #'g:subgraph graph top)))))
+          (recurse top leaf))))))
 
 #++
 (let* ((cwd #p"/home/colin/code/common-lisp/alive-lsp/")
        (dir (p:ensure-directory (p:join cwd "vendored"))))
-  (with-open-file (stream #p"deps.dot" :direction :output :if-exists :supersede)
-    (g:to-dot-with-stream (work cwd dir) stream)))
+  (work cwd dir))
+
+;; TODO: Implement `vend get foo' that tricks it into downloading the dep graph
+;; of that specific dep, even if it isn't listed in a local project's ASD file.
 
 ;; --- Executable --- ;;
 
