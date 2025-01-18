@@ -6,6 +6,10 @@
 
 - Support for Allegro (`alisp`).
 
+#### Fixed
+
+- Restored support for `postmodern`.
+
 ## 0.1.2 (2025-01-17)
 
 #### Added

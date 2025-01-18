@@ -108,6 +108,10 @@
 #++
 (reader-macro? (coerce "" 'list))
 
+(defun other-reader? (chars)
+  (and (eql #\# (nth 0 chars))
+       (eql #\. (nth 1 chars))))
+
 (defun asdf-call? (chars)
   (and (eql #\( (nth 0 chars))
        (eql #\a (nth 1 chars))
@@ -240,6 +244,8 @@ succeeding as-is on a given string."
                      ;; proactively remove them.
                      ((reader-macro? chars)
                       (keep (cons #\t acc) (chuck 1 (cddr tail))))
+                     ((other-reader? chars)
+                      (keep acc (cdr tail)))
                      ;; Likewise, some clever package authors like to utilise
                      ;; `asdf' and `uiop' directly in their system definitions.
                      ;; This similarly causes problems with `read', so we remove
@@ -272,6 +278,7 @@ succeeding as-is on a given string."
 :foo (asdf:bar)
 :baz (cffi-grovel:grovel-file 1)
 :beep (checkl:tests 1)
+:fruit #.*yes*
 :action asdf:do-it)")
 
 (defun depends-from-system (sexp)

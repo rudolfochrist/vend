@@ -24,6 +24,7 @@
     :cl-pdf-parser :cl-pdf
     :cl-plus-c :cl-autowrap
     :cl-postgres :postmodern
+    :cl-postgres+local-time :local-time
     :cl-ppcre-unicode :cl-ppcre
     :cl-unicode/base :cl-unicode
     ;; NOTE: 2025-01-13 Breaking the normal pattern, this Clack-related system
@@ -555,6 +556,7 @@ map back to the parent, such that later only one git clone is performed.")
     :trivial-main-thread "https://github.com/Shinmera/trivial-main-thread.git"
     :trivial-macroexpand-all "https://github.com/cbaggers/trivial-macroexpand-all.git"
     :trivial-mimes   "https://github.com/Shinmera/trivial-mimes.git"
+    :trivial-octet-streams "https://github.com/sharplispers/trivial-octet-streams.git"
     :trivial-open-browser "https://github.com/eudoxia0/trivial-open-browser.git"
     :trivial-package-local-nicknames "https://github.com/phoe/trivial-package-local-nicknames.git"
     :trivial-rfc-1123 "https://github.com/stacksmith/trivial-rfc-1123.git"
