@@ -232,6 +232,7 @@ map back to the parent, such that later only one git clone is performed.")
     :cl-spark        "https://github.com/tkych/cl-spark.git"
     :cl-speedy-queue "https://github.com/zkat/cl-speedy-queue.git"
     :cl-slug         "https://github.com/EuAndreh/cl-slug.git"
+    :cl-smtp         "https://gitlab.common-lisp.net/cl-smtp/cl-smtp.git"
     :cl-steamworks   "https://github.com/Shinmera/cl-steamworks.git"
     :cl-syntax       "https://github.com/m2ym/cl-syntax.git"
     :cl-template     "https://github.com/alpha123/cl-template.git"
@@ -255,6 +256,7 @@ map back to the parent, such that later only one git clone is performed.")
     :clip            "https://github.com/Shinmera/clip.git"
     :clog-ace        "https://github.com/rabbibotton/clog-ace.git"
     :clog-terminal   "https://github.com/rabbibotton/clog-terminal.git"
+    :clop            "https://github.com/sheepduke/clop.git"
     :closer-mop      "https://github.com/pcostanza/closer-mop.git"
     :closure-common  "https://github.com/sharplispers/closure-common.git"
     :clsql           "https://github.com/UnwashedMeme/clsql.git"
@@ -391,6 +393,7 @@ map back to the parent, such that later only one git clone is performed.")
     :lru-cache       "https://github.com/Shinmera/lru-cache.git"
     :ltk             "https://github.com/ghollisjr/ltk.git"
     :machine-state   "https://github.com/Shinmera/machine-state.git"
+    :magicffi        "https://github.com/guicho271828/magicffi.git"
     :manifolds       "https://github.com/Shirakumo/manifolds.git"
     :marshal         "https://github.com/wlbr/cl-marshal.git"
     :mathkit         "https://github.com/lispgames/mathkit.git"
@@ -538,6 +541,7 @@ map back to the parent, such that later only one git clone is performed.")
     :trivial-benchmark "https://github.com/Shinmera/trivial-benchmark.git"
     :trivial-channels "https://github.com/rpav/trivial-channels.git"
     :trivial-clipboard "https://github.com/snmsts/trivial-clipboard.git"
+    :trivial-clock   "https://github.com/ak-coram/cl-trivial-clock.git"
     :trivial-cltl2   "https://github.com/Zulu-Inuoe/trivial-cltl2.git"
     :trivial-custom-debugger "https://github.com/phoe/trivial-custom-debugger.git"
     :trivial-deprecate "https://github.com/Shinmera/trivial-deprecate.git"
@@ -554,6 +558,7 @@ map back to the parent, such that later only one git clone is performed.")
     :trivial-open-browser "https://github.com/eudoxia0/trivial-open-browser.git"
     :trivial-package-local-nicknames "https://github.com/phoe/trivial-package-local-nicknames.git"
     :trivial-rfc-1123 "https://github.com/stacksmith/trivial-rfc-1123.git"
+    :trivial-sanitize "https://codeberg.org/cage/trivial-sanitize.git"
     :trivial-shell   "https://github.com/hraban/trivial-shell.git"
     :trivial-ssh     "https://github.com/eudoxia0/trivial-ssh.git"
     :trivial-sockets "https://github.com/usocket/trivial-sockets.git"
@@ -613,6 +618,7 @@ map back to the parent, such that later only one git clone is performed.")
       (when (string-starts-with? (symbol-name sys) "CFFI-") :cffi)
       (when (string-starts-with? (symbol-name sys) "CLACK-") :clack)
       (when (string-starts-with? (symbol-name sys) "DBD-") :dbi)
+      (when (string-starts-with? (symbol-name sys) "FRUGAL-UUID/") :frugal-uuid)
       (when (string-starts-with? (symbol-name sys) "IOLIB/") :iolib)
       (when (string-starts-with? (symbol-name sys) "IRONCLAD/") :ironclad)
       (when (string-starts-with? (symbol-name sys) "JSONRPC/") :jsonrpc)
