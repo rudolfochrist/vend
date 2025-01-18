@@ -1,5 +1,11 @@
 # vend
 
+## Unreleased
+
+#### Added
+
+- Support for Allegro (`alisp`).
+
 ## 0.1.2 (2025-01-17)
 
 #### Added

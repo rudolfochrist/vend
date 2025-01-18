@@ -326,15 +326,15 @@ please [[https://github.com/fosskers/vend/issues][open an Issue]].
 
 =vend repl= works with the following compilers:
 
-| Compiler  | Status | Notes          |
-|-----------+--------+----------------|
-| SBCL      | ✅    |                |
-| ECL       | ✅    |                |
-| ABCL      | ✅    |                |
-| Clasp     | ✅    |                |
-| CCL       | ✅    |                |
-| Allegro   | ❌    | No =--eval= flag |
-| LispWorks | ❓    |                |
+| Compiler  | Status | Notes |
+|-----------+--------+-------|
+| SBCL      | ✅    |       |
+| ECL       | ✅    |       |
+| ABCL      | ✅    |       |
+| Clasp     | ✅    |       |
+| CCL       | ✅    |       |
+| Allegro   | ✅    |       |
+| LispWorks | ❓    |       |
 
 [[https://wiki.archlinux.org/title/Common_Lisp#Historical][Historical implementations]] are not considered.
 
@@ -381,7 +381,7 @@ But you're discouraged from doing this habitually.
 
 ** How can I build executables of my application?
 
-See [[file:build.lisp][build.lisp]] for how I build =vend=, which uses ECL. For SBCL, consider adding:
+See [[file:build.lisp][build.lisp]] for how =vend= is built, which uses ECL. For SBCL, consider adding:
 
 #+begin_src lisp
 (sb-ext:save-lisp-and-die #p"foobar"
