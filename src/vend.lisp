@@ -32,6 +32,23 @@ the root."
       (with-open-file (stream #p"deps.dot" :direction :output :if-exists :supersede)
         (g:to-dot-with-stream final stream)))))
 
+;; --- Search --- ;;
+
+(defun vend/search (term)
+  "Check the names of all known systems for a given term."
+  (let* ((matches (t:transduce (t:comp (t:map (lambda (pair)
+                                                (cons (keyword->string (car pair))
+                                                      (cdr pair))))
+                                       (t:filter (lambda (pair) (substring? (car pair) term))))
+                               #'t:cons (t:plist +sources+)))
+         (longest (t:transduce (t:map (lambda (pair) (length (car pair))))
+                               (t:fold #'max 0) matches)))
+    (dolist (pair matches)
+      (format t "~va ~a~%" longest (car pair) (cdr pair)))))
+
+#++
+(vend/search "nonexistent")
+
 ;; --- Check --- ;;
 
 (defun vend/check (&key focus)
@@ -110,19 +127,17 @@ the root."
        (dir (p:ensure-directory (p:join cwd "vendored"))))
   (work cwd dir))
 
-;; TODO: Implement `vend get foo' that tricks it into downloading the dep graph
-;; of that specific dep, even if it isn't listed in a local project's ASD file.
-
 ;; --- Executable --- ;;
 
 (defconstant +help+
   "vend - Vendor your Common Lisp dependencies
 
 Commands:
-  check [focus] - Check your dependencies for issues
-  get           - Download all project dependencies into 'vendored/'
-  graph [focus] - Visualise a graph of transitive project dependencies
-  repl  [args]  - Start a Lisp session with only your vendored ASDF systems
+  check  [focus] - Check your dependencies for issues
+  get            - Download all project dependencies into 'vendored/'
+  graph  [focus] - Visualise a graph of transitive project dependencies
+  repl   [args]  - Start a Lisp session with only your vendored ASDF systems
+  search [term]  - Search known systems
 
 Flags:
   --help    - Display this help message
@@ -131,11 +146,12 @@ Flags:
 
 (defconstant +vend-rules+
   '((("--help" "-h") 0 (vend/help))
-    ("--version" 0 (format t "0.1.2~%"))
-    ("check" 1 (vend/check :focus (cadr 1)) :stop)
-    ("get"   0 (vend/get))
-    ("graph" 1 (vend/graph :focus (cadr 1)) :stop)
-    ("repl"  1 (vend/repl (rest 1)) :stop)))
+    ("--version" 0 (format t "0.1.3~%"))
+    ("check"  1 (vend/check :focus (cadr 1)) :stop)
+    ("get"    0 (vend/get))
+    ("graph"  1 (vend/graph :focus (cadr 1)) :stop)
+    ("repl"   1 (vend/repl (rest 1)) :stop)
+    ("search" 1 (vend/search 1))))
 
 (defun vend/help ()
   (princ +help+))

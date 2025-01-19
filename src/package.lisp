@@ -25,6 +25,15 @@
 #++
 (string-starts-with? "hello" "llo" :from 2)
 
+(defun substring? (string sub)
+  "Is one string a substring of another?"
+  (not (null (search sub string))))
+
+#++
+(substring? "hello" "ll")
+#++
+(substring? "hello" "all")
+
 (defun into-keyword (s)
   "Turn anything stringy or symboly into a keyword."
   (etypecase s
