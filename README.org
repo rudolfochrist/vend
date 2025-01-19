@@ -319,7 +319,7 @@ projects:
 | [[https://github.com/marijnh/Postmodern][Postmodern]] | ✅        | ✅        | ✅     | Database |                                     |
 | [[https://github.com/fukamachi/qlot][Qlot]]       | ❌        | -         | -      | Dev tool | Usage of =package-inferred-system=    |
 | [[https://github.com/quicklisp/quicklisp-client][Quicklisp]]  | ✅        | ❌        | -      | Dev tool | System is unloadable: [[https://github.com/quicklisp/quicklisp-client/issues/125][(1)​]] [[https://github.com/quicklisp/quicklisp-client/issues/140][(2)​]]      |
-| [[https://github.com/Shirakumo/radiance][Radiance]]   | ✅        | ✅        |        | Web      |                                     |
+| [[https://github.com/Shirakumo/radiance][Radiance]]   | ✅        | ✅        | ✅     | Web      |                                     |
 | [[https://github.com/roswell/roswell][Roswell]]    | ✅        | ❌        | -      | Dev tool | Requires =quicklisp= internally       |
 | [[https://github.com/Shirakumo/trial][Trial]]      | ✅        | ✅        | ✅     | Gamedev  | [[https://github.com/Shirakumo/trial-assets/][trial-assets]] manual setup for demos |
 | [[https://github.com/fukamachi/woo][Woo]]        | ✅        | ✅        | ❌     | Web      | Usage of =package-inferred-system=    |

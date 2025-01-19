@@ -109,6 +109,7 @@
 (reader-macro? (coerce "" 'list))
 
 (defun other-reader? (chars)
+  "A hack for Postmodern."
   (and (eql #\# (nth 0 chars))
        (eql #\. (nth 1 chars))))
 
