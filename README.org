@@ -34,6 +34,7 @@ It's time for some peace of mind.
   - [[#vend-repl][vend repl]]
   - [[#vend-graph][vend graph]]
   - [[#vend-check][vend check]]
+  - [[#vend-search][vend search]]
 - [[#coverage][Coverage]]
 - [[#compiler-compatibility][Compiler Compatibility]]
 - [[#faq][FAQ]]
@@ -290,6 +291,16 @@ TRIVIAL-BACKTRACE is deprecated.
 
 Woops! And while Common Lisp has a culture of "done means done, not dead", it's
 still important to know what you're getting yourself into.
+
+** vend search
+
+Search the known systems via some term.
+
+#+begin_example
+> vend search woo
+woo    https://github.com/fukamachi/woo.git
+wookie https://github.com/orthecreedence/wookie.git
+#+end_example
 
 * Coverage
 

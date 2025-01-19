@@ -1,10 +1,12 @@
 # vend
 
-## Unreleased
+## 0.1.3 (2025-01-19)
 
 #### Added
 
+- New command: `vend search`.
 - Support for Allegro (`alisp`).
+- Numerous additions to the registry.
 
 #### Fixed
 
