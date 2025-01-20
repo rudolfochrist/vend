@@ -1,5 +1,12 @@
 # vend
 
+## Unreleased
+
+#### Added
+
+- New command: `vend test`. Supports:
+  - `parachute`
+
 ## 0.1.3 (2025-01-19)
 
 #### Added
