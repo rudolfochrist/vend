@@ -2,6 +2,11 @@
 
 (in-package :vend)
 
+;; --- Constants --- ;;
+
+(defparameter +require-asdf+ "(require :asdf)")
+(defparameter +init-registry+ "(asdf:initialize-source-registry `(:source-registry (:tree ,(uiop:getcwd)) :ignore-inherited-configuration))")
+
 ;; --- Graph --- ;;
 
 (defun scan-systems! (graph paths)
@@ -138,6 +143,7 @@ Commands:
   graph  [focus] - Visualise a graph of transitive project dependencies
   repl   [args]  - Start a Lisp session with only your vendored ASDF systems
   search [term]  - Search known systems
+  test   [args]  - Run all detected test systems
 
 Flags:
   --help    - Display this help message
@@ -151,7 +157,8 @@ Flags:
     ("get"    0 (vend/get))
     ("graph"  1 (vend/graph :focus (cadr 1)) :stop)
     ("repl"   1 (vend/repl (rest 1)) :stop)
-    ("search" 1 (vend/search 1))))
+    ("search" 1 (vend/search 1))
+    ("test"   1 (vend/test (rest 1)) :stop)))
 
 (defun vend/help ()
   (princ +help+))
@@ -167,11 +174,33 @@ Flags:
       (work cwd dir))
     (vlog "Done.")))
 
+(defun vend/test (args &key (dir (ext:getcwd)))
+  "Run detected test systems."
+  (let* ((compiler (or (car args) "sbcl"))
+         (eval (if (string-equal "alisp" compiler) "-e" "--eval"))
+         (systems (t:transduce (t:comp (t:map #'systems-from-file)
+                                       #'t:concatenate)
+                               #'t:cons (root-asd-files dir)))
+         (tests (test-invocations systems)))
+    (when tests
+      (let ((exps (t:transduce (t:comp (t:intersperse eval)
+                                       (t:once eval))
+                               #'t:cons (append (list +require-asdf+ +init-registry+) tests))))
+        (vlog "Running tests.")
+        (multiple-value-bind (stream code state)
+            (ext:run-program compiler (append (cdr args) exps) :output *standard-output*)
+          (declare (ignore stream state))
+          (unless (zerop code)
+            (ext:quit 1)))))))
+
+#++
+(vend/test '() :dir #p"/home/colin/code/common-lisp/filepaths/")
+
 (defun vend/repl (args)
   "Start a given repl."
   (let* ((compiler (or (car args) "sbcl"))
          (eval (if (string-equal "alisp" compiler) "-e" "--eval"))
-         (load (list eval "(require :asdf)" eval "(asdf:initialize-source-registry `(:source-registry (:tree ,(uiop:getcwd)) :ignore-inherited-configuration))")))
+         (load (list eval +require-asdf+ eval +init-registry+)))
     (ext:run-program compiler (append (cdr args) load) :output t :input *standard-input*)))
 
 (defun main ()
@@ -187,3 +216,6 @@ Flags:
 ;; https://github.com/sharplispers/ironclad/blob/master/ironclad.asd
 ;; https://github.com/sharplispers/chipz/blob/master/chipz.asd
 ;; https://github.com/rpav/fast-io/blob/master/fast-io.asd#L15
+
+#++
+(t:transduce (t:comp (t:once 2) (t:once 1)) #'t:cons '(3 4 5))

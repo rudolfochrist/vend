@@ -5,8 +5,9 @@
   :homepage "https://github.com/fosskers/vend"
   :depends-on (:filepaths :simple-graph :transducers)
   :serial t
-  :components ((:module "src" :components ((:file "package")
-                                           (:file "registry")
-                                           (:file "asd")
-                                           (:file "vend"))))
+  :components ((:module "src"
+                :components ((:file "package")
+                             (:file "registry")
+                             (:file "asd")
+                             (:file "vend"))))
   :description "Simply vendor your Common Lisp project dependencies.")

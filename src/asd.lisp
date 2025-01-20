@@ -320,3 +320,71 @@ succeeding as-is on a given string."
 (system-name (car (sexps-from-file (car (asd-files "./")))))
 #++
 (system-name '(defsystem foo))
+
+(defun test-op? (list)
+  (and (string-equal "TEST-OP" (symbol-name (car list)))
+       (string-equal "TEST-OP" (symbol-name (car (nth 1 list))))))
+
+#++
+(test-op? '(test-op (test-op :foobar)))
+
+(defun extract-test-op (list)
+  (nth 1 (nth 1 list)))
+
+#++
+(extract-test-op '(test-op (test-op :foobar)))
+
+(defun testable-systems (systems)
+  "Find the keyword names of systems for which `asdf:test-system' would function."
+  (t:transduce (t:filter-map (lambda (sys)
+                               (let ((ops (getf sys :in-order-to)))
+                                 ;; FIXME: 2025-01-20 Not guaranteed that the `test-op' entry will be first.
+                                 (when (test-op? (car ops))
+                                   (cons (system-name sys)
+                                         (into-keyword (extract-test-op (car ops))))))))
+               #'t:cons systems))
+
+;; TODO: 2025-01-20 Account for other compilers invoking this.
+(defun parachute-test (sys)
+  "Generate the structure of a parachute test from a given system name."
+  (list (format nil "(asdf:load-system :~a)" sys)
+        (format nil "
+(let* ((status (parachute:status (parachute:test :~a)))
+       (code (if (eq :passed status) 0 1)))
+  #+ecl  (ext:quit code)
+  #+sbcl (sb-ext:exit :code code))
+" sys)))
+
+#++
+(let* ((status (parachute:status (parachute:test :~a)))
+       (code (if (eq :passed status) 0 1)))
+  #+ecl  (ext:quit code)
+  #+sbcl (sb-ext:exit :code code))
+
+(defun asdf-test-system (sys)
+  "Just a normal `test-system' call."
+  (format nil "(asdf:test-system :~a)" sys))
+
+(defun test-invocations (systems)
+  "From some systems, extract testable systems and produce a series of sexp
+strings, which if passed to `--eval', would result in the test suites running
+while intelligently catching failures."
+  (t:transduce (t:comp (t:filter-map (lambda (pair)
+                                       (let ((system (t:transduce #'t:pass (t:find (lambda (sys) (eq (cdr pair) (system-name sys)))) systems)))
+                                         (unless system
+                                           (error "~a specifies a test-op whose associated system does not exist!" (bold-red (car pair))))
+                                         (cons (car pair) system))))
+                       (t:map (lambda (pair)
+                                (destructuring-bind (name . sys) pair
+                                  ;; NOTE: Add support for other testing libraries here.
+                                  (cond ((member :parachute (depends-from-system sys))
+                                         (parachute-test (system-name sys)))
+                                        (t (list (asdf-test-system name)))))))
+                       #'t:concatenate)
+               #'t:cons (testable-systems systems)))
+
+#++
+(let* ((systems (t:transduce (t:comp (t:map #'systems-from-file)
+                                     #'t:concatenate)
+                             #'t:cons (root-asd-files #p"/home/colin/code/common-lisp/filepaths/"))))
+  (test-invocations systems))
