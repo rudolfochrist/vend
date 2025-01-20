@@ -351,15 +351,23 @@ succeeding as-is on a given string."
         (format nil "
 (let* ((status (parachute:status (parachute:test :~a)))
        (code (if (eq :passed status) 0 1)))
-  #+ecl  (ext:quit code)
-  #+sbcl (sb-ext:exit :code code))
+  #+ccl (ccl:quit code)
+  #+ecl (ext:quit code)
+  #+abcl (ext:quit :status code)
+  #+sbcl (sb-ext:exit :code code)
+  #+clasp (si:quit code)
+  #+allegro (excl:exit code :quiet t))
 " sys)))
 
 #++
 (let* ((status (parachute:status (parachute:test :~a)))
        (code (if (eq :passed status) 0 1)))
-  #+ecl  (ext:quit code)
-  #+sbcl (sb-ext:exit :code code))
+  #+ccl (ccl:quit code)
+  #+ecl (ext:quit code)
+  #+abcl (ext:quit :status code)
+  #+sbcl (sb-ext:exit :code code)
+  #+clasp (si:quit code)
+  #+allegro (excl:exit code :quiet t))
 
 (defun asdf-test-system (sys)
   "Just a normal `test-system' call."
