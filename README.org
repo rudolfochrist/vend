@@ -328,9 +328,10 @@ Pass an additional arg to switch compilers:
 
 *** Integrations
 
-| Library   | Compatibility | Notes |
-|-----------+---------------+-------|
-| [[https://github.com/Shinmera/parachute][Parachute]] | ✅           |       |
+| Library   | Compatibility | Notes                                      |
+|-----------+---------------+--------------------------------------------|
+| [[https://github.com/Shinmera/parachute][Parachute]] | ⭐⭐⭐       |                                            |
+| [[https://github.com/lispci/fiveam][FiveAM]]    | ⭐⭐         | Test system must export =all-tests= function |
 
 If no specific (or an unknown) testing library is used, =vend= will fall back to a
 naive =(asdf:test-system :foo)= call. However, this will not yield the correct

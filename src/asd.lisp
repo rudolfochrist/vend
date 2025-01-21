@@ -344,35 +344,6 @@ succeeding as-is on a given string."
                                          (into-keyword (extract-test-op (car ops))))))))
                #'t:cons systems))
 
-;; TODO: 2025-01-20 Account for other compilers invoking this.
-(defun parachute-test (sys)
-  "Generate the structure of a parachute test from a given system name."
-  (list (format nil "(asdf:load-system :~a)" sys)
-        (format nil "
-(let* ((status (parachute:status (parachute:test :~a)))
-       (code (if (eq :passed status) 0 1)))
-  #+ccl (ccl:quit code)
-  #+ecl (ext:quit code)
-  #+abcl (ext:quit :status code)
-  #+sbcl (sb-ext:exit :code code)
-  #+clasp (si:quit code)
-  #+allegro (excl:exit code :quiet t))
-" sys)))
-
-#++
-(let* ((status (parachute:status (parachute:test :~a)))
-       (code (if (eq :passed status) 0 1)))
-  #+ccl (ccl:quit code)
-  #+ecl (ext:quit code)
-  #+abcl (ext:quit :status code)
-  #+sbcl (sb-ext:exit :code code)
-  #+clasp (si:quit code)
-  #+allegro (excl:exit code :quiet t))
-
-(defun asdf-test-system (sys)
-  "Just a normal `test-system' call."
-  (format nil "(asdf:test-system :~a)" sys))
-
 (defun test-invocations (systems)
   "From some systems, extract testable systems and produce a series of sexp
 strings, which if passed to `--eval', would result in the test suites running
@@ -384,15 +355,51 @@ while intelligently catching failures."
                                          (cons (car pair) system))))
                        (t:map (lambda (pair)
                                 (destructuring-bind (name . sys) pair
-                                  ;; NOTE: Add support for other testing libraries here.
-                                  (cond ((member :parachute (depends-from-system sys))
-                                         (parachute-test (system-name sys)))
-                                        (t (list (asdf-test-system name)))))))
+                                  (let ((deps (depends-from-system sys)))
+                                    ;; NOTE: Add support for other testing libraries here.
+                                    (cond ((member :parachute deps) (parachute-test (system-name sys)))
+                                          ((member :fiveam deps) (fiveam-test (system-name sys)))
+                                          (t (list (asdf-test-system name))))))))
                        #'t:concatenate)
                #'t:cons (testable-systems systems)))
 
 #++
 (let* ((systems (t:transduce (t:comp (t:map #'systems-from-file)
                                      #'t:concatenate)
-                             #'t:cons (root-asd-files #p"/home/colin/code/common-lisp/filepaths/"))))
+                             #'t:cons (root-asd-files #p"/home/colin/code/common-lisp/testing-tests/"))))
   (test-invocations systems))
+
+;; TODO: 2025-01-20 Account for other compilers invoking this.
+(defun parachute-test (sys)
+  "Generate the structure of a parachute test from a given system name."
+  (list (format nil "(asdf:load-system :~a)" sys)
+        (format nil "
+(let* ((status (parachute:status (parachute:test :~a)))
+       (code (if (eq :passed status) 0 1)))
+  (uiop:quit code))
+" sys)))
+
+#++
+(let* ((status (parachute:status (parachute:test :~a)))
+       (code (if (eq :passed status) 0 1)))
+  (uiop:quit code))
+
+(defun asdf-test-system (sys)
+  "Just a normal `test-system' call."
+  (format nil "(progn (asdf:test-system :~a) (uiop:quit 0))" sys))
+
+(defun fiveam-test (sys)
+  "Generate the structure of a fiveam test from a given system name."
+  (list (format nil "(asdf:load-system :~a)" sys)
+        (format nil "
+(multiple-value-bind (status obj foo) (~a:all-tests)
+  (declare (ignore obj foo))
+  (let ((code (if status 0 1)))
+    (uiop:quit code)))
+" sys)))
+
+#++
+(multiple-value-bind (status obj foo) (~a:all-tests)
+  (declare (ignore obj foo))
+  (let ((code (if status 0 1)))
+    (uiop:quit code)))
