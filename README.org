@@ -338,6 +338,8 @@ If no specific (or an unknown) testing library is used, =vend= will fall back to
 naive =(asdf:test-system :foo)= call. However, this will not yield the correct
 error code to the terminal in the event of test failures.
 
+If you desire integration with libraries not listed here, please [[https://github.com/fosskers/vend/issues][open an Issue]].
+
 * Coverage
 
 =vend= does not cover all of what's available on Quicklisp, but it does have
