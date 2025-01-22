@@ -336,12 +336,13 @@ succeeding as-is on a given string."
 
 (defun testable-systems (systems)
   "Find the keyword names of systems for which `asdf:test-system' would function."
-  (t:transduce (t:filter-map (lambda (sys)
-                               (let ((ops (getf sys :in-order-to)))
-                                 ;; FIXME: 2025-01-20 Not guaranteed that the `test-op' entry will be first.
-                                 (when (test-op? (car ops))
-                                   (cons (system-name sys)
-                                         (into-keyword (extract-test-op (car ops))))))))
+  (t:transduce (t:comp (t:filter-map (lambda (sys)
+                                       (let ((name (system-name sys)))
+                                         (t:transduce (t:comp (t:filter #'test-op?)
+                                                              (t:map (lambda (op)
+                                                                       (cons name (into-keyword (extract-test-op op))))))
+                                                      #'t:cons (getf sys :in-order-to)))))
+                       #'t:concatenate)
                #'t:cons systems))
 
 (defun test-invocations (systems)

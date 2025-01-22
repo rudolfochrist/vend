@@ -330,8 +330,9 @@ Pass an additional arg to switch compilers:
 
 | Library   | Compatibility | Notes                                      |
 |-----------+---------------+--------------------------------------------|
-| [[https://github.com/Shinmera/parachute][Parachute]] | ⭐⭐⭐       |                                            |
-| [[https://github.com/lispci/fiveam][FiveAM]]    | ⭐⭐         | Test system must export =all-tests= function |
+| [[https://github.com/Shinmera/parachute][Parachute]] | ✅           |                                            |
+| [[https://github.com/lispci/fiveam][FiveAM]]    | ✅*          | Test system must export =all-tests= function |
+| [[https://github.com/fukamachi/rove][Rove]]      | ❌           | Usage of =package-inferred-system=           |
 
 If no specific (or an unknown) testing library is used, =vend= will fall back to a
 naive =(asdf:test-system :foo)= call. However, this will not yield the correct
