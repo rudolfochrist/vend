@@ -54,7 +54,7 @@
 #++
 (root-asd-files (ext:getcwd))
 #++
-(root-asd-files "/home/colin/code/common-lisp/lem/")
+(root-asd-files "/home/colin/code/common-lisp/zauberwald/")
 
 (defun comment? (string)
   "Is the given STRING a comment line?"

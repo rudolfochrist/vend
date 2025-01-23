@@ -128,7 +128,7 @@ the root."
           (recurse top leaf))))))
 
 #++
-(let* ((cwd #p"/home/colin/code/common-lisp/radiance-contribs/")
+(let* ((cwd #p"/home/colin/code/common-lisp/zauberwald/")
        (dir (p:ensure-directory (p:join cwd "vendored"))))
   (work cwd dir))
 

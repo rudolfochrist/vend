@@ -8,6 +8,10 @@
   - `parachute`
   - `fiveam`
 
+#### Fixed
+
+- Updated `transducers` dependency to fix a `.asd` detection edge case.
+
 ## 0.1.3 (2025-01-19)
 
 #### Added

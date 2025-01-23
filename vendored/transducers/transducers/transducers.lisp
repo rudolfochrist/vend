@@ -409,16 +409,23 @@ applications of a given function F.
 (defun once (item)
   "Transducer: Inject some ITEM onto the front of the transduction."
   (lambda (reducer)
-    (let ((item item))
+    (let ((unused? t))
       (lambda (result &optional (input nil i-p))
-        (if i-p (if item
-                    (let ((res (funcall reducer result item)))
-                      (if (reduced-p res)
-                          res
-                          (progn (setf item nil)
-                                 (funcall reducer res input))))
-                    (funcall reducer result input))
-            (funcall reducer result))))))
+        (cond ((and i-p unused?)
+               (let ((res (funcall reducer result item)))
+                 (if (reduced-p res)
+                     res
+                     (progn (setf unused? nil)
+                            (funcall reducer res input)))))
+              (i-p (funcall reducer result input))
+              ;; A weird case where they specified `once', but the original
+              ;; Source itself was empty.
+              ((and (not i-p) unused?)
+               (let ((res (funcall reducer result item)))
+                 (if (reduced-p res)
+                     (funcall reducer (reduced-val res))
+                     (funcall reducer res))))
+              (t (funcall reducer result)))))))
 
 #+nil
 (transduce (comp (filter (lambda (n) (> n 10)))
@@ -426,18 +433,79 @@ applications of a given function F.
                  (take 3))
            #'cons (ints 1))
 
+#++
+(transduce (once nil) #'cons '(0))
+#++
+(transduce (once nil) #'cons '())
+
+(defun from-csv (reducer)
+  "Transducer: Interpret the data stream as CSV data.
+
+The first item found is assumed to be the header list, and it will be used to
+construct useable hashtables for all subsequent items.
+
+Note: This function makes no attempt to convert types from the
+original parsed strings. If you want numbers, you will need to
+further parse them yourself.
+
+This function is expected to be passed \"bare\" to `transduce', so there is no
+need for the caller to manually pass a REDUCER."
+  (let ((headers nil))
+    (lambda (result &optional (input nil i-p))
+      (if i-p (let ((items (split-csv-line input)))
+                (if headers (funcall reducer result (zipmap headers items))
+                    (progn (setf headers items)
+                           result)))
+          (funcall reducer result)))))
+
 #+nil
 (transduce (comp (once "Name,Age")
                  #'from-csv
                  (map (lambda (hm) (gethash "Name" hm))))
            #'cons '("Alice,35" "Bob,26"))
 
+(defun split-csv-line (line)
+  "Split a LINE of CSV data in a sane way.
+
+This removes any extra whitespace that might be hanging around between elements."
+  (mapcar (lambda (s) (string-trim " " s))
+          (string-split line :separator #\,)))
+
+(defun into-csv (headers)
+  "Transducer: Given a sequence of HEADERS, rerender each item in the data stream
+into a CSV string. It's assumed that each item in the transduction is a hash
+table whose keys are strings that match the values found in HEADERS.
+
+# Conditions
+
+- `empty-argument': when an empty HEADERS sequence is given.
+"
+  (if (etypecase headers
+        (list      (null headers))
+        (cl:vector (zerop (length headers))))
+      (restart-case (error 'empty-argument :fn "headers")
+        (use-value (value)
+          :report "Supply a default value and reattempt the transduction."
+          :interactive (lambda () (prompt-new-value "Headers (must be a list): "))
+          (into-csv value)))
+      (lambda (reducer)
+        (let ((unsent t))
+          (lambda (result &optional (input nil i-p))
+            (if i-p (if unsent
+                        (let ((res (funcall reducer result (recsv headers))))
+                          (if (reduced-p res)
+                              res
+                              (progn (setf unsent nil)
+                                     (funcall reducer res (table-vals->csv headers input)))))
+                        (funcall reducer result (table-vals->csv headers input)))
+                (funcall reducer result)))))))
+
 #+nil
 (transduce (comp #'from-csv (into-csv '("Name" "Age")))
-           #'cons '("Name,Age,Hair" "Colin,35,Blond" "Tamayo,26,Black"))
+           #'cons '("Name,Age,Hair" "Colin,35,Blond" "Jack,26,Black"))
 #+nil
 (transduce (comp #'from-csv (into-csv '()))
-           #'cons '("Name,Age,Hair" "Colin,35,Blond" "Tamayo,26,Black"))
+           #'cons '("Name,Age,Hair" "Colin,35,Blond" "Jack,26,Black"))
 
 (defun table-vals->csv (headers table)
   "Given some HEADERS to compare to, convert a hash TABLE to a rendered CSV string
