@@ -41,10 +41,11 @@ It's time for some peace of mind.
 - [[#coverage][Coverage]]
 - [[#compiler-compatibility][Compiler Compatibility]]
 - [[#faq][FAQ]]
-  - [[#does-this-use-git-submodules][Does this use git submodules?]]
-  - [[#can-i-install-new-dependencies-while-vend-repl-is-running][Can I install new dependencies while =vend repl= is running?]]
   - [[#how-do-i-update-dependencies][How do I update dependencies?]]
   - [[#how-can-i-build-executables-of-my-application][How can I build executables of my application?]]
+  - [[#how-do-i-refer-to-local-dependencies][How do I refer to local dependencies?]]
+  - [[#can-i-install-new-dependencies-while-vend-repl-is-running][Can I install new dependencies while =vend repl= is running?]]
+  - [[#does-this-use-git-submodules][Does this use git submodules?]]
   - [[#why-ecl][Why ECL?]]
 
 * Why vendor dependencies?
@@ -394,27 +395,6 @@ please [[https://github.com/fosskers/vend/issues][open an Issue]].
 
 * FAQ
 
-** Does this use git submodules?
-
-No. Submodules need to be recloned by your users, which is a weaker long-term
-guarantee than true vendoring. Submodules are also a pain in the neck to manage.
-With =vend=, if you want to change and make new commits to vendored dependencies,
-you're still free to do so.
-
-** Can I install new dependencies while =vend repl= is running?
-
-Probably not. At least, =vend= assumes that Quicklisp doesn't exist, and it tells
-ASDF to only look for systems in the current directory tree. It's not clear what
-a call to =(ql:quickload ...)= would do in that case.
-
-If you want new packages available to =vend repl=, you can:
-
-- Manually clone them into =vendored/= (discouraged).
-- Add them to your =.asd= explicitly and call =vend get=.
-
-Either way, it's expected that you ensure that when a user freshly clones your
-repository, runs =vend get=, and then loads your system, everything should work.
-
 ** How do I update dependencies?
 
 The intent is that by vendoring, you're taking responsibility for the "true
@@ -443,6 +423,39 @@ See [[file:build.lisp][build.lisp]] for how =vend= is built, which uses ECL. For
                           :executable t
                           :compression t)
 #+end_src
+** How do I refer to local dependencies?
+
+=vend get= fetches dependencies it knows about via =git=, but sometimes you want to
+refer to a dependency that already exists somewhere else on your local machine.
+To trick =vend=, you can either:
+
+- Make a copy of the local project within =vendored/=.
+- Create a symlink inside =vendored/= that refers to the local project.
+
+Then, when running =vend get= it will see the folder you added and assume it had
+already fetched it via a previous call to =vend get=. Likewise, =vend repl= should
+"just work".
+
+** Can I install new dependencies while =vend repl= is running?
+
+Probably not. At least, =vend= assumes that Quicklisp doesn't exist, and it tells
+ASDF to only look for systems in the current directory tree. It's not clear what
+a call to =(ql:quickload ...)= would do in that case.
+
+If you want new packages available to =vend repl=, you can:
+
+- Manually clone them into =vendored/= (discouraged).
+- Add them to your =.asd= explicitly and call =vend get=.
+
+Either way, it's expected that you ensure that when a user freshly clones your
+repository, runs =vend get=, and then loads your system, everything should work.
+
+** Does this use git submodules?
+
+No. Submodules need to be recloned by your users, which is a weaker long-term
+guarantee than true vendoring. Submodules are also a pain in the neck to manage.
+With =vend=, if you want to change and make new commits to vendored dependencies,
+you're still free to do so.
 
 ** Why ECL?
 
