@@ -38,6 +38,7 @@ It's time for some peace of mind.
   - [[#vend-search][vend search]]
   - [[#vend-test][vend test]]
     - [[#integrations][Integrations]]
+- [[#ci-integration][CI Integration]]
 - [[#coverage][Coverage]]
 - [[#compiler-compatibility][Compiler Compatibility]]
 - [[#faq][FAQ]]
@@ -340,6 +341,33 @@ naive =(asdf:test-system :foo)= call. However, this will not yield the correct
 error code to the terminal in the event of test failures.
 
 If you desire integration with libraries not listed here, please [[https://github.com/fosskers/vend/issues][open an Issue]].
+* CI Integration
+
+A [[https://github.com/marketplace/actions/common-lisp-testing][Github Action]] is available that utilises =vend=. In the simplest case:
+
+#+begin_src yaml
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Unit Tests
+    steps:
+      - name: Clone the Project
+        uses: actions/checkout@v4
+
+      - name: Set up Common Lisp
+        uses: fosskers/common-lisp@v1
+
+      - name: Test
+        run: |
+          vend test
+#+end_src
+
+See its README for more information.
 
 * Coverage
 
