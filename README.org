@@ -37,6 +37,7 @@ It's time for some peace of mind.
   - [[#vend-check][vend check]]
   - [[#vend-search][vend search]]
   - [[#vend-test][vend test]]
+    - [[#setup][Setup]]
     - [[#integrations][Integrations]]
 - [[#ci-integration][CI Integration]]
 - [[#coverage][Coverage]]
@@ -328,6 +329,22 @@ Pass an additional arg to switch compilers:
 #+begin_example
 > vend test ecl
 #+end_example
+
+*** Setup
+
+In order for the test suite to be detected properly, your systems must look
+something like this:
+
+#+begin_src lisp
+(defsystem "foo"
+  :components ((:module "src" :components ((:file "package"))))
+  :in-order-to ((test-op (test-op :foo/tests))))
+
+(defsystem "foo/tests"
+  :depends-on (:foo :parachute)
+  :components ((:module "tests" :components ((:file "tests"))))
+  :perform (test-op (op c) (symbol-call :parachute :test :foo/tests)))
+#+end_src
 
 *** Integrations
 
