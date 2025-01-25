@@ -316,6 +316,8 @@ succeeding as-is on a given string."
       (string (into-keyword name))
       (symbol (into-keyword (symbol-name name))))))
 
+;; --- Testing Systems --- ;;
+
 #++
 (system-name (car (sexps-from-file (car (asd-files "./")))))
 #++
@@ -359,6 +361,7 @@ while intelligently catching failures."
                                   (let ((deps (depends-from-system sys)))
                                     ;; NOTE: Add support for other testing libraries here.
                                     (cond ((member :parachute deps) (parachute-test (system-name sys)))
+                                          ((member :clunit2 deps) (clunit2-test (system-name sys)))
                                           ((member :fiveam deps) (fiveam-test (system-name sys)))
                                           (t (list (asdf-test-system name))))))))
                        #'t:concatenate)
@@ -404,3 +407,17 @@ while intelligently catching failures."
   (declare (ignore obj foo))
   (let ((code (if status 0 1)))
     (uiop:quit code)))
+
+(defun clunit2-test (sys)
+  "Generate the structure of a clunit2 test from a given system name."
+  (list (format nil "(asdf:load-system :~a)" sys)
+        (format nil "
+(handler-bind ((clunit::test-suite-failure (lambda (c) (declare (ignore c)) (uiop:quit 1))))
+  (clunit:run-all-suites :signal-condition-on-fail t :stop-on-fail t)
+  (uiop:quit 0))
+" sys)))
+
+#++
+(handler-bind ((clunit::test-suite-failure (lambda (c) (declare (ignore c)) (uiop:quit 1))))
+  (clunit:run-all-suites :signal-condition-on-fail t :stop-on-fail t)
+  (uiop:quit 0))

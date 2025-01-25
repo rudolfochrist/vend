@@ -351,6 +351,7 @@ something like this:
 | Library   | Compatibility | Notes                                      |
 |-----------+---------------+--------------------------------------------|
 | [[https://github.com/Shinmera/parachute][Parachute]] | ✅           |                                            |
+| [[https://codeberg.org/cage/clunit2][Clunit2]]   | ✅           |                                            |
 | [[https://github.com/lispci/fiveam][FiveAM]]    | ✅*          | Test system must export =all-tests= function |
 | [[https://github.com/fukamachi/rove][Rove]]      | ❌           | Usage of =package-inferred-system=           |
 

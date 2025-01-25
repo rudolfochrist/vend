@@ -6,6 +6,7 @@
 
 - New command: `vend test`. Supports:
   - `parachute`
+  - `clunit2`
   - `fiveam`
 
 #### Fixed
