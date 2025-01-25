@@ -109,7 +109,8 @@ how your software should be provisioned.
 
 * Installation
 
-In all cases, =vend= requires [[https://ecl.common-lisp.dev/][ECL]] to build and run.
+In all cases, =vend= requires [[https://ecl.common-lisp.dev/][ECL]] to build and run. However, it can be used to
+manage projects of any underlying compiler (see =vend repl=).
 
 ** From Source
 
