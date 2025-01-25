@@ -336,6 +336,15 @@ succeeding as-is on a given string."
 #++
 (extract-test-op '(test-op (test-op :foobar)))
 
+(defun extract-symbol-call-args (list)
+  "Extract the arguments to `symbol-call' from a `:perform' entry."
+  (let ((body (nth 2 list)))
+    (when (string-equal "SYMBOL-CALL" (symbol-name (car body)))
+      (cdr body))))
+
+#++
+(extract-symbol-call-args '(asdf:test-op (op c) (uiop:symbol-call :parachute :test :org.shirakumo.alloy.test)))
+
 (defun testable-systems (systems)
   "Find the keyword names of systems for which `asdf:test-system' would function."
   (t:transduce (t:comp (t:filter-map (lambda (sys)
@@ -351,7 +360,8 @@ succeeding as-is on a given string."
   "From some systems, extract testable systems and produce a series of sexp
 strings, which if passed to `--eval', would result in the test suites running
 while intelligently catching failures."
-  (t:transduce (t:comp (t:filter-map (lambda (pair)
+  (t:transduce (t:comp (t:unique-by #'cdr)
+                       (t:filter-map (lambda (pair)
                                        (let ((system (t:transduce #'t:pass (t:find (lambda (sys) (eq (cdr pair) (system-name sys)))) systems)))
                                          (unless system
                                            (error "~a specifies a test-op whose associated system does not exist!" (bold-red (car pair))))
@@ -360,7 +370,9 @@ while intelligently catching failures."
                                 (destructuring-bind (name . sys) pair
                                   (let ((deps (depends-from-system sys)))
                                     ;; NOTE: Add support for other testing libraries here.
-                                    (cond ((member :parachute deps) (parachute-test (system-name sys)))
+                                    (cond ((member :parachute deps)
+                                           (parachute-test (system-name sys)
+                                                           (nth 2 (extract-symbol-call-args (getf sys :perform)))))
                                           ((member :clunit2 deps) (clunit2-test (system-name sys)))
                                           ((member :fiveam deps) (fiveam-test (system-name sys)))
                                           (t (list (asdf-test-system name))))))))
@@ -370,18 +382,18 @@ while intelligently catching failures."
 #++
 (let* ((systems (t:transduce (t:comp (t:map #'systems-from-file)
                                      #'t:concatenate)
-                             #'t:cons (root-asd-files #p"/home/colin/code/common-lisp/testing-tests/"))))
+                             #'t:cons (root-asd-files #p"/home/colin/code/common-lisp/alloy/"))))
   (test-invocations systems))
 
-;; TODO: 2025-01-20 Account for other compilers invoking this.
-(defun parachute-test (sys)
+(defun parachute-test (sys pkg)
   "Generate the structure of a parachute test from a given system name."
-  (list (format nil "(asdf:load-system :~a)" sys)
-        (format nil "
+  (let ((pkg (or pkg sys)))
+    (list (format nil "(asdf:load-system :~a)" sys)
+          (format nil "
 (let* ((status (parachute:status (parachute:test :~a)))
        (code (if (eq :passed status) 0 1)))
   (uiop:quit code))
-" sys)))
+" pkg))))
 
 #++
 (let* ((status (parachute:status (parachute:test :~a)))

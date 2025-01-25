@@ -396,7 +396,7 @@ projects:
 
 - Resolves: Does =vend get= complete?
 - Compiles: Does =(asdf:load-system :foo)= within =vend repl= complete?
-- Tests: Does =(asdf:test-system :foo)= (or similar) within =vend repl= pass?
+- Tests: Does =vend test= or =(asdf:test-system :foo)= within =vend repl= pass?
 
 | Project    | Resolves? | Compiles? | Tests? | Category | Notes                               |
 |------------+-----------+-----------+--------+----------+-------------------------------------|

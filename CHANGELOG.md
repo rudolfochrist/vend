@@ -1,5 +1,14 @@
 # vend
 
+## Unreleased
+
+#### Fixed
+
+- `vend test`: Under `parachute`, be more sensitive to the name of the specified
+  testing `defpackage`.
+- `vend test`: Only run a specified test package once, even if multiple parent
+  systems refer to it.
+
 ## 0.1.4 (2025-01-25)
 
 #### Added
