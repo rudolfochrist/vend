@@ -175,6 +175,7 @@ map back to the parent, such that later only one git clone is performed.")
     :cl-base16       "https://github.com/tpine/cl-base16.git"
     :cl-base32       "https://github.com/hargettp/cl-base32.git"
     :cl-base64       "https://github.com/darabi/cl-base64.git"
+    :cl-beanstalk    "https://github.com/antifuchs/cl-beanstalk.git"
     :cl-bmp          "https://github.com/Shinmera/cl-bmp.git"
     :cl-cffi-gtk     "https://github.com/sharplispers/cl-cffi-gtk.git"
     :cl-change-case  "https://github.com/rudolfochrist/cl-change-case.git"

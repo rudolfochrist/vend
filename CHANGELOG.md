@@ -5,6 +5,7 @@
 #### Added
 
 - Support for [`clisp`][clisp].
+- More entries to the registry.
 
 #### Fixed
 
