@@ -4,7 +4,7 @@
 
 ;; --- Constants --- ;;
 
-(defparameter +require-asdf+ "(require :asdf)")
+(defparameter +require-asdf+ "(require \"asdf\")")
 (defparameter +init-registry+ "(asdf:initialize-source-registry `(:source-registry (:tree ,(uiop:getcwd)) :ignore-inherited-configuration))")
 
 ;; --- Graph --- ;;
@@ -177,7 +177,8 @@ Flags:
 (defun vend/test (args &key (dir (ext:getcwd)))
   "Run detected test systems."
   (let* ((compiler (or (car args) "sbcl"))
-         (eval (if (string-equal "alisp" compiler) "-e" "--eval"))
+         (eval (eval-flag compiler))
+         (clisp (if (clisp? compiler) '("-repl") '()))
          (systems (t:transduce (t:comp (t:map #'systems-from-file)
                                        #'t:concatenate)
                                #'t:cons (root-asd-files dir)))
@@ -188,7 +189,7 @@ Flags:
                                #'t:cons (append (list +require-asdf+ +init-registry+) tests))))
         (vlog "Running tests.")
         (multiple-value-bind (stream code state)
-            (ext:run-program compiler (append (cdr args) exps) :output *standard-output*)
+            (ext:run-program compiler (append (cdr args) clisp exps) :output *standard-output*)
           (declare (ignore stream state))
           (unless (zerop code)
             (ext:quit 1)))))))
@@ -199,9 +200,10 @@ Flags:
 (defun vend/repl (args)
   "Start a given repl."
   (let* ((compiler (or (car args) "sbcl"))
-         (eval (if (string-equal "alisp" compiler) "-e" "--eval"))
-         (load (list eval +require-asdf+ eval +init-registry+)))
-    (ext:run-program compiler (append (cdr args) load) :output t :input *standard-input*)))
+         (eval (eval-flag compiler))
+         (load (list eval +require-asdf+ eval +init-registry+))
+         (clisp (if (clisp? compiler) '("-repl") '())))
+    (ext:run-program compiler (append (cdr args) clisp load) :output t :input *standard-input*)))
 
 (defun main ()
   (let ((ext:*lisp-init-file-list* nil)

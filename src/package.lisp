@@ -73,3 +73,15 @@
   (format t "~a " (bold-cyan "[vend]"))
   (apply #'format t text rest)
   (format t "~%"))
+
+;; --- Compiler --- ;;
+
+(defun clisp? (compiler)
+  "Is this clisp?"
+  (string-equal "clisp" compiler))
+
+(defun eval-flag (compiler)
+  "The flag necessary to directly inject Lisp into a new REPL."
+  (cond ((string-equal "alisp" compiler) "-e")
+        ((clisp? compiler) "-x")
+        (t "--eval")))
