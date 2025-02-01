@@ -508,6 +508,7 @@ you're still free to do so.
 
 ** Why ECL?
 
-=vend= itself is built with [[https://ecl.common-lisp.dev/main.html][ECL]] but you're free to use it to manage Lisp projects
-of any (modern) compiler. ECL typically produces very small binaries; in the
-case of =vend= it's only a few hundred kilobytes, which eases distribution.
+To avoid dependencies, =vend= uses a number of [[https://gitlab.com/embeddable-common-lisp/ecl][ECL]]-specific extensions. However,
+you're free to use it to manage Lisp projects of any (modern) compiler. ECL
+typically produces very small binaries; in the case of =vend= it's only a few
+hundred kilobytes, which eases distribution.
