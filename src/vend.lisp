@@ -109,9 +109,10 @@ the root."
                (unless (gethash dep cloned)
                  (let ((url  (getf +sources+ dep))
                        (path (p:ensure-string (p:join target (keyword->string dep)))))
-                   (unless url
-                     (let ((route (reverse (car (g:paths-to graph dep)))))
-                       (error "~a is not a known system.~%~%  ~{~a~^ -> ~}~%~%Please have it registered in the vend source code" (bold-red dep) route)))
+                   (unless (probe-file path)
+                     (unless url 
+                       (let ((route (reverse (car (g:paths-to graph dep)))))
+                         (error "~a is not a known system.~%~%  ~{~a~^ -> ~}~%~%Please have it registered in the vend source code" (bold-red dep) route))))
                    (vlog "Fetching ~a" (bold dep))
                    (clone url path)
                    (setf (gethash dep cloned) t)
