@@ -9,6 +9,7 @@
 
 #### Fixed
 
+- `vend get`: support for truly local dependencies that aren't registered with `vend`.
 - `vend test`: Under `parachute`, be more sensitive to the name of the specified
   testing `defpackage`.
 - `vend test`: Only run a specified test package once, even if multiple parent
