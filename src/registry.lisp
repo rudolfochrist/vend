@@ -161,6 +161,7 @@ map back to the parent, such that later only one git clone is performed.")
     :calispel        "https://github.com/hawkir/calispel.git"
     :cephes          "https://github.com/Lisp-Stat/cephes.cl.git"
     :cffi            "https://github.com/cffi/cffi.git"
+    :chanl           "https://github.com/zkat/chanl.git"
     :checkl          "https://github.com/rpav/CheckL.git"
     :chipz           "https://github.com/sharplispers/chipz.git"
     :chronicity      "https://github.com/chaitanyagupta/chronicity.git"
