@@ -525,6 +525,7 @@ map back to the parent, such that later only one git clone is performed.")
     :sha3            "https://github.com/pmai/sha3.git"
     :shasht          "https://github.com/yitzchak/shasht.git"
     :shlex           "https://github.com/ruricolist/cl-shlex.git"
+    :si-kanren       "https://github.com/rgc69/si-kanren.git"
     :simple-date-time "https://github.com/quek/simple-date-time.git"
     :simple-graph    "https://github.com/fosskers/simple-graph.git"
     :simple-tasks    "https://github.com/Shinmera/simple-tasks.git"
