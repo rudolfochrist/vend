@@ -269,6 +269,7 @@ map back to the parent, such that later only one git clone is performed.")
     :clip            "https://github.com/Shinmera/clip.git"
     :clog-ace        "https://github.com/rabbibotton/clog-ace.git"
     :clog-terminal   "https://github.com/rabbibotton/clog-terminal.git"
+    :clon            "https://github.com/didierverna/clon.git"
     :clop            "https://github.com/sheepduke/clop.git"
     :closer-mop      "https://github.com/pcostanza/closer-mop.git"
     :closure-common  "https://github.com/sharplispers/closure-common.git"
