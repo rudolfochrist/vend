@@ -436,6 +436,7 @@ map back to the parent, such that later only one git clone is performed.")
     :modularize-interfaces "https://github.com/Shinmera/modularize-interfaces.git"
     :moptilities     "https://github.com/hraban/moptilities.git"
     :mssql           "https://github.com/archimag/cl-mssql.git"
+    :mt19937         "https://github.com/DruidGreeneyes/MT19937.git"
     :multilang-documentation "https://github.com/Shinmera/multilang-documentation.git"
     :named-readtables "https://github.com/melisgl/named-readtables.git"
     :nclasses        "https://github.com/atlas-engineer/nclasses.git"
