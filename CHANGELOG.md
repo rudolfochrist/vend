@@ -1,5 +1,11 @@
 # vend
 
+## Unreleased
+
+#### Added
+
+- More entries to the registry.
+
 ## 0.1.5 (2025-02-08)
 
 #### Added
