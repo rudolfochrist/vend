@@ -461,6 +461,7 @@ map back to the parent, such that later only one git clone is performed.")
     :org.tfeb.conduit-packages "https://github.com/tfeb/conduit-packages.git"
     :osicat          "https://github.com/osicat/osicat.git"
     :parachute       "https://github.com/Shinmera/parachute.git"
+    :parcom          "https://github.com/fosskers/parcom.git"
     :parenscript     "https://gitlab.common-lisp.net/parenscript/parenscript.git"
     :parse-declarations-1.0 "https://gitlab.common-lisp.net/parse-declarations/parse-declarations.git"
     :parse-float     "https://github.com/soemraws/parse-float.git"
@@ -664,6 +665,7 @@ map back to the parent, such that later only one git clone is performed.")
       (when (string-starts-with? (symbol-name sys) "MOCKINGBIRD/") :mockingbird)
       (when (string-starts-with? (symbol-name sys) "NJSON/") :njson)
       (when (string-starts-with? (symbol-name sys) "NYXT/") :nyxt)
+      (when (string-starts-with? (symbol-name sys) "PARCOM/") :parcom)
       (when (string-starts-with? (symbol-name sys) "PROVE-") :prove)
       (when (string-starts-with? (symbol-name sys) "QLOT-TESTS/") :qlot)
       (when (string-starts-with? (symbol-name sys) "QLOT/") :qlot)
