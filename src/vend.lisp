@@ -188,7 +188,7 @@ Flags:
 
 (defconstant +vend-rules+
   '((("--help" "-h") 0 (vend/help))
-    ("--version" 0 (format t "0.1.5~%"))
+    ("--version" 0 (format t "0.2.0~%"))
     ("check"  1 (vend/check :focus (cadr 1)) :stop)
     ("get"    0 (vend/get))
     ("graph"  1 (vend/graph :focus (cadr 1)) :stop)

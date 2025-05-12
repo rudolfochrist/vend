@@ -11,7 +11,7 @@ Just vendor your dependencies!
 - =vend get= to fetch dependencies directly into your project.
 - =vend repl= to open an isolated Lisp session.
 - =vend test= to run all your test suites.
-- =vend= only has 3 dependencies itself and compiles to a 300kb binary.
+- =vend= only has 3 dependencies itself and compiles to a 400kb binary.
 - Neither Quicklisp (the tool) nor Quicklisp (the repository) are used.
 - Trivial integration with Sly / Slime / Lem / Slimv.
 
