@@ -41,6 +41,8 @@
     :dref :mgl-pax
     :eclector-concrete-syntax-tree :eclector
     :feedback-client :feedback
+    :glsl-symbols :glsl-spec
+    :glsl-docs :glsl-spec
     :lem-mailbox :lem-mailbox
     :list-of :asdf-finalizers
     :machine-state/opengl :machine-state
@@ -60,6 +62,7 @@
     :qtopengl :qt+libs
     :regression-test :ansi-test
     :rt :ansi-test
+    :rtg-math.vari :rtg-math
     :sdf/bmfont :sdf
     :simple-date :postmodern
     ;; NOTE: 2025-01-11 This being here overrides the `trial-' mapping in
@@ -337,6 +340,7 @@ map back to the parent, such that later only one git clone is performed.")
     :flexichain      "https://github.com/robert-strandh/Flexichain.git"
     :float-features  "https://github.com/Shinmera/float-features.git"
     :flow            "https://github.com/Shinmera/flow.git"
+    :fn              "https://github.com/cbaggers/fn.git"
     :fn-macro        "https://github.com/fosskers/fn-macro.git"
     :font-discovery  "https://github.com/Shinmera/font-discovery.git"
     :for             "https://github.com/Shinmera/for.git"
@@ -349,6 +353,7 @@ map back to the parent, such that later only one git clone is performed.")
     :glkit           "https://github.com/lispgames/glkit.git"
     :global-vars     "https://github.com/lmj/global-vars.git"
     :glop            "https://github.com/lispgames/glop.git"
+    :glsl-spec       "https://github.com/cbaggers/glsl-spec.git"
     :glsl-toolkit    "https://github.com/Shirakumo/glsl-toolkit.git"
     :glu-tessellate  "https://github.com/orthecreedence/glu-tessellate.git"
     :harmony         "https://github.com/Shirakumo/harmony.git"
@@ -512,6 +517,7 @@ map back to the parent, such that later only one git clone is performed.")
     :retrospectiff   "https://github.com/slyrus/retrospectiff.git"
     :rfc2388         "https://github.com/jdz/rfc2388.git"
     :rove            "https://github.com/fukamachi/rove.git"
+    :rtg-math        "https://github.com/cbaggers/rtg-math.git"
     :rutils          "https://github.com/fosskers/rutils.git"
     :s-base64        "https://github.com/svenvc/s-base64.git"
     :s-sysdeps       "https://github.com/svenvc/s-sysdeps.git"
@@ -608,6 +614,8 @@ map back to the parent, such that later only one git clone is performed.")
     :unix-opts       "https://github.com/libre-man/unix-opts.git"
     :usocket         "https://github.com/usocket/usocket.git"
     :uuid            "https://github.com/dardoria/uuid.git"
+    :varjo           "https://github.com/cbaggers/varjo.git"
+    :vas-string-metrics "https://gitlab.common-lisp.net/vsedach/vas-string-metrics.git"
     :verbose         "https://github.com/Shinmera/verbose.git"
     :vom             "https://github.com/orthecreedence/vom.git"
     :websocket-driver "https://github.com/fukamachi/websocket-driver.git"

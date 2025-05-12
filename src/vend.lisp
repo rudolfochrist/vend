@@ -129,7 +129,7 @@ the root."
           (recurse top leaf))))))
 
 #++
-(let* ((cwd #p"/home/colin/code/common-lisp/zauberwald/")
+(let* ((cwd #p"/home/colin/code/common-lisp/rtg-math/")
        (dir (p:ensure-directory (p:join cwd "vendored"))))
   (work cwd dir))
 
