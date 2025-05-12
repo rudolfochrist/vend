@@ -133,6 +133,40 @@ the root."
        (dir (p:ensure-directory (p:join cwd "vendored"))))
   (work cwd dir))
 
+;; --- Project Initialization --- ;;
+
+(defconstant +defsystem-template+
+  "(defsystem \"~a\"
+  :version \"0.0.0\"
+  :author \"\"
+  :license \"\"
+  :homepage \"\"
+  :depends-on ()
+  :serial t
+  :components ((:module \"src\" :components ((:file \"package\"))))
+  :description \"\")
+")
+
+(defconstant +defpackage-template+
+  "(defpackage ~a
+  (:use :cl)
+  (:documentation \"\"))
+
+(in-package :~a)
+")
+
+(defun vend/init (name)
+  "Given the name of a project, create a simple directory structure with a minimal .asd file."
+  (ensure-directories-exist (p:ensure-directory (p:join name "src")))
+  (with-open-file (f (p:join name (p:with-extension name "asd"))
+                     :direction :output
+                     :if-does-not-exist :create)
+    (format f +defsystem-template+ name))
+  (with-open-file (f (p:join name "src" "package.lisp")
+                     :direction :output
+                     :if-does-not-exist :create)
+    (format f +defpackage-template+ name name)))
+
 ;; --- Executable --- ;;
 
 (defconstant +help+
@@ -142,6 +176,7 @@ Commands:
   check  [focus] - Check your dependencies for issues
   get            - Download all project dependencies into 'vendored/'
   graph  [focus] - Visualise a graph of transitive project dependencies
+  init   [name]  - Create a minimal project skeleton
   repl   [args]  - Start a Lisp session with only your vendored ASDF systems
   search [term]  - Search known systems
   test   [args]  - Run all detected test systems
@@ -157,6 +192,7 @@ Flags:
     ("check"  1 (vend/check :focus (cadr 1)) :stop)
     ("get"    0 (vend/get))
     ("graph"  1 (vend/graph :focus (cadr 1)) :stop)
+    ("init"   1 (vend/init (cadr 1)) :stop)
     ("repl"   1 (vend/repl (rest 1)) :stop)
     ("search" 1 (vend/search 1))
     ("test"   1 (vend/test (rest 1)) :stop)))

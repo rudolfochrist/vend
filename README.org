@@ -39,6 +39,7 @@ It's time for some peace of mind.
   - [[#vend-test][vend test]]
     - [[#setup][Setup]]
     - [[#integrations][Integrations]]
+  - [[#vend-init][vend init]]
 - [[#ci-integration][CI Integration]]
 - [[#coverage][Coverage]]
 - [[#compiler-compatibility][Compiler Compatibility]]
@@ -360,6 +361,24 @@ naive =(asdf:test-system :foo)= call. However, this will not yield the correct
 error code to the terminal in the event of test failures.
 
 If you desire integration with libraries not listed here, please [[https://github.com/fosskers/vend/issues][open an Issue]].
+** vend init
+
+If you don't even have a project yet, =vend init= will create a simple skeleton
+for you.
+
+#+begin_example
+> vend init foo
+#+end_example
+
+This generates:
+
+#+begin_example
+foo
+├── foo.asd
+└── src
+    └── package.lisp
+#+end_example
+
 * CI Integration
 
 A [[https://github.com/marketplace/actions/common-lisp-testing][Github Action]] is available that utilises =vend=. In the simplest case:

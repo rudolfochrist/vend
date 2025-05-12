@@ -4,6 +4,7 @@
 
 #### Added
 
+- `vend init` for creating minimal project skeletons.
 - More entries to the registry.
 
 ## 0.1.5 (2025-02-08)
