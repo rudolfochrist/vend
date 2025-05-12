@@ -1,10 +1,10 @@
 (defpackage filepaths
   (:use :cl)
   ;; --- Structural tests --- ;;
-  (:export #:rootp #:emptyp
-           #:starts-with-p #:ends-with-p
-           #:absolutep #:relativep
-           #:directoryp)
+  (:export #:root? #:rootp #:empty? #:emptyp
+           #:starts-with? #:starts-with-p #:ends-with? #:ends-with-p
+           #:absolute? #:absolutep #:relative? #:relativep
+           #:directory? #:directoryp)
   ;; --- Construction --- ;;
   (:export #:join)
   ;; --- Component Access --- ;;
@@ -24,12 +24,15 @@
 
 (in-package :filepaths)
 
-(defvar +empty-path+ #p"")
-(defvar +filesystem-root+ #p"/")
-(defvar +separator+ #\/)
+(defconstant +empty-path+ #p"")
+(defconstant +filesystem-root+ #p"/")
+(defconstant +separator+ #\/)
 
-(declaim (ftype (function ((or pathname string)) boolean) rootp))
-(defun rootp (path)
+(defmacro rootp (path)
+  `(root? ,path))
+
+(declaim (ftype (function ((or pathname string)) boolean) root?))
+(defun root? (path)
   "Is the given PATH the root directory?"
   (or (and (stringp path)
            (string-equal "/" path))
@@ -39,8 +42,11 @@
 #+nil
 (rootp #p"/")
 
-(declaim (ftype (function ((or pathname string)) boolean) emptyp))
-(defun emptyp (path)
+(defmacro emptyp (path)
+  `(empty? ,path))
+
+(declaim (ftype (function ((or pathname string)) boolean) empty?))
+(defun empty? (path)
   "Is the given PATH an empty string?"
   (or (and (stringp path)
            (= 0 (length path)))
@@ -50,7 +56,10 @@
 #+nil
 (emptyp #p"")
 
-(defun starts-with-p (path base)
+(defmacro starts-with-p (path base)
+  `(starts-with? ,path ,base))
+
+(defun starts-with? (path base)
   "Are the initial components of a PATH some BASE?"
   (let ((bools (mapcar #'equal (components path) (components base))))
     (reduce (lambda (a b) (and a b)) bools :initial-value t)))
@@ -58,7 +67,10 @@
 #+nil
 (starts-with-p #p"/foo/bar/baz/zing.json" "/foo/bar")
 
-(defun ends-with-p (path child)
+(defmacro ends-with-p (path child)
+  `(ends-with? ,path ,child))
+
+(defun ends-with? (path child)
   "Are the final components of a PATH some given CHILD?"
   (let ((bools (mapcar #'equal
                        (reverse (components path))
@@ -68,8 +80,11 @@
 #+nil
 (ends-with-p #p"/foo/bar/baz/zing.json" "baz/zing.json")
 
-(declaim (ftype (function ((or pathname string)) boolean) absolutep))
-(defun absolutep (path)
+(defmacro absolutep (path)
+  `(absolute? ,path))
+
+(declaim (ftype (function ((or pathname string)) boolean) absolute?))
+(defun absolute? (path)
   "Yields T when the given PATH is a full, absolute path."
   (if (pathnamep path)
       (eq :absolute (car (pathname-directory path)))
@@ -79,8 +94,11 @@
 #+nil
 (absolutep "/home/colin/foo.txt")
 
-(declaim (ftype (function ((or pathname string)) boolean) relativep))
-(defun relativep (path)
+(defmacro relativep (path)
+  `(relative? ,path))
+
+(declaim (ftype (function ((or pathname string)) boolean) relative?))
+(defun relative? (path)
   "Yields T when the given PATH is a relative one."
   (not (absolutep path)))
 
@@ -89,8 +107,11 @@
 #+nil
 (relativep #p"foo.txt")
 
-(declaim (ftype (function ((or pathname string)) boolean) directoryp))
-(defun directoryp (path)
+(defmacro directoryp (path)
+  `(directory? ,path))
+
+(declaim (ftype (function ((or pathname string)) boolean) directory?))
+(defun directory? (path)
   "Yields T if the PATH represents a directory.
 
 Note that this only checks the formatting of the path, and does not query the
@@ -179,7 +200,7 @@ filesystem."
 #+nil
 (with-parent #p"/foo/bar/baz.json" #p"/zing")
 
-(declaim (ftype (function ((or pathname string)) (or simple-string null)) extension))
+(declaim (ftype (function ((or pathname string)) (or simple-string keyword null)) extension))
 (defun extension (path)
   "The extension of a given PATH."
   (pathname-type path))
@@ -188,6 +209,8 @@ filesystem."
 (extension #p"/foo/bar.json")
 #+nil
 (extension #p"/")
+#++
+(extension #p"*.*")
 
 (declaim (ftype (function ((or pathname string) string) pathname) with-extension))
 (defun with-extension (path ext)
@@ -286,6 +309,8 @@ filesystem."
 
 #+nil
 (join "/foo" "bar" "**.json")
+#++
+(join "/foo/" "*.*")
 
 #+nil
 (join "/foo" "bar" "baz" "test.json")
@@ -307,7 +332,10 @@ filesystem."
                   (list (if (directoryp path)
                             comp
                             (let* ((ext  (extension path))
-                                   (file (if ext (concatenate 'string (base path) "." ext) (base path))))
+                                   (file (if ext
+                                             (concatenate 'string (base path) "."
+                                                          (string-if-keyword ext))
+                                             (base path))))
                               (append comp (list file))))))
              (if (absolutep path)
                  (cons "/" list)
@@ -317,6 +345,8 @@ filesystem."
 (components "/foo/bar/baz.json")
 #+nil
 (components "/foo/bar/.././../baz/stuff.json")
+#++
+(components "foo/*.*")
 
 (declaim (ftype (function (list) pathname) from-list))
 (defun from-list (list)
@@ -339,11 +369,21 @@ filesystem."
         path
         (make-pathname :name nil
                        :type nil
-                       :directory (append (pathname-directory path)
+                       ;; NOTE: 2025-05-12 The result of `pathname-directory'
+                       ;; will be nil when a relative path with a single
+                       ;; component is given. In that case, we must help it
+                       ;; yield the correct structure to be appended to
+                       ;; immediately afterward.
+                       :directory (append (or (pathname-directory path)
+                                              '(:relative))
                                           (list (name path)))))))
 
 #+nil
 (ensure-directory #p"/foo/bar/baz")
+#+nil
+(ensure-directory "/foo")
+#+nil
+(ensure-directory "foo")
 
 (declaim (ftype (function ((or pathname string)) simple-string) ensure-string))
 (defun ensure-string (path)
