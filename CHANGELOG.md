@@ -1,5 +1,11 @@
 # vend
 
+## 0.2.1 (2025-05-31)
+
+#### Fixed
+
+- Support `mgl-pax`'s new system, `autoload`.
+
 ## 0.2.0 (2025-05-13)
 
 #### Added
