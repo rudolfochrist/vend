@@ -10,6 +10,7 @@
     :alloy-simple :alloy
     :alloy-simple-presentations :alloy
     :array-operations/all :array-operations
+    :autoload :mgl-pax
     :automaton :mcclim
     :babel-streams :babel
     :binpack/2 :binpack
