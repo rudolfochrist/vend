@@ -66,6 +66,7 @@
     :rtg-math.vari :rtg-math
     :sdf/bmfont :sdf
     :simple-date :postmodern
+    :tiny-routes-middleware-cookie :tiny-routes
     ;; NOTE: 2025-01-11 This being here overrides the `trial-' mapping in
     ;; `get-parent' but it is necessary, as `trial-assets' is a separate repo.
     :trial-assets :trial-assets
@@ -568,6 +569,7 @@ map back to the parent, such that later only one git clone is performed.")
     :terrable        "https://github.com/Shirakumo/terrable.git"
     :text-draw       "https://github.com/Shinmera/text-draw.git"
     :tooter          "https://github.com/Shinmera/tooter.git"
+    :tiny-routes     "https://github.com/jeko2000/tiny-routes.git"
     :transducers     "https://github.com/fosskers/cl-transducers.git"
     :translate       "https://gitlab.common-lisp.net/dkochmanski/translate.git"
     :translate-client "https://github.com/aarvid/translate-client.git"
