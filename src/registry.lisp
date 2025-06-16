@@ -366,6 +366,7 @@ map back to the parent, such that later only one git clone is performed.")
     :glu-tessellate  "https://github.com/orthecreedence/glu-tessellate.git"
     :harmony         "https://github.com/Shirakumo/harmony.git"
     :history-tree    "https://github.com/atlas-engineer/history-tree.git"
+    :hsx             "https://github.com/skyizwhite/hsx.git"
     :html-encode     "https://github.com/fosskers/html-encode.git"
     :html-entities   "https://github.com/BnMcGn/html-entities.git"
     :http-body       "https://github.com/fukamachi/http-body.git"
@@ -427,6 +428,7 @@ map back to the parent, such that later only one git clone is performed.")
     :machine-state   "https://github.com/Shinmera/machine-state.git"
     :magicffi        "https://github.com/guicho271828/magicffi.git"
     :manifolds       "https://github.com/Shirakumo/manifolds.git"
+    :map-set         "https://github.com/stylewarning/map-set.git"
     :markup          "https://github.com/moderninterpreters/markup.git"
     :marshal         "https://github.com/wlbr/cl-marshal.git"
     :mathkit         "https://github.com/lispgames/mathkit.git"
@@ -451,6 +453,8 @@ map back to the parent, such that later only one git clone is performed.")
     :mssql           "https://github.com/archimag/cl-mssql.git"
     :mt19937         "https://github.com/DruidGreeneyes/MT19937.git"
     :multilang-documentation "https://github.com/Shinmera/multilang-documentation.git"
+    :mystic          "https://github.com/roswell/mystic.git"
+    :myway           "https://github.com/fukamachi/myway.git"
     :named-readtables "https://github.com/melisgl/named-readtables.git"
     :nclasses        "https://github.com/atlas-engineer/nclasses.git"
     :ndebug          "https://github.com/atlas-engineer/ndebug.git"
@@ -532,6 +536,7 @@ map back to the parent, such that later only one git clone is performed.")
     :s-sysdeps       "https://github.com/svenvc/s-sysdeps.git"
     :s-xml           "https://gitlab.common-lisp.net/s-xml/s-xml.git"
     :salza2          "https://github.com/xach/salza2.git"
+    :safety-params   "https://github.com/fukamachi/safety-params.git"
     :sb-cga          "https://github.com/nikodemus/sb-cga.git"
     :sdf             "https://github.com/lispgames/sdf.git"
     :sdl2            "https://github.com/lispgames/cl-sdl2.git"
@@ -674,6 +679,7 @@ map back to the parent, such that later only one git clone is performed.")
       (when (string-starts-with? (symbol-name sys) "CLACK-") :clack)
       (when (string-starts-with? (symbol-name sys) "DBD-") :dbi)
       (when (string-starts-with? (symbol-name sys) "FRUGAL-UUID/") :frugal-uuid)
+      (when (string-starts-with? (symbol-name sys) "HSX/") :hsx)
       (when (string-starts-with? (symbol-name sys) "IOLIB/") :iolib)
       (when (string-starts-with? (symbol-name sys) "IRONCLAD/") :ironclad)
       (when (string-starts-with? (symbol-name sys) "JSONRPC/") :jsonrpc)
@@ -682,6 +688,7 @@ map back to the parent, such that later only one git clone is performed.")
       (when (string-starts-with? (symbol-name sys) "LEV-") :lev)
       (when (string-starts-with? (symbol-name sys) "MEMORY-REGIONS/") :memory-regions)
       (when (string-starts-with? (symbol-name sys) "MOCKINGBIRD/") :mockingbird)
+      (when (string-starts-with? (symbol-name sys) "MYSTIC-") :mystic)
       (when (string-starts-with? (symbol-name sys) "NJSON/") :njson)
       (when (string-starts-with? (symbol-name sys) "NYXT/") :nyxt)
       (when (string-starts-with? (symbol-name sys) "PARCOM/") :parcom)
