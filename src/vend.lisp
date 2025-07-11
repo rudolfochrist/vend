@@ -86,13 +86,17 @@ the root."
 
 ;; --- Downloading --- ;;
 
-(defun clone (url path)
+(defun clone (url path name)
   "Given a source URL to clone from, do a shallow git clone into a given absolute PATH."
   (unless (probe-file path)
-    (multiple-value-bind (stream code obj)
-        (ext:run-program "git" (list "clone" "--quiet" "--depth=1" url path) :output t)
-      (declare (ignore stream obj))
-      (assert (= 0 code) nil "Clone failed: ~a" url))))
+    (let* ((program "git")
+           (project-name (string-downcase (string name)))
+           (arguments (list "subtree" "add" "-q" "--prefix" (concatenate 'string "vendored/" project-name) url
+                            "HEAD" "--squash" "-m" (format nil "Add dependency ~A" name))))
+      (multiple-value-bind (stream code obj)
+          (ext:run-program program arguments :output t)
+        (declare (ignore stream obj))
+        (assert (= 0 code) nil "Clone failed: ~a" url)))))
 
 (defun work (cwd target)
   "Recursively perform a git clone on every detected dependency."
@@ -114,7 +118,7 @@ the root."
                      (let ((route (reverse (car (g:paths-to graph dep)))))
                        (error "~a is not a known system.~%~%  ~{~a~^ -> ~}~%~%Please have it registered in the vend source code." (bold-red dep) route)))
                    (vlog "Fetching ~a" (bold dep))
-                   (clone url path)
+                   (clone url path (keyword->string dep))
                    (setf (gethash dep cloned) t)
                    (scan-systems! graph (asd-files path))
                    (dolist (leaf (unique-leaves (apply #'g:subgraph graph top)))
