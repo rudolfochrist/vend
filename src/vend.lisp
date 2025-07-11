@@ -6,7 +6,7 @@
 
 (defparameter +require-asdf+ "(require \"asdf\")")
 (defparameter +init-registry+ "(asdf:initialize-source-registry `(:source-registry (:tree ,(uiop:getcwd)) :ignore-inherited-configuration))")
-
+(defvar *save-deps* nil)
 ;; --- Graph --- ;;
 
 (defun scan-systems! (graph paths)
@@ -86,8 +86,8 @@ the root."
 
 ;; --- Downloading --- ;;
 
-(defun clone (url path name)
-  "Given a source URL to clone from, do a shallow git clone into a given absolute PATH."
+(defun subtree (url path name)
+  "Given a source URL, a git subtree is added on PATH."
   (unless (probe-file path)
     (let* ((program "git")
            (project-name (string-downcase (string name)))
@@ -98,7 +98,15 @@ the root."
         (declare (ignore stream obj))
         (assert (= 0 code) nil "Clone failed: ~a" url)))))
 
-(defun work (cwd target)
+(defun clone (url path)
+  "Given a source URL to clone from, do a shallow git clone into a given absolute PATH."
+  (unless (probe-file path)
+    (multiple-value-bind (stream code obj)
+        (ext:run-program "git" (list "clone" "--quiet" "--depth=1" url path) :output t)
+      (declare (ignore stream obj))
+      (assert (= 0 code) nil "Clone failed: ~a" url))))
+
+(defun work (cwd target &optional savep)
   "Recursively perform a git clone on every detected dependency."
   (let ((graph  (g:make-graph))
         (cloned (make-hash-table)))
@@ -118,7 +126,9 @@ the root."
                      (let ((route (reverse (car (g:paths-to graph dep)))))
                        (error "~a is not a known system.~%~%  ~{~a~^ -> ~}~%~%Please have it registered in the vend source code." (bold-red dep) route)))
                    (vlog "Fetching ~a" (bold dep))
-                   (clone url path (keyword->string dep))
+                   (if savep
+                       (subtree url path (keyword->string dep))
+                       (clone url path))
                    (setf (gethash dep cloned) t)
                    (scan-systems! graph (asd-files path))
                    (dolist (leaf (unique-leaves (apply #'g:subgraph graph top)))
@@ -202,12 +212,14 @@ Flags:
   --help    - Display this help message
   --version - Display the current version of vend
   -r        - Provide additional registry
+  --save    - Save dependencies as git subtrees
 ")
 
 (defconstant +vend-rules+
   '((("--help" "-h") 0 (vend/help))
     ("--version" 0 (format t "0.2.0~%"))
     ("-r" 1 (vend/register 1))
+    ("--save" 0 (vend/save))
     ("check"  1 (vend/check :focus (cadr 1)) :stop)
     ("get"    0 (vend/get))
     ("update" 2 (vend/update (cadr 1) (caddr 1)) :stop)
@@ -228,7 +240,7 @@ Flags:
     (handler-bind ((error (lambda (c)
                             (format t "~a~%" c)
                             (ext:quit 1))))
-      (work cwd dir))
+      (work cwd dir *save-deps*))
     (vlog "Done.")))
 
 (defun vend/update (name ref)
@@ -245,6 +257,9 @@ Flags:
 
 (defun vend/register (path)
   (register-systems (pathname path)))
+
+(defun vend/save ()
+  (setf *save-deps* t))
 
 (defun vend/test (args &key (dir (ext:getcwd)))
   "Run detected test systems."
