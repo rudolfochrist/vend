@@ -177,13 +177,14 @@ the root."
   "vend - Vendor your Common Lisp dependencies
 
 Commands:
-  check  [focus] - Check your dependencies for issues
-  get            - Download all project dependencies into 'vendored/'
-  graph  [focus] - Visualise a graph of transitive project dependencies
-  init   [name]  - Create a minimal project skeleton
-  repl   [args]  - Start a Lisp session with only your vendored ASDF systems
-  search [term]  - Search known systems
-  test   [args]  - Run all detected test systems
+  check  [focus]      - Check your dependencies for issues
+  get                 - Download all project dependencies into 'vendored/'
+  update [name] [ref] - Update dependency to a specific revision.
+  graph  [focus]      - Visualise a graph of transitive project dependencies
+  init   [name]       - Create a minimal project skeleton
+  repl   [args]       - Start a Lisp session with only your vendored ASDF systems
+  search [term]       - Search known systems
+  test   [args]       - Run all detected test systems
 
 Flags:
   --help    - Display this help message
@@ -195,6 +196,7 @@ Flags:
     ("--version" 0 (format t "0.2.0~%"))
     ("check"  1 (vend/check :focus (cadr 1)) :stop)
     ("get"    0 (vend/get))
+    ("update" 2 (vend/update (cadr 1) (caddr 1)) :stop)
     ("graph"  1 (vend/graph :focus (cadr 1)) :stop)
     ("init"   1 (vend/init (cadr 1)) :stop)
     ("repl"   1 (vend/repl (rest 1)) :stop)
@@ -214,6 +216,18 @@ Flags:
                             (ext:quit 1))))
       (work cwd dir))
     (vlog "Done.")))
+
+(defun vend/update (name ref)
+  (let* ((project-name (intern (string-upcase name) :keyword))
+         (url (getf +sources+ project-name))
+         (command "git")
+         (args (list "subtree" "pull" "-q" "--prefix" (concatenate 'string "vendored/" (keyword->string name))
+                     url ref "--squash" "-m" (format nil "Update ~A-~A" name ref))))
+    (vlog "Update ~A to ref ~A" name ref)
+    (multiple-value-bind (stream code obj)
+        (ext:run-program command args :output t)
+      (declare (ignore stream obj))
+      (assert (zerop code) nil "Update ~A to ~A failed." name ref))))
 
 (defun vend/test (args &key (dir (ext:getcwd)))
   "Run detected test systems."
