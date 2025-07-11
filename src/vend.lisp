@@ -132,6 +132,18 @@ the root."
         (dolist (leaf (unique-leaves graph))
           (recurse top leaf))))))
 
+(defun register-systems (pathname)
+  (handler-bind ((error (lambda (c)
+                          (format t "~A~%" c)
+                          (ext:quit 1))))
+    (let ((reg (uiop:read-file-form pathname)))
+      (dolist (r reg)
+        (destructuring-bind (name details) r
+          (setf (getf +sources+ name)
+                (getf details :url))
+          (dolist (sub (getf details :subsystems))
+            (setf (getf +parents+ sub) name)))))))
+
 #++
 (let* ((cwd #p"/home/colin/code/common-lisp/rtg-math/")
        (dir (p:ensure-directory (p:join cwd "vendored"))))
@@ -189,11 +201,13 @@ Commands:
 Flags:
   --help    - Display this help message
   --version - Display the current version of vend
+  -r        - Provide additional registry
 ")
 
 (defconstant +vend-rules+
   '((("--help" "-h") 0 (vend/help))
     ("--version" 0 (format t "0.2.0~%"))
+    ("-r" 1 (vend/register 1))
     ("check"  1 (vend/check :focus (cadr 1)) :stop)
     ("get"    0 (vend/get))
     ("update" 2 (vend/update (cadr 1) (caddr 1)) :stop)
@@ -229,6 +243,9 @@ Flags:
       (declare (ignore stream obj))
       (assert (zerop code) nil "Update ~A to ~A failed." name ref))))
 
+(defun vend/register (path)
+  (register-systems (pathname path)))
+
 (defun vend/test (args &key (dir (ext:getcwd)))
   "Run detected test systems."
   (let* ((compiler (or (car args) "sbcl"))
@@ -263,6 +280,8 @@ Flags:
 (defun main ()
   (let ((ext:*lisp-init-file-list* nil)
         (ext:*help-message* +help+))
+    (uiop:if-let ((local-registry (probe-file (uiop:xdg-config-home "vend/registry.lisp"))))
+      (register-systems local-registry))
     (cond ((= 1 (length ext:*command-args*)) (vend/help))
           (t (ext:process-command-args :rules +vend-rules+)))
     (ext:quit 0)))
