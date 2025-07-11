@@ -17,6 +17,21 @@ Just vendor your dependencies!
 
 It's time for some peace of mind.
 
+* ABOUT THIS FORK!
+
+This fork switches from cloning the dependency repositories to add them as git subtrees. For me, this gives
+more control if I want to switch to a specific version.
+
+Secondly, this fork loads a local registry to resolve private, local or otherwise non public
+dependencies. Either use the =-r= flag or =vend= loads the registry from =~/.config/vend/registry.lisp= if it
+exists. The local registry file looks like this:
+
+#+begin_src lisp
+((:system-or-project-name (:url "https://repo.org/path/to/repository.git"
+                           :subsystems (:system1 :system2 :etc)))
+ (:another-system (:url "https://repo.org/another-system.git")))
+#+end_src
+
 * Table of Contents :TOC_5_gh:noexport:
 - [[#why-vendor-dependencies][Why vendor dependencies?]]
   - [[#why-vend][Why vend?]]
