@@ -102,7 +102,7 @@ the root."
   "Given a source URL to clone from, do a shallow git clone into a given absolute PATH."
   (unless (probe-file path)
     (multiple-value-bind (stream code obj)
-        (ext:run-program "git" (list "clone" "--quiet" "--depth=1" url path) :output t)
+        (ext:run-program "git" (list "clone" "--quiet" "--depth=1" "--no-single-branch" url path) :output t)
       (declare (ignore stream obj))
       (assert (= 0 code) nil "Clone failed: ~a" url))))
 
